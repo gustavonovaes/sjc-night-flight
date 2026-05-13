@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Gustavo Novaes <contato@gustavonovaes.dev>" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <!-- PWA / fullscreen no iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-fullscreen"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#030314" />
+    <title>SJC Night Flight — Guardião do Vale</title>
+    <script src="js/world.js" defer></script>
+    <script src="js/audio.js" defer></script>
+    <script src="js/entities.js" defer></script>
+    <script src="js/renderer.js" defer></script>
+    <script src="js/dev.js" defer></script>
+    <script src="js/game.js" defer></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        /* dvh cobre área real excluindo barra do browser em mobile */
+        height: 100dvh;
+        background: #030314;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        font-family: "Courier New", Courier, monospace;
+        color: #e0e0ff;
+        user-select: none;
+        /* safe area para notch/ilha dinâmica */
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+      }
+      #wrap {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+      }
+      canvas {
+        display: block;
+        border-radius: 4px;
+        box-shadow:
+          0 0 60px rgba(37, 99, 235, 0.45),
+          0 0 120px rgba(37, 99, 235, 0.15);
+        width: min(100vw, calc((100dvh - 28px) * 800 / 450));
+        height: auto;
+        aspect-ratio: 800 / 450;
+        touch-action: none;
+      }
+      #btn-pause-mobile {
+        display: none;
+        position: fixed;
+        top: max(10px, env(safe-area-inset-top, 10px));
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(10, 10, 40, 0.75);
+        border: 1px solid rgba(37, 99, 235, 0.5);
+        color: #60a5fa;
+        font-size: 20px;
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        cursor: pointer;
+        z-index: 999;
+        line-height: 1;
+      }
+      @media (pointer: coarse) {
+        #btn-pause-mobile {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      #ticker {
+        width: 100vw;
+        background: rgba(10, 10, 40, 0.92);
+        border-top: 1px solid rgba(37, 99, 235, 0.4);
+        color: #60a5fa;
+        font-size: 11px;
+        padding: 4px 0;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      #ticker-inner {
+        display: inline-block;
+        animation: tick 50s linear infinite;
+      }
+      @keyframes tick {
+        from {
+          transform: translateX(800px);
+        }
+        to {
+          transform: translateX(-100%);
+        }
+      }
+      :fullscreen canvas,
+      :-webkit-full-screen canvas {
+        border-radius: 0;
+        box-shadow: none;
+        width: min(100vw, calc(100dvh * 800 / 450));
+      }
+      :fullscreen body,
+      :-webkit-full-screen body {
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrap">
+      <canvas id="c"></canvas>
+      <div id="ticker">
+        <span id="ticker-inner">
+          📡 SJC é o polo aeroespacial do Brasil &nbsp;·&nbsp; ✈️ Embraer é a 3ª
+          maior fabricante de aviões comerciais do mundo &nbsp;·&nbsp; 🔭 INPE
+          monitora o clima e o espaço desde 1961 &nbsp;·&nbsp; 🎓 ITA formou
+          gerações de engenheiros aeronáuticos de elite &nbsp;·&nbsp; 🌿 Serra
+          da Mantiqueira é Reserva da Biosfera pela UNESCO &nbsp;·&nbsp; 💧 Rio
+          Paraíba do Sul nasce em SJC e abastece milhões de pessoas
+          &nbsp;·&nbsp; 🏙️ SJC é a 3ª maior cidade do Estado de SP &nbsp;·&nbsp;
+          🛰️ DCTA desenvolveu o foguete VSB-30 lançado de Alcântara
+          &nbsp;·&nbsp; 🏭 Parque Tecnológico de SJC é um dos maiores da América
+          Latina &nbsp;·&nbsp; ⚡ CEMADEN monitora riscos climáticos 24h por dia
+          &nbsp;·&nbsp; 🛸 19/05/1986 — A Noite dos Discos Voadores: FAB
+          interceptou 21 OVNIs sobre o Vale do Paraíba &nbsp;·&nbsp; 🎻 Festival
+          de Música de SJC é um dos mais tradicionais do Brasil &nbsp;·&nbsp; 🌺
+          Festa das Orquídeas celebra a flora da Mantiqueira &nbsp;·&nbsp; 🚀 O
+          DCTA é o maior complexo aeroespacial da América Latina &nbsp;·&nbsp;
+          🎭 Centro Cultural Vincentino Aranha preserva a história industrial de
+          SJC &nbsp;·&nbsp; 🏭 Johnson &amp; Johnson, GM, Ericsson, Panasonic,
+          Avibras, Hitachi, Nestlé, Bayer — SJC é polo industrial global
+          &nbsp;·&nbsp;
+        </span>
+      </div>
+      <button id="btn-pause-mobile">⏸</button>
+    </div>
+  </body>
+</html>
