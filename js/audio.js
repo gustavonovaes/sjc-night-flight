@@ -41,30 +41,32 @@ function noise(dur, vol) {
   } catch (e) {}
 }
 
+// Volume do tiro bem baixo — não deve competir com a música de fundo
 function sfxShoot() {
-  tone(880, 0.06, "square", 0.05);
+  tone(880, 0.06, "square", 0.022);
 }
 function sfxHit() {
-  tone(160, 0.22, "sawtooth", 0.11);
-  noise(0.15, 0.07);
+  tone(160, 0.22, "sawtooth", 0.09);
+  noise(0.15, 0.05);
 }
+// Explosão de inimigo — ligeiramente mais suave que antes
 function sfxBang() {
-  tone(320, 0.07, "sine", 0.07);
-  noise(0.05, 0.04);
+  tone(320, 0.07, "sine", 0.045);
+  noise(0.05, 0.025);
 }
 function sfxCollect() {
   [380, 560, 840].forEach((f, i) =>
-    setTimeout(() => tone(f, 0.1, "sine", 0.1), i * 55),
+    setTimeout(() => tone(f, 0.1, "sine", 0.09), i * 55),
   );
 }
 function sfxPowerup() {
   [300, 420, 560, 720, 960].forEach((f, i) =>
-    setTimeout(() => tone(f, 0.09, "triangle", 0.12), i * 45),
+    setTimeout(() => tone(f, 0.09, "triangle", 0.10), i * 45),
   );
 }
 function sfxBossIn() {
-  tone(55, 0.6, "sawtooth", 0.14);
-  tone(75, 0.6, "square", 0.09);
+  tone(55, 0.6, "sawtooth", 0.11);
+  tone(75, 0.6, "square", 0.07);
 }
 
 // Repertório: arcade clássico + chill hip-hop (fases 1-2) + rock (fases 3-4)
@@ -118,7 +120,7 @@ function startMusic() {
     if (gState === ST.PLAY) {
       const pl = PLAYLISTS[playlistIdx];
       const freq = pl[mIdx++ % pl.length];
-      if (freq) tone(freq, 0.22, "triangle", 0.032);
+      if (freq) tone(freq, 0.22, "triangle", 0.062); // volume aumentado para se destacar dos SFX
     }
     mTimer = setTimeout(next, PLAYLIST_TEMPOS[playlistIdx] || 280);
   };

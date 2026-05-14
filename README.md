@@ -34,14 +34,14 @@ Pilote um avião Embraer defendendo o Vale contra frentes frias, drones, araras,
 
 | Power-up         | Efeito                                                                                                     | Duração    |
 | ---------------- | ---------------------------------------------------------------------------------------------------------- | ---------- |
-| 🛡️ ESCUDO        | Absorve o próximo acerto sem perder vida; acumula até 3×                                                   | 240 frames |
-| ⚡ BOOST         | Tiro triplo + cadência máxima; acumula até 3×                                                              | 280 frames |
-| 🛩️ 14-BIS        | Invencibilidade total; avião se transforma no biplano de Santos-Dumont. Taxa de queda escala com combo ×10 | 420 frames |
-| 🚀 PULSO AVIBRAS | Dispara 2 mísseis teleguiados a cada 90 frames; mira OVNIs e chefes primeiro                               | 480 frames |
-| 📡 SATÉLITE INPE | Ímã: atrai coletáveis num raio de 220px; revela barras de HP dos inimigos                                  | 360 frames |
-| ❄️ REVAP SHOCK   | Ondachoque: elimina projéteis inimigos num raio de 300px; mantém campo de 80px                             | 180 frames |
-| 🪂 ASA DELTA     | Aceleração/desaceleração quase instantânea; combo nunca zera; rastro arco-íris                             | 400 frames |
-| 📶 WINGMAN 5G    | Drone aliado espelha seus tiros + anel de escudo orbital que intercepta projéteis inimigos                 | 500 frames |
+| 🛡️ ESCUDO        | Absorve o próximo acerto sem perder vida; acumula até 3×                                                   | 300 frames |
+| ⚡ BOOST         | Tiro triplo + cadência máxima; acumula até 3×                                                              | 340 frames |
+| 🛩️ 14-BIS        | Invencibilidade total; avião se transforma no biplano de Santos-Dumont. Taxa de queda escala com combo ×10 | 480 frames |
+| 🚀 PULSO AVIBRAS | Dispara 2 mísseis teleguiados a cada 90 frames; mira OVNIs e chefes primeiro                               | 540 frames |
+| 📡 SATÉLITE INPE | Ímã: atrai coletáveis num raio de 220px; revela barras de HP dos inimigos                                  | 420 frames |
+| ❄️ REVAP SHOCK   | Ondachoque: elimina projéteis inimigos num raio de 300px; mantém campo de 80px                             | 260 frames |
+| 🪂 ASA DELTA     | Aceleração/desaceleração quase instantânea; combo nunca zera; rastro arco-íris                             | 420 frames |
+| 📶 WINGMAN 5G    | Drone aliado espelha seus tiros + anel de escudo orbital que intercepta projéteis inimigos                 | 540 frames |
 
 ---
 
@@ -179,6 +179,42 @@ E em 19 de maio de 1986 — a noite em que 21 OVNIs foram interceptados sobre o 
 ---
 
 ## Changelog
+
+### v0.0.2 — Balanceamento e Performance
+
+**Dificuldade e progressão**
+- Hordas redesenhadas por fase: Fase 1 só tem nuvens/drones; Fase 2 introduz araras e OVNIs noturnos; Fase 3 adiciona helicópteros; Fase 4 é o caos total com todos os inimigos
+- `spawnEnemy()` respeita a mesma progressão: nenhum inimigo novo aparece fora da sua fase
+- Protótipo X movido para o **último lugar** na rotação de chefes — é o mais difícil de matar em laps avançados
+- Protótipo X: aceleração por lap reduzida (`laps * 0.7`, era `1.5`); pausa entre dashes aumentada; spread de orbs mais suave
+- Intervalo entre bosses aumentado: ~47s (2800 frames), era ~30s (1800 frames)
+
+**Coletáveis**
+- Spawn periódico reduzido: a cada 220–380 frames (era 95–180 frames)
+- DROP_TABLE: chances reduzidas em ~50% para inimigos comuns
+- Limite de drops por kill: 2 para inimigos comuns, 6 para bosses — evita poluição visual
+
+**Power-ups — duração aumentada**
+- Escudo: 240 → 300 frames | Boost: 280 → 340 | 14-BIS: 420 → 480 | Avibras: 480 → 540
+- REVAP Shock: 180 → 260 frames (era muito curto) | INPE: 360 → 420 | Asa Delta: 400 → 420 | Wingman: 500 → 540
+
+**Performance**
+- Trail do player: removido `createRadialGradient` por partícula (~30 objetos/frame economizados)
+- Projéteis orb inimigos: removido `createRadialGradient`, substituído por cor sólida
+- `_findMissileTarget()`: substituído `[...enemies].sort()` por `reduce()` sem alocação intermediária
+- Cap de 180 partículas simultâneas para evitar pico de GC em explosões encadeadas
+
+**Áudio**
+- Volume da música de fundo aumentado: 0.032 → 0.062
+- Volume do tiro (`sfxShoot`) reduzido: 0.050 → 0.022 (era o som mais frequente do jogo)
+- Explosões e boss sounds levemente reduzidos para equilibrar com a música
+
+**Interface**
+- Contador de FPS no canto inferior esquerdo: verde ≥ 55, amarelo ≥ 40, vermelho < 40
+- Constante `BOSS_TYPES` extraída para evitar repetição inline em `game.js`
+- Código: comentários em português nas funções principais; variáveis mantidas em inglês
+
+---
 
 ### v0.0.1 — Lançamento inicial
 

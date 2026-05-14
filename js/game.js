@@ -1,5 +1,8 @@
 "use strict";
 
+// Tipos que contam como "boss vivo" — usados em múltiplos pontos do jogo
+const BOSS_TYPES = ["boss", "prototipo_x", "cemaden_eye", "engrenagem", "cigarra"];
+
 let _prevTickerState = null;
 
 const RADIO_MSGS = {
@@ -37,36 +40,44 @@ function _buildHorde(spec) {
   return arr;
 }
 
+// Hordas temáticas por fase — cada fase apresenta novos inimigos gradualmente.
+// Fase 1: apenas nuvens e drones. Fase 2: araras e OVNIs noturnos.
+// Fase 3: invasão coordenada com helicópteros. Fase 4: caos total.
 const WAVE_DEFS = [
-  { name: "Frente Fria da Mantiqueira",    phase: 1, horde: _buildHorde([["cloud",3],["drone",4],["tanajura",3]]) },
-  { name: "Patrulha de Drones DCTA",       phase: 1, horde: _buildHorde([["drone",5],["cloud",2],["arara",3],["tanajura",4]]) },
-  { name: "Bando de Araras Furiosas",      phase: 2, horde: _buildHorde([["arara",6],["drone",4],["cloud",2],["balao",2],["tanajura",4]]) },
-  { name: "Noite dos Discos Voadores",     phase: 2, horde: _buildHorde([["ovni",4],["arara",4],["drone",3],["cloud",1],["balao",2]]) },
-  { name: "Invasão Coordenada",            phase: 3, horde: _buildHorde([["ovni",5],["arara",4],["drone",4],["cloud",2],["helicoptero",2],["tanajura",5]]) },
-  { name: "Tempestade Total",              phase: 3, horde: _buildHorde([["ovni",5],["arara",5],["drone",4],["cloud",3],["helicoptero",3],["balao",3]]) },
-  { name: "Alerta CEMADEN — Nível Máximo", phase: 4, horde: _buildHorde([["ovni",6],["arara",6],["drone",5],["cloud",3],["helicoptero",4],["tanajura",6],["balao",2]]) },
-  { name: "Caos Sobre o Vale",             phase: 4, horde: _buildHorde([["ovni",7],["arara",6],["drone",5],["cloud",4],["helicoptero",4],["tanajura",7],["balao",3]]) },
-  { name: "Batalha Final do Guardião",     phase: 4, horde: _buildHorde([["ovni",8],["arara",7],["drone",6],["cloud",4],["helicoptero",5],["tanajura",8],["balao",4]]) },
+  // ── Fase 1: patrulha diurna ──────────────────────────────────────────────
+  { name: "Frente Fria da Mantiqueira",    phase: 1, horde: _buildHorde([["cloud",3],["drone",3]]) },
+  { name: "Patrulha de Drones DCTA",       phase: 1, horde: _buildHorde([["drone",5],["cloud",2],["arara",2]]) },
+  // ── Fase 2: araras + primeira noite com OVNIs ────────────────────────────
+  { name: "Bando de Araras Furiosas",      phase: 2, horde: _buildHorde([["arara",5],["drone",3],["cloud",1],["balao",1]]) },
+  { name: "Noite dos Discos Voadores",     phase: 2, horde: _buildHorde([["ovni",3],["arara",3],["drone",2],["balao",1]]) },
+  // ── Fase 3: invasão coordenada com helicópteros ──────────────────────────
+  { name: "Invasão Coordenada",            phase: 3, horde: _buildHorde([["ovni",4],["arara",3],["drone",3],["cloud",1],["helicoptero",2]]) },
+  { name: "Tempestade Total",              phase: 3, horde: _buildHorde([["ovni",4],["arara",4],["drone",3],["cloud",2],["helicoptero",2],["balao",2]]) },
+  // ── Fase 4: caos total — todos os inimigos ───────────────────────────────
+  { name: "Alerta CEMADEN — Nível Máximo", phase: 4, horde: _buildHorde([["ovni",5],["arara",4],["drone",4],["cloud",2],["helicoptero",3],["tanajura",3],["balao",2]]) },
+  { name: "Caos Sobre o Vale",             phase: 4, horde: _buildHorde([["ovni",6],["arara",5],["drone",4],["cloud",3],["helicoptero",3],["tanajura",4],["balao",2]]) },
+  { name: "Batalha Final do Guardião",     phase: 4, horde: _buildHorde([["ovni",7],["arara",6],["drone",5],["cloud",3],["helicoptero",4],["tanajura",5],["balao",3]]) },
 ];
 
+// Anuncia uma nova onda: exibe texto, monta a fila de horda embaralhada e troca a música.
 function announce(n) {
   const def = WAVE_DEFS[Math.min(n, WAVE_DEFS.length - 1)];
   waveText = `ONDA ${n + 1}: ${def.name.toUpperCase()}`;
   waveT = 200;
-  hordeQueue = [...def.horde].sort(() => Math.random() - 0.5);
+  hordeQueue = [...def.horde].sort(() => Math.random() - 0.5); // embaralha para variedade
   hordeSpawnT = 70;
   switchMusicForPhase(n);
-  if (def.phase !== currentPhase) {
-    currentPhase = def.phase;
-  }
+  if (def.phase !== currentPhase) currentPhase = def.phase;
   const msg = RADIO_MSGS[`wave_${n}`];
   if (msg) radioSay(msg, 100);
 }
 
+// Inicializa uma nova partida: reseta todos os estados globais e começa a onda 0.
 function startGame() {
   ensureAC();
   const pl = PLANES[selectedPlane];
   const totalPts = parseInt(localStorage.getItem(TOTAL_KEY) || "0");
+  // usa o avião selecionado apenas se desbloqueado; caso contrário, usa o padrão
   player = new Player(totalPts >= pl.unlock ? pl : PLANES[0]);
   bullets = [];
   enemies = [];
@@ -90,10 +101,7 @@ function startGame() {
   hordeSpawnT = 0;
   currentPhase = 0;
   playlistIdx = 6;
-  off1 = 0;
-  off2 = 0;
-  off3 = 0;
-  offSky = 0;
+  off1 = 0; off2 = 0; off3 = 0; offSky = 0;
   radioText = ""; radioT = 0; radioQueue = [];
   windX = 0; windTimer = 1800; lightningT = 0;
   grazeCount = 0; cbersMission = null; cbersMissionT = 3800;
@@ -107,6 +115,8 @@ const keys = {};
 const JOY_MAX = 82;
 const touch = { active: false, vx: 0, vy: 0, cx: 0, cy: 0, kx: 0, ky: 0 };
 
+// Loop de lógica principal — chamado a cada frame pelo requestAnimationFrame.
+// Atualiza física, spawns, colisões, power-ups e eventos atmosféricos.
 function update() {
   frame++;
   if (dev.openCooldown > 0) dev.openCooldown--;
@@ -206,6 +216,8 @@ function update() {
   enemies = enemies.filter((e) => !e.dead);
   collectibles.forEach((c) => c.update());
   collectibles = collectibles.filter((c) => !c.dead);
+  // cap de partículas para evitar picos de GC em explosões encadeadas
+  if (particles.length > 180) particles.length = 180;
   particles.forEach((p) => {
     p.x += p.vx;
     p.y += p.vy;
@@ -225,11 +237,13 @@ function update() {
     // gradual: começa lento e acelera com o tempo e as waves
     spawnT = Math.max(22, 120 - waveNum * 8 - frame / 180);
   }
+  // spawn periódico de coletáveis — intervalo aumentado para reduzir quantidade na tela
   if (--collectT <= 0) {
-    collectT = 95 + Math.floor(Math.random() * 85);
+    collectT = 220 + Math.floor(Math.random() * 160);
     collectibles.push(new Collectible(W + 22, 48 + Math.random() * (H - 96)));
   }
-  if (!bossAlive && frame > 0 && frame % 1800 === 0) {
+  // boss spawna a cada ~47s (2800 frames) — intervalo aumentado para o jogador respirar
+  if (!bossAlive && frame > 0 && frame % 2800 === 0) {
     spawnBoss();
   }
   if (!bossAlive && --ovniEventT <= 0) {
@@ -286,9 +300,8 @@ function update() {
           );
           combo = Math.min(combo + 1, 10);
           comboT = 130;
-          const _bossTypes = ["boss","prototipo_x","cemaden_eye","engrenagem","cigarra"];
-          if (_bossTypes.includes(e.type)) shakeAmt += 9;
-          if (_bossTypes.includes(e.type)) bossAlive = false;
+            if (BOSS_TYPES.includes(e.type)) shakeAmt += 9;
+          if (BOSS_TYPES.includes(e.type)) bossAlive = false;
           dropCollectibles(e.x, e.y, e.type);
         }
       }
@@ -350,13 +363,14 @@ function update() {
         e.hp -= 2;
         if (e.hp <= 0 && !e.dead) {
           e.dead = true;
-          if (["boss","prototipo_x","cemaden_eye","engrenagem","cigarra"].includes(e.type)) bossAlive = false;
+          if (BOSS_TYPES.includes(e.type)) bossAlive = false;
         }
         if (player.lives <= 0) endGame();
       }
     }
   });
 
+  // coleta de power-ups e itens de pontuação
   collectibles.forEach((c) => {
     if (c.dead) return;
     if (circ({ x: c.x, y: c.y, r: c.r }, { x: player.x, y: player.y, r: 20 })) {
@@ -410,50 +424,59 @@ function update() {
   });
 }
 
+// Spawna um inimigo avulso conforme a onda atual — reforça o spawn contínuo entre hordas.
+// Cada onda tem uma distribuição de probabilidade diferente para introduzir inimigos gradualmente.
 function spawnEnemy() {
   const y = 55 + Math.random() * (H - 110);
   const r = Math.random();
   const isNight = dayPhase < 0.26 || dayPhase > 0.84;
   const w = waveNum;
 
+  // Ondas 0-1 (Fase 1): só nuvens e drones — sem OVNIs
   if (w === 0) {
     if (r < 0.52) enemies.push(new Enemy("cloud", W + 85, y));
-    else           enemies.push(new Enemy("drone", W + 42, y));
+    else                enemies.push(new Enemy("drone", W + 42, y));
   } else if (w === 1) {
     if      (r < 0.30) enemies.push(new Enemy("cloud", W + 85, y));
     else if (r < 0.75) enemies.push(new Enemy("drone", W + 42, y));
-    else               enemies.push(new Enemy("arara", W + 32, y));
+    else                     enemies.push(new Enemy("arara", W + 32, y));
+  // Ondas 2-3 (Fase 2): araras dominam; OVNIs apenas à noite a partir da onda 3
   } else if (w === 2) {
     if      (r < 0.18) enemies.push(new Enemy("cloud", W + 85, y));
     else if (r < 0.45) enemies.push(new Enemy("drone", W + 42, y));
-    else               enemies.push(new Enemy("arara", W + 32, y));
+    else                     enemies.push(new Enemy("arara", W + 32, y));
   } else if (w === 3) {
     if      (r < 0.15) enemies.push(new Enemy("cloud", W + 85, y));
     else if (r < 0.38) enemies.push(new Enemy("drone", W + 42, y));
     else if (r < 0.68) enemies.push(new Enemy("arara", W + 32, y));
-    else if (isNight)  enemies.push(new Enemy("ovni",  W + 55, y));
-    else               enemies.push(new Enemy("drone", W + 42, y));
+    else if (isNight)        enemies.push(new Enemy("ovni",  W + 55, y));
+    else                     enemies.push(new Enemy("drone", W + 42, y));
+  // Ondas 4-5 (Fase 3): todos os inimigos comuns + helicópteros
   } else if (w === 4) {
-    if      (r < 0.12) enemies.push(new Enemy("cloud", W + 85, y));
-    else if (r < 0.35) enemies.push(new Enemy("drone", W + 42, y));
-    else if (r < 0.62) enemies.push(new Enemy("arara", W + 32, y));
-    else if (r < 0.82) enemies.push(new Enemy("ovni",  W + 55, y));
-    else               enemies.push(new Enemy("drone", W + 42, y));
+    if      (r < 0.12) enemies.push(new Enemy("cloud",      W + 85, y));
+    else if (r < 0.32) enemies.push(new Enemy("drone",      W + 42, y));
+    else if (r < 0.58) enemies.push(new Enemy("arara",      W + 32, y));
+    else if (r < 0.78) enemies.push(new Enemy("ovni",       W + 55, y));
+    else                     enemies.push(new Enemy("helicoptero", W + 60, y));
   } else if (w === 5) {
-    if      (r < 0.10) enemies.push(new Enemy("cloud", W + 85, y));
-    else if (r < 0.28) enemies.push(new Enemy("drone", W + 42, y));
-    else if (r < 0.55) enemies.push(new Enemy("arara", W + 32, y));
-    else               enemies.push(new Enemy("ovni",  W + 55, y));
-    if (Math.random() < 0.25) {
+    if      (r < 0.10) enemies.push(new Enemy("cloud",      W + 85, y));
+    else if (r < 0.26) enemies.push(new Enemy("drone",      W + 42, y));
+    else if (r < 0.50) enemies.push(new Enemy("arara",      W + 32, y));
+    else if (r < 0.74) enemies.push(new Enemy("ovni",       W + 55, y));
+    else                     enemies.push(new Enemy("helicoptero", W + 60, y));
+    // chance de spawn duplo para aumentar pressão na fase 3
+    if (Math.random() < 0.22) {
       const y2 = 55 + Math.random() * (H - 110);
       enemies.push(new Enemy("drone", W + 42 + Math.random() * 60, y2));
     }
+  // Ondas 6+ (Fase 4): caos total — todos os tipos incluindo tanajura
   } else {
-    if      (r < 0.08) enemies.push(new Enemy("cloud", W + 85, y));
-    else if (r < 0.24) enemies.push(new Enemy("drone", W + 42, y));
-    else if (r < 0.50) enemies.push(new Enemy("arara", W + 32, y));
-    else               enemies.push(new Enemy("ovni",  W + 55, y));
-    if (Math.random() < 0.35) {
+    if      (r < 0.08) enemies.push(new Enemy("cloud",      W + 85, y));
+    else if (r < 0.22) enemies.push(new Enemy("drone",      W + 42, y));
+    else if (r < 0.46) enemies.push(new Enemy("arara",      W + 32, y));
+    else if (r < 0.68) enemies.push(new Enemy("ovni",       W + 55, y));
+    else                     enemies.push(new Enemy("helicoptero", W + 60, y));
+    if (Math.random() < 0.30) {
       const y2 = 55 + Math.random() * (H - 110);
       const extraType = isNight && Math.random() < 0.5 ? "ovni" : "arara";
       enemies.push(new Enemy(extraType, W + 60 + Math.random() * 80, y2));
@@ -478,9 +501,11 @@ function spawnOvniEvent() {
   }
 }
 
+// Spawna o próximo chefe da rotação e incrementa waveNum.
 function spawnBoss() {
   bossAlive = true;
-  const BOSS_ROTATION = ["boss", "prototipo_x", "cemaden_eye", "engrenagem", "cigarra"];
+  // prototipo_x fica por último: é o mais difícil de matar e ganha velocidade a cada lap
+  const BOSS_ROTATION = ["boss", "cemaden_eye", "engrenagem", "cigarra", "prototipo_x"];
   const bossType = BOSS_ROTATION[Math.floor(waveNum) % BOSS_ROTATION.length];
   enemies.push(new Enemy(bossType, W + 200, H / 2));
   waveText = `⚠️ CHEFE: ${BOSS_LABELS[bossType] || bossType.toUpperCase()} ⚠️`;
@@ -495,6 +520,7 @@ function spawnBoss() {
   }
 }
 
+// Encerra a partida: salva recorde individual e pontuação acumulada no localStorage.
 function endGame() {
   gState = ST.OVER;
   stopMusic();
@@ -721,8 +747,20 @@ document.getElementById("btn-pause-mobile")?.addEventListener("click", () => {
   else if (gState === ST.PAUSE) gState = ST.PLAY;
 });
 
-(function loop() {
+// Contadores de FPS — atualizados a cada segundo
+let fps = 0;
+let _fpsCount = 0;
+let _fpsTs = 0;
+
+(function loop(ts) {
+  // calcula FPS a cada 1s
+  _fpsCount++;
+  if (ts - _fpsTs >= 1000) {
+    fps = _fpsCount;
+    _fpsCount = 0;
+    _fpsTs = ts;
+  }
   update();
   render();
   requestAnimationFrame(loop);
-})();
+})(0);

@@ -95,8 +95,10 @@ function drawParqueDaCidade(off) {
     ctx.closePath();
     ctx.fill();
     PARQUE_TREES.forEach(({ ox, h }) => {
-      const drop = Math.abs(ox) * 0.38;
-      drawTree(px + ox, base - 66 - Math.max(0, 52 - drop), h);
+      // aproximação parabólica da superfície do morro para enraizar as árvores corretamente
+      const u = ox / 155;
+      const hillY = (base - 122) + 122 * u * u;
+      drawTree(px + ox, hillY + 6, h);
     });
     ctx.fillStyle = "#0d1c10";
     ctx.fillRect(px - 5, base - 162, 10, 52);
@@ -420,6 +422,16 @@ function drawHUD() {
     ctx.fillText("⚙ GOD", W - 8, H - 8);
     ctx.restore();
   }
+  // FPS — canto inferior direito, acima do botão DEV
+  ctx.save();
+  ctx.font = "9px monospace";
+  ctx.textAlign = "right";
+  const fpsColor = fps >= 55 ? "#4ade80" : fps >= 40 ? "#fbbf24" : "#f87171";
+  ctx.fillStyle = fpsColor;
+  ctx.globalAlpha = 0.75;
+  ctx.fillText(`${fps} fps`, W - 4, H - 28);
+  ctx.globalAlpha = 1;
+  ctx.restore();
   drawRadio();
 }
 

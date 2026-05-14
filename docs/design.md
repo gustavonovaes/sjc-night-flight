@@ -63,14 +63,14 @@
 
 | ID            | Label           | Efeito                                                                        | Duração (frames)     |
 |---------------|-----------------|-------------------------------------------------------------------------------|----------------------|
-| `shield`      | ESCUDO          | Absorve o próximo acerto sem perder vida; acumula até 3×                      | `SHIELD_DUR = 240`   |
-| `boost`       | BOOST           | Tiro triplo + cadência máxima; acumula até 3×                                 | `BOOST_DUR = 280`    |
-| `14bis`       | 14-BIS          | Invencibilidade total; avião transforma-se no biplano de Santos-Dumont        | `BIS_DUR = 420`      |
-| `avibras_pw`  | PULSO AVIBRAS   | Dispara 2 mísseis teleguiados a cada 90 frames; prioriza OVNIs e chefe        | `AVIBRAS_DUR = 480`  |
-| `inpe_sat`    | SATÉLITE INPE   | Ímã que atrai coletáveis num raio de 220px; revela barra de HP de todos os inimigos | `INPE_DUR = 360` |
-| `revap_pw`    | REVAP SHOCK     | Onda de choque instantânea: destrói projéteis inimigos num raio de 300px; mantém campo de 80px | `REVAP_DUR = 180` |
-| `delta_pw`    | ASA DELTA       | Aceleração/frenagem quase instantâneas (accel 1.8, friction 0.22); combo não reseta; rastro arco-íris | `DELTA_DUR = 400` |
-| `ericsson_pw` | WINGMAN 5G      | Drone wingman que replica o tiro do jogador (diagonal duplo com Boost ativo)  | `ERICSSON_DUR = 500` |
+| `shield`      | ESCUDO          | Absorve o próximo acerto sem perder vida; acumula até 3×                      | `SHIELD_DUR = 300`   |
+| `boost`       | BOOST           | Tiro triplo + cadência máxima; acumula até 3×                                 | `BOOST_DUR = 340`    |
+| `14bis`       | 14-BIS          | Invencibilidade total; avião transforma-se no biplano de Santos-Dumont        | `BIS_DUR = 480`      |
+| `avibras_pw`  | PULSO AVIBRAS   | Dispara 2 mísseis teleguiados a cada 90 frames; prioriza OVNIs e chefe        | `AVIBRAS_DUR = 540`  |
+| `inpe_sat`    | SATÉLITE INPE   | Ímã que atrai coletáveis num raio de 220px; revela barra de HP de todos os inimigos | `INPE_DUR = 420` |
+| `revap_pw`    | REVAP SHOCK     | Onda de choque instantânea: destrói projéteis inimigos num raio de 300px; mantém campo de 80px | `REVAP_DUR = 260` |
+| `delta_pw`    | ASA DELTA       | Aceleração/frenagem quase instantâneas (accel 1.8, friction 0.22); combo não reseta; rastro arco-íris | `DELTA_DUR = 420` |
+| `ericsson_pw` | WINGMAN 5G      | Drone wingman que replica o tiro do jogador (diagonal duplo com Boost ativo)  | `ERICSSON_DUR = 540` |
 
 ### Notas de implementação
 
@@ -111,15 +111,16 @@ Os IDs dos power-ups de Avibras, INPE, Revap, Delta e Ericsson usam sufixo `_pw`
 - Evento especial `spawnOvniEvent`: aparece em grupo de 3–5 com mensagem "INCIDENTE 19/05/1986".
 
 ### Chefe — Monstro Climático (`boss`)
-- Spawn a cada 1800 frames (se o chefe anterior já foi destruído).
-- HP: 42, R: 72. Fica parado no lado direito da tela (`x >= W - 210`).
-- Dispara orbs direcionados ao jogador a cada 28 frames.
-- Barra de HP exibida sobre o sprite. Destruição concede 2500 pontos.
+- Spawn a cada **2800 frames** (~47s — intervalo aumentado para o jogador ter tempo de respirar).
+- HP: 42 + `waveNum*12`, R: 72. Fica parado no lado direito da tela (`x >= W - 210`).
+- Dispara orbs direcionados ao jogador. Barra de HP exibida sobre o sprite. Destruição concede 2500 pontos.
 
 ### Chefe — Protótipo X (`prototipo_x`)
 - Passa horizontalmente em velocidade alta, re-entra pela direita ao sair pela esquerda.
-- HP: 28 + `waveNum*4`. Accelera a cada lap. Dispara spread de 5 orbs.
-- Sonic boom: empurra o jogador ao cruzar próximo (< 40px).
+- HP: 28 + `waveNum*6`. Acelera a cada lap: `vx = -(5.5 + laps * 0.7)` (incremento reduzido para curva de dificuldade mais suave).
+- Pausa entre dashes: `dashT = max(80, 170 - laps * 10)`. Spread: `0.18 + laps * 0.025`.
+- Dispara spread de 5 orbs. Sonic boom: empurra o jogador ao cruzar próximo (< 40px).
+- **Posição na rotação:** último (`index 4`), pois é o mais difícil de matar em laps avançados.
 
 ### Chefe — Olho do CEMADEN (`cemaden_eye`)
 - Estacionário. Cicla entre fase **protegida** (invulnerável, 6 blobs rotatórios) e **vulnerável** (sem escudo).
@@ -136,7 +137,9 @@ Os IDs dos power-ups de Avibras, INPE, Revap, Delta e Ericsson usam sufixo `_pw`
 - HP: 90 + `waveNum*10`. Pontuação: 5000.
 
 ### Rotação de chefes
-`spawnBoss()` usa `BOSS_ROTATION = ["boss","prototipo_x","cemaden_eye","engrenagem","cigarra"]` com índice `waveNum % 5`. Após wave 8, um segundo chefe entra 4s depois.
+`spawnBoss()` usa `BOSS_ROTATION = ["boss","cemaden_eye","engrenagem","cigarra","prototipo_x"]` com índice `waveNum % 5`. O Protótipo X foi movido para o último lugar por ser o mais difícil de matar em laps avançados. Após wave 8, um segundo chefe entra 4s depois.
+
+A constante `BOSS_TYPES` (definida em `game.js`) lista todos os tipos de chefe e é usada em múltiplos pontos para verificar colisões e drops.
 
 ---
 
@@ -157,17 +160,21 @@ O jogo é dividido em **4 fases**, cada uma com 2 waves. Cada wave é anunciada 
 
 ### Waves e hordas
 
-| Wave | Nome                         | Fase | Horda (inimigos em burst)                        |
-|------|------------------------------|------|--------------------------------------------------|
-| 0    | Frente Fria da Mantiqueira   | 1    | 3 clouds + 4 drones                              |
-| 1    | Patrulha de Drones DCTA      | 1    | 5 drones + 2 clouds + 3 araras                   |
-| 2    | Bando de Araras Furiosas     | 2    | 6 araras + 4 drones + 2 clouds                   |
-| 3    | Noite dos Discos Voadores    | 2    | 4 ovnis + 4 araras + 3 drones + 1 cloud          |
-| 4    | Invasão Coordenada           | 3    | 5 ovnis + 5 araras + 4 drones + 2 clouds         |
-| 5    | Tempestade Total             | 3    | 6 ovnis + 5 araras + 5 drones + 3 clouds         |
-| 6    | Alerta CEMADEN — Nível Máx.  | 4    | 7 ovnis + 6 araras + 5 drones + 3 clouds         |
-| 7    | Caos Sobre o Vale            | 4    | 8 ovnis + 7 araras + 6 drones + 4 clouds         |
-| 8+   | Batalha Final do Guardião    | 4    | 9 ovnis + 8 araras + 7 drones + 5 clouds (loop)  |
+Cada fase apresenta apenas os inimigos temáticos relevantes. Novos tipos são introduzidos gradualmente.
+
+| Wave | Nome                         | Fase | Horda (inimigos em burst)                                         |
+|------|------------------------------|------|-------------------------------------------------------------------|
+| 0    | Frente Fria da Mantiqueira   | 1    | 3 clouds + 3 drones                                               |
+| 1    | Patrulha de Drones DCTA      | 1    | 5 drones + 2 clouds + 2 araras                                    |
+| 2    | Bando de Araras Furiosas     | 2    | 5 araras + 3 drones + 1 cloud + 1 balao                           |
+| 3    | Noite dos Discos Voadores    | 2    | 3 ovnis + 3 araras + 2 drones + 1 balao                           |
+| 4    | Invasão Coordenada           | 3    | 4 ovnis + 3 araras + 3 drones + 1 cloud + 2 helicopteros          |
+| 5    | Tempestade Total             | 3    | 4 ovnis + 4 araras + 3 drones + 2 clouds + 2 helicopteros + 2 balaos |
+| 6    | Alerta CEMADEN — Nível Máx.  | 4    | 5 ovnis + 4 araras + 4 drones + 2 clouds + 3 helicopteros + 3 tanajuras + 2 balaos |
+| 7    | Caos Sobre o Vale            | 4    | 6 ovnis + 5 araras + 4 drones + 3 clouds + 3 helicopteros + 4 tanajuras + 2 balaos |
+| 8+   | Batalha Final do Guardião    | 4    | 7 ovnis + 6 araras + 5 drones + 3 clouds + 4 helicopteros + 5 tanajuras + 3 balaos (loop) |
+
+**Regra de spawn contínuo (`spawnEnemy`):** a distribuição de probabilidade muda a cada onda. OVNIs só aparecem a partir da onda 3 e apenas à noite. Helicópteros surgem no spawn contínuo a partir da onda 4. Tanajuras aparecem somente na horda da Fase 4.
 
 ### Mecânica de horda
 
@@ -203,7 +210,7 @@ Definidos em `CTYPES`:
 | `boost`  | BOOST    | 0      | power-up   |
 | `14bis`  | 14-BIS   | 0      | power-up raro |
 
-Coletáveis surgem periodicamente (a cada ~95–180 frames). Ao destruir um inimigo, `dropCollectibles()` consulta a `DROP_TABLE` — cada entrada tem uma chance independente por tipo de inimigo.
+Coletáveis surgem periodicamente (a cada ~220–380 frames). Ao destruir um inimigo, `dropCollectibles()` consulta a `DROP_TABLE` — cada entrada tem uma chance independente por tipo de inimigo, com **limite de drops por kill: 2 para inimigos comuns, 6 para bosses**. Isso evita que matar um único inimigo polua a tela de coletáveis.
 
 **Visual:** coletáveis de pontuação exibem o nome da empresa centralizado; power-ups exibem o emoji do item em tamanho grande, sem texto.
 
@@ -364,6 +371,9 @@ Recursos: god mode, sem projéteis, spawn de inimigos, todos os power-ups, veloc
 ### HUD de buffs
 Cada buff ativo exibe ícone + segundos restantes + barra de progresso à direita da tela. Buffs acumuláveis (shield, boost, avibras, inpe, delta, ericsson) mostram progresso relativo ao máximo acumulável.
 
+### Contador de FPS
+Exibido no canto inferior esquerdo com cor dinâmica: verde ≥ 55 fps, amarelo ≥ 40 fps, vermelho < 40 fps. Calculado a cada segundo via timestamp do `requestAnimationFrame`.
+
 ---
 
 ## Notas de performance
@@ -373,3 +383,18 @@ Cada buff ativo exibe ícone + segundos restantes + barra de progresso à direit
 - Trail do jogador usa `Math.random()` no `update()` (lógica, não desenho) — correto.
 - Partículas de explosão usam `Math.random()` apenas no momento do spawn — correto.
 - O loop usa `requestAnimationFrame` sem `setInterval`, garantindo sincronismo com o VSync do navegador.
+- **Trail do player:** removido `createRadialGradient` por partícula — substituído por `fillStyle` sólido com `globalAlpha`. Evita criar ~30 objetos `CanvasGradient` por frame.
+- **EBullet (orb):** removido `createRadialGradient` — substituído por cor sólida + `shadowBlur`. Reduz alocações de objeto por frame com muitos projéteis na tela.
+- **`_findMissileTarget()`:** substituído `[...enemies].sort()` por `reduce()`, eliminando criação de array intermediário a cada disparo de míssil Avibras.
+- **Cap de partículas:** array `particles` limitado a 180 entradas para evitar pico de GC em explosões encadeadas (ex.: boss + horda simultâneos).
+- **`sfxBossIn()`:** chamado também pela Engrenagem e Cigarra a cada tiro — volume reduzido para não saturar o canal de áudio.
+
+## Áudio — balanceamento de volumes
+
+| Função        | Volume anterior | Volume atual | Motivo                             |
+|---------------|-----------------|--------------|------------------------------------|
+| Música de fundo | 0.032         | 0.062        | Muito baixa em relação aos SFX     |
+| `sfxShoot`    | 0.050           | 0.022        | Tiro frequente — saturava o áudio  |
+| `sfxBang`     | 0.070 / 0.040   | 0.045 / 0.025| Explosão mais suave                |
+| `sfxHit`      | 0.110 / 0.070   | 0.090 / 0.050| Dano ao jogador — mantido audível  |
+| `sfxBossIn`   | 0.140 / 0.090   | 0.110 / 0.070| Chamado por múltiplos bosses       |

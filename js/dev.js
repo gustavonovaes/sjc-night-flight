@@ -2,7 +2,7 @@
 
 const ST = Object.freeze({ MENU: 0, PLAY: 1, PAUSE: 2, OVER: 3, SOBRE: 4 });
 let gState = ST.MENU;
-const DEV_BTN = { x: W - 50, y: 4, w: 46, h: 20 };
+const DEV_BTN = { x: W - 50, y: H - 24, w: 46, h: 20 };
 
 let player, bullets, enemies, eBullets, collectibles, particles, floaters;
 let frame = 0;

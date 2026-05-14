@@ -2,14 +2,15 @@
 
 const FIRE_N = 24;
 const FIRE_B = 7;
-const SHIELD_DUR = 240;
-const BOOST_DUR = 280;
-const BIS_DUR = 420;
-const AVIBRAS_DUR = 480;   // Pulso Avibras — mísseis perseguidores
-const INPE_DUR = 360;      // Satélite INPE — ímã + revelar HP
-const REVAP_DUR = 180;     // Revap — onda de choque (limpa projéteis)
-const DELTA_DUR = 400;     // Asa Delta — agilidade máxima + combo
-const ERICSSON_DUR = 500;  // 5G Ericsson — drone wingman
+// Durações em frames (60fps). Aumentadas para powerups se sentirem mais úteis.
+const SHIELD_DUR   = 300;  // Escudo — absorve 1 acerto; era 240 (~4s → 5s)
+const BOOST_DUR    = 340;  // Boost — tiro triplo; era 280 (~5.7s)
+const BIS_DUR      = 480;  // 14-BIS — invencível; era 420 (~8s)
+const AVIBRAS_DUR  = 540;  // Pulso Avibras — mísseis perseguidores; era 480 (~9s)
+const INPE_DUR     = 420;  // Satélite INPE — ímã + revelar HP; era 360 (~7s)
+const REVAP_DUR    = 260;  // Revap — onda de choque; era 180 — muito curto, aumentado (~4.3s)
+const DELTA_DUR    = 420;  // Asa Delta — agilidade máxima + combo; era 400 (~7s)
+const ERICSSON_DUR = 540;  // 5G Ericsson — drone wingman; era 500 (~9s)
 const INV = 120;
 const MAX_LIVES = 3;
 
@@ -62,6 +63,7 @@ function floatText(txt, x, y, col) {
   floaters.push({ txt, x, y: y - 10, vy: -1.2, life: 1, col });
 }
 
+// Jogador: gerencia movimento com inércia, tiro automático, power-ups e vidas.
 class Player {
   constructor(planeCfg) {
     const cfg = planeCfg || PLANES[0];
@@ -193,12 +195,10 @@ class Player {
     return true;
   }
   draw() {
+    // Rastro sem gradient — evita criar CanvasGradient por partícula a cada frame
     this.trail.forEach((p) => {
-      ctx.globalAlpha = p.life * 0.5;
-      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * p.life);
-      g.addColorStop(0, `hsla(${p.hue},100%,78%,1)`);
-      g.addColorStop(1, `hsla(${p.hue},100%,60%,0)`);
-      ctx.fillStyle = g;
+      ctx.globalAlpha = p.life * 0.42;
+      ctx.fillStyle = `hsl(${p.hue},88%,70%)`;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
       ctx.fill();
@@ -594,18 +594,20 @@ class Bullet {
   }
 }
 
+// Encontra o alvo prioritário para os mísseis Avibras: ovni > boss > mais próximo.
+// Usa reduce() para evitar criar array intermediário com spread + sort.
 function _findMissileTarget() {
   if (!enemies || !enemies.length) return null;
-  // prioriza ovni > boss > qualquer inimigo mais próximo do jogador
-  const byPriority = [...enemies].sort((a, b) => {
-    const prio = { ovni: 0, boss: 1 };
-    const pa = prio[a.type] ?? 2, pb = prio[b.type] ?? 2;
-    if (pa !== pb) return pa - pb;
-    const da = (a.x - player.x) ** 2 + (a.y - player.y) ** 2;
-    const db = (b.x - player.x) ** 2 + (b.y - player.y) ** 2;
-    return da - db;
-  });
-  return byPriority[0];
+  const PRIO = { ovni: 0, boss: 1 };
+  return enemies.reduce((melhor, e) => {
+    if (!melhor) return e;
+    const pm = PRIO[melhor.type] ?? 2;
+    const pe = PRIO[e.type] ?? 2;
+    if (pe !== pm) return pe < pm ? e : melhor;
+    const dm = (melhor.x - player.x) ** 2 + (melhor.y - player.y) ** 2;
+    const de = (e.x - player.x) ** 2 + (e.y - player.y) ** 2;
+    return de < dm ? e : melhor;
+  }, null);
 }
 
 class HomingMissile {
@@ -638,7 +640,7 @@ class HomingMissile {
   }
   draw() {
     this.smoke.forEach((s, i) => {
-      ctx.globalAlpha = s.life * 0.35 * (i / this.smoke.length);
+      ctx.globalAlpha = 0.35 * (i / this.smoke.length); // s.life é sempre 1
       ctx.fillStyle = "#e5e7eb";
       ctx.beginPath();
       ctx.arc(s.x, s.y, 3 + (1 - i / this.smoke.length) * 3, 0, Math.PI * 2);
@@ -663,6 +665,8 @@ class HomingMissile {
   }
 }
 
+// Inimigo genérico: tipo define comportamento, HP, velocidade e padrão de tiro.
+// Todos os tipos (cloud, drone, arara, ovni, boss…) são tratados na mesma classe via switch.
 class Enemy {
   constructor(type, x, y) {
     this.type = type;
@@ -750,13 +754,13 @@ class Enemy {
         break;
       }
       case "prototipo_x": {
-        this.vx = -6;
+        this.vx = -5.5;                           // velocidade base menor
         this.hp = this.mhp = 28 + waveNum * 6;
         this.r = 26;
-        this.shootT = Math.max(30, 80 - waveNum * 4);
+        this.shootT = Math.max(28, 85 - waveNum * 3);
         this.phase = 0;
         this.laps = 0;
-        this.dashT = 0;
+        this.dashT = 60;                          // começa com pause antes do 1º dash
         this.dashing = false;
         break;
       }
@@ -895,32 +899,34 @@ class Enemy {
       if (this.dashing) {
         this.x += this.vx;
         if (this.x < -80) {
+          // completou um lap — aceleração suave para o jogador conseguir reagir
           this.x = W + 100;
           this.laps++;
           this.dashing = false;
-          this.dashT = Math.max(60, 140 - this.laps * 12);
-          this.vx = -(6 + this.laps * 1.5);
+          this.dashT = Math.max(80, 170 - this.laps * 10); // pausa entre dashes mais generosa
+          this.vx = -(5.5 + this.laps * 0.7);             // incremento menor: 0.7 por lap (era 1.5)
         }
+        // sonic boom: empurra o jogador ao cruzar próximo
         if (player && Math.abs(this.x - player.x) < 36) {
           player.pullX += (this.x < player.x ? -1 : 1) * 4;
         }
       } else {
-        // hover at right side, weave vertically
+        // paira no lado direito oscilando verticalmente
         const tx = W - 150 - Math.sin(this.phase * 0.4) * 60;
         this.x += (tx - this.x) * 0.04;
-        this.y = H / 2 + Math.sin(this.phase) * (80 + this.laps * 15);
+        this.y = H / 2 + Math.sin(this.phase) * (80 + this.laps * 12);
         this.y = Math.max(36, Math.min(H - 36, this.y));
         if (--this.dashT <= 0) {
           this.dashing = true;
         }
       }
       if (--this.shootT <= 0) {
-        this.shootT = Math.max(16, 55 - this.laps * 6 - waveNum * 2);
+        this.shootT = Math.max(22, 65 - this.laps * 5 - waveNum * 2); // cooldown mais generoso (era 16 min)
         sfxBossIn();
         if (player) {
           const baseAng = Math.atan2(player.y - this.y, player.x - this.x);
-          const spread = 0.22 + this.laps * 0.04;
-          const spd = 4.5 + this.laps * 0.3;
+          const spread = 0.18 + this.laps * 0.025; // spread cresce mais devagar (era 0.04)
+          const spd = 4.0 + this.laps * 0.2;       // velocidade dos orbs cresce mais devagar (era 0.3)
           for (let a = -2; a <= 2; a++)
             nb.push(new EBullet(this.x, this.y, "orb", Math.cos(baseAng + a * spread) * spd, Math.sin(baseAng + a * spread) * spd));
         }
@@ -1392,14 +1398,12 @@ class EBullet {
       ctx.shadowBlur = 12;
       ctx.beginPath(); ctx.arc(0, 0, 9, 0, Math.PI * 2); ctx.fill();
     } else {
-      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 11);
-      g.addColorStop(0, "#ff9999");
-      g.addColorStop(1, "rgba(200,0,0,0)");
-      ctx.fillStyle = g;
+      // orb — cor sólida com sombra, sem gradient por instância
+      ctx.fillStyle = "#ff7777";
       ctx.shadowColor = "#ff4444";
-      ctx.shadowBlur = 14;
+      ctx.shadowBlur = 10;
       ctx.beginPath();
-      ctx.arc(0, 0, 11, 0, Math.PI * 2);
+      ctx.arc(0, 0, 9, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.shadowBlur = 0;
@@ -1452,80 +1456,69 @@ const CTYPES_PW = [
 const CTYPES = [...CTYPES_SCORE, ...CTYPES_PW];
 
 // Tabela de drops por inimigo: { coletável_id: chance 0..1 }
-// Soma das chances não precisa ser 1 — cada entrada é checada independentemente
+// Cada entrada é checada independentemente — chances reduzidas para não poluir a tela.
+// IDs de power-up usam sufixo _pw para não colidir com IDs de pontuação homônimos.
 const DROP_TABLE = {
-  // pw IDs usam sufixo _pw para não colidir com score IDs homônimos
-  cloud:  { shield: 0.12, boost: 0.06, "14bis": 0.005,
-            avibras_pw: 0.02, inpe_sat: 0.02, revap_pw: 0.02, delta_pw: 0.02, ericsson_pw: 0.02,
-            embraer: 0.08, inpe: 0.08, dcta: 0.06, ita: 0.06, avibras: 0.04,
-            tech: 0.06, jj: 0.04, gm: 0.04, ericsson: 0.04, panasonic: 0.03,
-            hitachi: 0.03, nestle: 0.03, bayer: 0.03, parker: 0.03, eaton: 0.03,
-            caoa: 0.02, revap: 0.02, ball: 0.02, lanxess: 0.02, ardagh: 0.02,
-            fccr: 0.04, sesc: 0.04, museu: 0.03, arena: 0.03, parque: 0.03, vicentina: 0.03 },
-  drone:  { shield: 0.18, boost: 0.10, "14bis": 0.008,
-            avibras_pw: 0.04, inpe_sat: 0.04, revap_pw: 0.04, delta_pw: 0.03, ericsson_pw: 0.05,
-            embraer: 0.12, inpe: 0.10, dcta: 0.10, ita: 0.08, avibras: 0.07,
-            tech: 0.08, jj: 0.05, gm: 0.05, ericsson: 0.06, panasonic: 0.04,
-            hitachi: 0.04, nestle: 0.04, bayer: 0.04, parker: 0.04, eaton: 0.04,
-            caoa: 0.03, revap: 0.03, ball: 0.03, lanxess: 0.03, ardagh: 0.03,
-            fccr: 0.05, sesc: 0.05, museu: 0.04, arena: 0.04, parque: 0.04, vicentina: 0.04 },
-  arara:  { shield: 0.10, boost: 0.08, "14bis": 0.006,
-            avibras_pw: 0.02, inpe_sat: 0.03, revap_pw: 0.02, delta_pw: 0.04, ericsson_pw: 0.02,
-            embraer: 0.06, inpe: 0.06, dcta: 0.05, ita: 0.05, avibras: 0.04,
-            tech: 0.05, jj: 0.04, gm: 0.04, ericsson: 0.04, panasonic: 0.03,
-            hitachi: 0.03, nestle: 0.04, bayer: 0.04, parker: 0.03, eaton: 0.03,
-            caoa: 0.03, revap: 0.02, ball: 0.02, lanxess: 0.02, ardagh: 0.02,
-            fccr: 0.05, sesc: 0.05, museu: 0.04, arena: 0.04, parque: 0.05, vicentina: 0.05 },
-  ovni:   { shield: 0.22, boost: 0.15, "14bis": 0.025,
-            avibras_pw: 0.08, inpe_sat: 0.10, revap_pw: 0.08, delta_pw: 0.07, ericsson_pw: 0.06,
-            embraer: 0.15, inpe: 0.18, dcta: 0.15, ita: 0.12, avibras: 0.10,
-            tech: 0.10, jj: 0.06, gm: 0.06, ericsson: 0.08, panasonic: 0.05,
-            hitachi: 0.05, nestle: 0.04, bayer: 0.04, parker: 0.05, eaton: 0.04,
-            caoa: 0.03, revap: 0.04, ball: 0.04, lanxess: 0.04, ardagh: 0.03,
-            fccr: 0.06, sesc: 0.06, museu: 0.05, arena: 0.05, parque: 0.04, vicentina: 0.04 },
-  tanajura: { shield: 0.08, boost: 0.07, "14bis": 0.004,
-            avibras_pw: 0.02, inpe_sat: 0.02, revap_pw: 0.02, delta_pw: 0.03, ericsson_pw: 0.02,
-            embraer: 0.08, inpe: 0.07, dcta: 0.07, ita: 0.06, tech: 0.06, avibras: 0.05,
-            jj: 0.03, gm: 0.03, ericsson: 0.04, panasonic: 0.02 },
-  helicoptero: { shield: 0.20, boost: 0.14, "14bis": 0.018,
-            avibras_pw: 0.07, inpe_sat: 0.07, revap_pw: 0.06, delta_pw: 0.06, ericsson_pw: 0.07,
-            embraer: 0.14, inpe: 0.12, dcta: 0.14, ita: 0.10, avibras: 0.10,
-            tech: 0.09, jj: 0.06, gm: 0.06, ericsson: 0.07, panasonic: 0.05,
-            fccr: 0.06, sesc: 0.05, museu: 0.04, arena: 0.04, parque: 0.04, vicentina: 0.04 },
-  balao:  { shield: 0.16, boost: 0.12, "14bis": 0.012,
-            avibras_pw: 0.05, inpe_sat: 0.08, revap_pw: 0.05, delta_pw: 0.05, ericsson_pw: 0.05,
-            embraer: 0.10, inpe: 0.14, dcta: 0.10, ita: 0.09, avibras: 0.08,
-            tech: 0.08, jj: 0.05, gm: 0.05, ericsson: 0.05, panasonic: 0.04,
-            fccr: 0.05, sesc: 0.05, museu: 0.05, arena: 0.04, parque: 0.05, vicentina: 0.05 },
-  boss:   { shield: 0.90, boost: 0.90, "14bis": 0.60,
-            avibras_pw: 0.70, inpe_sat: 0.70, revap_pw: 0.70, delta_pw: 0.65, ericsson_pw: 0.70,
-            embraer: 0.60, inpe: 0.60, dcta: 0.60, ita: 0.50, avibras: 0.50,
-            tech: 0.50, jj: 0.30, gm: 0.30, ericsson: 0.30, panasonic: 0.20,
-            hitachi: 0.20, nestle: 0.20, bayer: 0.20, parker: 0.20, eaton: 0.20,
-            caoa: 0.20, revap: 0.20, ball: 0.20, lanxess: 0.20, ardagh: 0.20,
-            fccr: 0.30, sesc: 0.30, museu: 0.25, arena: 0.25, parque: 0.25, vicentina: 0.25 },
-  prototipo_x: { shield: 0.85, boost: 0.85, "14bis": 0.55,
-            avibras_pw: 0.65, inpe_sat: 0.65, revap_pw: 0.65, delta_pw: 0.70, ericsson_pw: 0.65,
-            embraer: 0.55, inpe: 0.50, dcta: 0.60, ita: 0.50, avibras: 0.50,
-            tech: 0.45, jj: 0.28, gm: 0.28, ericsson: 0.28, panasonic: 0.18,
-            fccr: 0.28, sesc: 0.28, museu: 0.22, arena: 0.22, parque: 0.22, vicentina: 0.22 },
-  cemaden_eye: { shield: 0.88, boost: 0.88, "14bis": 0.58,
-            avibras_pw: 0.68, inpe_sat: 0.72, revap_pw: 0.68, delta_pw: 0.62, ericsson_pw: 0.68,
-            embraer: 0.55, inpe: 0.65, dcta: 0.55, ita: 0.48, avibras: 0.45,
-            tech: 0.45, jj: 0.28, gm: 0.28, ericsson: 0.28, panasonic: 0.18,
-            fccr: 0.28, sesc: 0.28, museu: 0.22, arena: 0.22, parque: 0.22, vicentina: 0.22 },
-  engrenagem:  { shield: 0.92, boost: 0.92, "14bis": 0.62,
-            avibras_pw: 0.72, inpe_sat: 0.68, revap_pw: 0.72, delta_pw: 0.66, ericsson_pw: 0.72,
-            embraer: 0.58, inpe: 0.55, dcta: 0.62, ita: 0.52, avibras: 0.52,
-            tech: 0.48, jj: 0.30, gm: 0.30, ericsson: 0.30, panasonic: 0.20,
-            fccr: 0.30, sesc: 0.30, museu: 0.24, arena: 0.24, parque: 0.24, vicentina: 0.24 },
-  cigarra:     { shield: 1.00, boost: 1.00, "14bis": 0.80,
-            avibras_pw: 0.85, inpe_sat: 0.85, revap_pw: 0.85, delta_pw: 0.80, ericsson_pw: 0.85,
-            embraer: 0.70, inpe: 0.70, dcta: 0.70, ita: 0.60, avibras: 0.60,
-            tech: 0.60, jj: 0.40, gm: 0.40, ericsson: 0.40, panasonic: 0.30,
-            hitachi: 0.30, nestle: 0.30, bayer: 0.30, parker: 0.30, eaton: 0.30,
-            caoa: 0.30, revap: 0.30, ball: 0.30, lanxess: 0.30, ardagh: 0.30,
-            fccr: 0.40, sesc: 0.40, museu: 0.35, arena: 0.35, parque: 0.35, vicentina: 0.35 },
+  cloud:  { shield: 0.06, boost: 0.03, "14bis": 0.003,
+            avibras_pw: 0.01, inpe_sat: 0.01, revap_pw: 0.01, delta_pw: 0.01, ericsson_pw: 0.01,
+            embraer: 0.04, inpe: 0.04, dcta: 0.03, ita: 0.03,
+            tech: 0.03, fccr: 0.02, sesc: 0.02, parque: 0.02 },
+
+  drone:  { shield: 0.09, boost: 0.05, "14bis": 0.004,
+            avibras_pw: 0.02, inpe_sat: 0.02, revap_pw: 0.02, delta_pw: 0.015, ericsson_pw: 0.02,
+            embraer: 0.06, inpe: 0.05, dcta: 0.05, ita: 0.04,
+            tech: 0.04, jj: 0.02, gm: 0.02, ericsson: 0.03 },
+
+  arara:  { shield: 0.05, boost: 0.04, "14bis": 0.003,
+            avibras_pw: 0.01, inpe_sat: 0.015, revap_pw: 0.01, delta_pw: 0.02, ericsson_pw: 0.01,
+            embraer: 0.03, inpe: 0.03, dcta: 0.02, ita: 0.02,
+            tech: 0.02, parque: 0.03, vicentina: 0.03 },
+
+  ovni:   { shield: 0.11, boost: 0.07, "14bis": 0.012,
+            avibras_pw: 0.04, inpe_sat: 0.05, revap_pw: 0.04, delta_pw: 0.035, ericsson_pw: 0.03,
+            embraer: 0.07, inpe: 0.09, dcta: 0.07, ita: 0.06,
+            tech: 0.05, ericsson: 0.04, fccr: 0.03, sesc: 0.03 },
+
+  tanajura: { shield: 0.04, boost: 0.03, "14bis": 0.002,
+            embraer: 0.04, inpe: 0.03, dcta: 0.03, tech: 0.03 },
+
+  helicoptero: { shield: 0.10, boost: 0.07, "14bis": 0.009,
+            avibras_pw: 0.035, inpe_sat: 0.035, revap_pw: 0.03, delta_pw: 0.03, ericsson_pw: 0.035,
+            embraer: 0.07, inpe: 0.06, dcta: 0.07, ita: 0.05,
+            tech: 0.04, ericsson: 0.04, fccr: 0.03, parque: 0.02 },
+
+  balao:  { shield: 0.08, boost: 0.06, "14bis": 0.006,
+            avibras_pw: 0.025, inpe_sat: 0.04, revap_pw: 0.025, delta_pw: 0.025, ericsson_pw: 0.025,
+            embraer: 0.05, inpe: 0.07, dcta: 0.05, ita: 0.04,
+            tech: 0.04, sesc: 0.03, parque: 0.03, vicentina: 0.03 },
+
+  // bosses garantem drops generosos para recompensar a dificuldade
+  boss:   { shield: 0.85, boost: 0.85, "14bis": 0.55,
+            avibras_pw: 0.65, inpe_sat: 0.65, revap_pw: 0.65, delta_pw: 0.60, ericsson_pw: 0.65,
+            embraer: 0.55, inpe: 0.55, dcta: 0.55, ita: 0.45,
+            tech: 0.45, jj: 0.25, gm: 0.25, ericsson: 0.25,
+            fccr: 0.28, sesc: 0.28, parque: 0.22, vicentina: 0.22 },
+
+  prototipo_x: { shield: 0.80, boost: 0.80, "14bis": 0.50,
+            avibras_pw: 0.60, inpe_sat: 0.60, revap_pw: 0.60, delta_pw: 0.65, ericsson_pw: 0.60,
+            embraer: 0.50, inpe: 0.46, dcta: 0.55, ita: 0.46,
+            tech: 0.40, dcta: 0.50, fccr: 0.25, parque: 0.20 },
+
+  cemaden_eye: { shield: 0.82, boost: 0.82, "14bis": 0.52,
+            avibras_pw: 0.62, inpe_sat: 0.66, revap_pw: 0.62, delta_pw: 0.57, ericsson_pw: 0.62,
+            embraer: 0.50, inpe: 0.60, dcta: 0.50, ita: 0.44,
+            tech: 0.40, ericsson: 0.24, fccr: 0.25, parque: 0.20 },
+
+  engrenagem:  { shield: 0.86, boost: 0.86, "14bis": 0.56,
+            avibras_pw: 0.66, inpe_sat: 0.62, revap_pw: 0.66, delta_pw: 0.60, ericsson_pw: 0.66,
+            embraer: 0.52, inpe: 0.50, dcta: 0.56, ita: 0.47,
+            tech: 0.42, gm: 0.26, ericsson: 0.26, fccr: 0.27, parque: 0.22 },
+
+  cigarra:     { shield: 0.95, boost: 0.95, "14bis": 0.75,
+            avibras_pw: 0.80, inpe_sat: 0.80, revap_pw: 0.80, delta_pw: 0.75, ericsson_pw: 0.80,
+            embraer: 0.65, inpe: 0.65, dcta: 0.65, ita: 0.55,
+            tech: 0.55, jj: 0.35, gm: 0.35, ericsson: 0.35,
+            fccr: 0.38, sesc: 0.38, parque: 0.32, vicentina: 0.32 },
 };
 
 class Collectible {
@@ -1583,9 +1576,15 @@ class Collectible {
   }
 }
 
+// Dropa coletáveis ao matar um inimigo, limitando a quantidade por kill.
+// Inimigos comuns: máx 2 drops. Bosses: máx 6 drops.
 function dropCollectibles(x, y, enemyType) {
   const table = DROP_TABLE[enemyType] ?? DROP_TABLE.cloud;
+  // BOSS_TYPES é definido em game.js mas está em escopo global
+  const maxDrops = (typeof BOSS_TYPES !== "undefined" && BOSS_TYPES.includes(enemyType)) ? 6 : 2;
+  let dropped = 0;
   CTYPES.forEach(ct => {
+    if (dropped >= maxDrops) return;
     const base = table[ct.id] ?? 0;
     if (base === 0) return;
     const boost = ct.id === "14bis" ? 1 + Math.max(0, combo - 5) * 0.9 : 1;
@@ -1593,6 +1592,7 @@ function dropCollectibles(x, y, enemyType) {
       const c = new Collectible(x, y);
       c.type = ct;
       collectibles.push(c);
+      dropped++;
     }
   });
 }
