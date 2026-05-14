@@ -103,7 +103,7 @@ function startGame() {
   playlistIdx = 6;
   off1 = 0; off2 = 0; off3 = 0; offSky = 0;
   radioText = ""; radioT = 0; radioQueue = [];
-  windX = 0; windTimer = 1800; lightningT = 0;
+  windX = 0; windTimer = 1800;
   grazeCount = 0; cbersMission = null; cbersMissionT = 3800;
   gState = ST.PLAY;
   startMusic();
@@ -145,13 +145,7 @@ function update() {
   }
   if (player) player.vx += windX * 0.1;
 
-  // lightning at night
   const isNight = dayPhase < 0.26 || dayPhase > 0.84;
-  if (isNight && lightningT <= 0 && Math.random() < 0.0006) {
-    lightningT = 3;
-    shakeAmt += 4;
-  }
-  if (lightningT > 0) lightningT--;
 
   scrollSpd = 2 + frame / 2200;
   off1 = (off1 + scrollSpd * 0.18) % (MT1.length * (W / MT1.length));

@@ -302,7 +302,7 @@ function drawBg() {
   drawMtRange(MT1, off1, m1, 0.72);
   drawMtRange(MT2, off2, m2, 0.88);
   drawMtRange(MT3, off3, m3, 1);
-  drawParqueDaCidade(offSky * 0.62);
+  // drawParqueDaCidade(offSky * 0.62);
   drawSkyline(offSky);
   drawAnelViario(offSky);
   const gd = ctx.createLinearGradient(0, H - 58, 0, H);
@@ -313,10 +313,6 @@ function drawBg() {
   ctx.fillStyle = "rgba(255,210,90,.09)";
   for (let x = -(offSky % 55); x < W + 55; x += 55)
     ctx.fillRect(x, H - 30, 28, 4);
-  if (lightningT > 0) {
-    ctx.fillStyle = `rgba(220,230,255,${lightningT * 0.25})`;
-    ctx.fillRect(0, 0, W, H);
-  }
 }
 
 function drawHUD() {

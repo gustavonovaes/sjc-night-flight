@@ -190,7 +190,6 @@ let radioT = 0;
 let radioQueue = [];
 let windX = 0;
 let windTimer = 1800;
-let lightningT = 0;
 let grazeCount = 0;
 let cbersMission = null;
 let cbersMissionT = 3800;
