@@ -300,14 +300,16 @@ O código é dividido em 6 módulos carregados via `<script defer>` em ordem de 
 
 ### Módulos
 
-| Arquivo            | Responsabilidade                                                              |
-|--------------------|-------------------------------------------------------------------------------|
-| `js/world.js`      | Canvas setup, RNGs, interpolação de céu, estrelas, montanhas, prédios, carros |
-| `js/audio.js`      | Web Audio API: SFX, playlists, loop de música, troca por fase                 |
-| `js/entities.js`   | Constantes de duração, helpers (`circ`, `explode`…), classes de entidades     |
-| `js/renderer.js`   | Scroll offsets, funções de desenho de fundo e UI (HUD, menus, overlays)       |
-| `js/dev.js`        | Estado de jogo, globals, painel DEV e funções de debug                        |
-| `js/game.js`       | Waves, `startGame`, `update`, `render`, event listeners, loop principal       |
+| Arquivo               | Responsabilidade                                                              |
+|-----------------------|-------------------------------------------------------------------------------|
+| `js/world.js`         | Canvas setup, RNGs, interpolação de céu, estrelas, montanhas, prédios, carros |
+| `js/audio.js`         | Web Audio API: SFX, playlists, loop de música, troca por fase                 |
+| `js/entities.js`      | Constantes de duração, helpers (`circ`, `explode`…), classes de entidades     |
+| `js/renderer.js`      | Scroll offsets, funções de desenho de fundo e UI (HUD, menus, overlays)       |
+| `js/dev.js`           | Estado de jogo, globals, painel DEV e funções de debug                        |
+| `js/multiplayer.js`   | Cliente WebSocket, lobby, `RemotePlayer`, mecânicas co-op, `drawLobby()`      |
+| `js/game.js`          | Waves, `startGame`, `update`, `render`, event listeners, loop principal       |
+| `server.js`           | Servidor Bun: HTTP estático + WebSocket + game loop autoritativo 30 ticks/s   |
 
 **Ordem de carregamento em `index.html`:**
 ```html
@@ -316,6 +318,7 @@ O código é dividido em 6 módulos carregados via `<script defer>` em ordem de 
 <script src="js/entities.js" defer></script>
 <script src="js/renderer.js" defer></script>
 <script src="js/dev.js" defer></script>
+<script src="js/multiplayer.js" defer></script>
 <script src="js/game.js" defer></script>
 ```
 
@@ -330,20 +333,132 @@ Todos os arquivos usam `"use strict"` e compartilham escopo global — sem ES mo
 | `EBullet`     | Projétil inimigo (bolt / beam / orb)                  |
 | `Collectible` | Token coletável animado com tipo aleatório de `CTYPES`|
 
+### Classes
+| Classe          | Responsabilidade                                               |
+|-----------------|----------------------------------------------------------------|
+| `RemotePlayer`  | Estado + interpolação de jogador remoto no modo multiplayer    |
+
 ### Estados de jogo (`ST`)
-| Estado  | Valor | Descrição                          |
-|---------|-------|------------------------------------|
-| `MENU`  | 0     | Tela inicial                       |
-| `PLAY`  | 1     | Jogo em andamento                  |
-| `PAUSE` | 2     | Pausado (P ou ESC)                 |
-| `OVER`  | 3     | Game over                          |
-| `SOBRE` | 4     | Tela "Sobre o jogo" (tecla `I`)    |
+| Estado   | Valor | Descrição                              |
+|----------|-------|----------------------------------------|
+| `MENU`   | 0     | Tela inicial                           |
+| `PLAY`   | 1     | Jogo em andamento (solo)               |
+| `PAUSE`  | 2     | Pausado (P ou ESC)                     |
+| `OVER`   | 3     | Game over                              |
+| `SOBRE`  | 4     | Tela "Sobre o jogo" (tecla `I`)        |
+| `LOBBY`  | 5     | Lobby multiplayer (aguardando jogadores)|
+| `MULTI`  | 6     | Jogo multiplayer em andamento          |
 
 ### Loop principal
 ```
 requestAnimationFrame → loop() → update() + render()
 ```
 `update()` avança física, spawns e colisões; `render()` desenha tudo na ordem correta de camadas.
+
+---
+
+## Modo Multiplayer
+
+### Arquitetura de rede
+
+**Modelo:** servidor autoritativo + predição client-side.
+
+| Responsabilidade                  | Onde fica    |
+|-----------------------------------|--------------|
+| Spawn de inimigos e coletáveis    | Servidor     |
+| HP dos inimigos                   | Servidor     |
+| Progressão de ondas e boss spawn  | Servidor     |
+| Mecânicas co-op (formação, SOS…)  | Servidor     |
+| Movimento do jogador local        | Cliente (60fps, predição) |
+| Interpolação de jogadores remotos | Cliente      |
+| Renderização, áudio, partículas   | Cliente      |
+
+O servidor roda a **30 ticks/s** via `setInterval`. Clientes rodam a 60fps e enviam posição a cada 3 frames. Jogadores remotos são interpolados com delay de 100ms usando buffer circular de snapshots.
+
+### Protocolo WebSocket (JSON)
+
+**Cliente → Servidor:**
+
+| Mensagem | Campos | Descrição |
+|---|---|---|
+| `join` | `lobbyId?` | Cria ou entra em lobby |
+| `ship` | `planeId` | Seleciona avião no lobby |
+| `ready` | — | Alterna estado pronto (toggle) |
+| `start` | — | Inicia partida (somente host) |
+| `pos` | `x,y,vx,vy,tilt,shield,buffs` | Posição do jogador (a cada 3 frames) |
+| `hit` | `enemyId, dmg` | Acertou inimigo |
+| `collect` | `collectibleId` | Coletou item (ou balão SOS) |
+| `dead` | — | Jogador morreu |
+| `shield_relay_used` | `partnerId` | Escudo do parceiro absorveu hit |
+
+**Servidor → Cliente:**
+
+| Mensagem | Campos | Descrição |
+|---|---|---|
+| `joined` | `playerId,lobbyId,isHost,shareUrl,players[]` | Confirmação de entrada no lobby |
+| `player_join/leave/ship/ready` | `id,...` | Mudanças de estado de outros jogadores |
+| `new_host` | `id` | Transferência de host |
+| `start` | — | Partida iniciando |
+| `player_update` | `id,x,y,vx,vy,tilt,lives,dead,buffs` | Posição de jogador remoto |
+| `enemy_spawn` | `id,etype,x,y,hp,isBoss?` | Servidor spawnou inimigo |
+| `enemy_hp` | `id,hp` | HP atualizado (hit validado) |
+| `enemy_die` | `id,pts,killedBy,x,y` | Inimigo morreu; pontos para quem matou |
+| `collect_spawn` | `id,ctype,x,y` | Novo coletável |
+| `collect_take/expire` | `id,playerId?,ctype?` | Coletável removido |
+| `player_dead` | `id` | Jogador morreu |
+| `player_revive` | `id,x,y,revivedBy` | Jogador revivido |
+| `sos_spawn` | `id,x,y,deadId` | Balão SOS apareceu |
+| `sos_take/expire` | `id` | Balão SOS removido |
+| `wave` | `num` | Nova onda (boss morreu) |
+| `boss_target` | `bossId,targetId` | Boss mudou de alvo |
+| `formation` | `playerIds[],active` | Bônus de formação ativado/desativado |
+| `shield_relay` | `shielderId,protectedId` | Escudo absorveu hit de parceiro |
+| `game_over` | — | Todos os jogadores mortos |
+
+### Mecânicas co-op
+
+#### 1. Balão SOS (revive)
+- Servidor recebe `dead` → spawna coletável especial `SOS` na última posição do morto
+- Qualquer parceiro que se aproxime a < 36px envia `collect {collectibleId: sosId}`
+- Servidor processa: morto revive com `lives=1` na posição do revivedor; broadcast `player_revive`
+- Balão expira em **1500 ticks** (~50s a 30 tps) sem ser coletado
+
+#### 2. Bônus de Formação
+- Servidor verifica a cada 10 ticks: para cada par de jogadores vivos, calcula distância euclidiana
+- Se distância < 80px: `formationPairs[key] += 10`. Ao atingir 180 frames → broadcast `formation active`
+- Se distância > 120px: `formationPairs[key] -= 5`. Ao cair abaixo de 180 → broadcast `formation inactive`
+- Cliente aplica multiplicador `×1.3` visualmente no HUD; pontuação por kill já é calculada com bônus
+
+#### 3. Escudo Compartilhado
+- Detecção **client-side**: antes de `tryHit()`, verifica `mp.players` por parceiro com `buffs.shield=true` a < 100px
+- Se encontrado: cancela o hit, envia `shield_relay_used {partnerId}` ao servidor
+- Servidor transmite `shield_relay {shielderId, protectedId}` para todos
+- Parceiro (shielderId) recebe a mensagem e decrementa `player.shield -= SHIELD_DUR` localmente
+- Local player recebe indicador visual verde ("relay absorvido")
+
+#### 4. Boss Split Focus
+- Servidor: a cada 120 ticks, para cada boss vivo em `lobby.enemies`, seleciona um jogador vivo diferente do alvo anterior
+- Broadcast `boss_target {bossId, targetId}` para todos
+- No cliente: se `targetId === mp.playerId`, ativa `mp.bossTargetId`; halo vermelho pulsante é desenhado em torno do jogador local na função `mpDrawBossTarget()`
+- Chefes direcionados (beam da Cigarra, orbs do Monstro) miram o jogador alvo pois a física é simulada localmente com posições de servidor
+
+### Lobby (`ST.LOBBY`)
+
+`drawLobby()` em `js/multiplayer.js` (acessível no escopo global):
+- Fundo idêntico ao menu (gradient + estrelas animadas)
+- ID do lobby em destaque + URL de compartilhamento
+- Lista de jogadores com cor individual (`MP_COLORS[]`), nave e status pronto
+- Seletor de nave (mesma lógica do menu solo)
+- Botão **INICIAR PARTIDA** (host) ou **MARCAR PRONTO** (outros)
+- URL `?lobby=ID` → auto-join via `mpAutoJoin()` no carregamento
+
+### Considerações de sincronização
+
+**Inimigos:** Cliente cria instâncias `Enemy(type, x, y)` ao receber `enemy_spawn`. A física de inimigos é simulada localmente (determinística dado o mesmo ponto inicial), mas apenas o HP é autoritativo. Colisões com o jogador local são processadas localmente; colisões com jogadores remotos são ignoradas no cliente (evita double-kill).
+
+**Coletáveis:** Mesmo padrão — criados localmente a partir de `collect_spawn`, removidos ao receber `collect_take` ou `collect_expire`. O tipo é determinado pelo servidor e sobrepõe o random local.
+
+**Morte e respawn:** Ao morrer (`lives <= 0`), cliente envia `dead` e ativa `mp.localDead = true`. O player ainda é desenhado (semi-transparente) para outros verem. `endGame()` só é chamado quando servidor confirma `game_over` (todos os jogadores mortos).
 
 ---
 

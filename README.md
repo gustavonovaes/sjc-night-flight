@@ -2,7 +2,7 @@
 
 Shooter side-scrolling arcade ambientado em São José dos Campos (SJC), inspirado na famosa _Noite dos Discos Voadores_ de 19 de maio de 1986, quando a Força Aérea Brasileira interceptou 21 OVNIs sobre o Vale do Paraíba.
 
-Pilote um avião Embraer defendendo o Vale contra frentes frias, drones, araras, OVNIs e chefes cada vez mais poderosos.
+Pilote um avião Embraer defendendo o Vale contra frentes frias, drones, araras, OVNIs e chefes cada vez mais poderosos. Modo multiplayer co-op para até 4 jogadores com lobby compartilhável por link.
 
 **[Jogar online →](https://gustavonovaes.github.io/sjc-night-flight/)**
 
@@ -17,11 +17,21 @@ Pilote um avião Embraer defendendo o Vale contra frentes frias, drones, araras,
 | Setas / WASD        | Mover                    |
 | Espaço / Enter      | Iniciar jogo             |
 | P / Escape          | Pausar / Despausar       |
+| M (no menu)         | Abrir lobby multiplayer  |
 | M (na pausa)        | Voltar ao menu principal |
 | ← → ou A D (menu)   | Trocar avião             |
 | ↑ ↓ ou W S (menu)   | Trocar dificuldade       |
 | I (no menu)         | Tela Sobre               |
 | Segurar Escape (4s) | Abrir painel DEV         |
+
+### Lobby Multiplayer
+
+| Tecla         | Ação                              |
+| ------------- | --------------------------------- |
+| ← → ou A D    | Trocar avião                      |
+| Enter         | Copiar link do lobby              |
+| Enter (host)  | Iniciar partida                   |
+| Escape        | Sair do lobby                     |
 
 ### Touch / Mobile
 
@@ -139,17 +149,19 @@ A pontuação acumulada soma todas as partidas e é salva no `localStorage`.
 
 ```
 /
-├── index.html          — Shell HTML, CSS, fullscreen API
+├── index.html            — Shell HTML, CSS, fullscreen API
+├── server.js             — Servidor Bun (HTTP estático + WebSocket multiplayer)
 ├── README.md
 ├── js/
-│   ├── world.js        — Canvas, sistema de céu, dados do mundo
-│   ├── audio.js        — SFX Web Audio + música procedural
-│   ├── entities.js     — Entidades do jogo (Player, Enemy, Bullet…) + definições de avião
-│   ├── renderer.js     — Funções de desenho de fundo e UI
-│   ├── dev.js          — Globais de estado + painel DEV
-│   └── game.js         — Sistema de ondas, loop update/render, eventos
+│   ├── world.js          — Canvas, sistema de céu, dados do mundo
+│   ├── audio.js          — SFX Web Audio + música procedural
+│   ├── entities.js       — Entidades do jogo (Player, Enemy, Bullet…) + definições de avião
+│   ├── renderer.js       — Funções de desenho de fundo e UI
+│   ├── dev.js            — Globais de estado + painel DEV
+│   ├── multiplayer.js    — Cliente WebSocket, lobby, RemotePlayer, mecânicas co-op
+│   └── game.js           — Sistema de ondas, loop update/render, eventos
 └── docs/
-    └── design.md       — Documento de design completo
+    └── design.md         — Documento de design completo
 ```
 
 Sem bundler. Sem framework. JS vanilla puro carregado via `<script defer>` em ordem de dependência.
@@ -158,7 +170,39 @@ Para detalhes técnicos completos — arquitetura, sistemas de jogo, entidades, 
 
 ---
 
-## Rodando Localmente
+## Modo Multiplayer
+
+Até 4 jogadores co-op aventura num mesmo lobby.
+
+**Como jogar:**
+1. No menu, clique em **MULTIJOGADOR** ou pressione **M**
+2. Um lobby com ID único é criado automaticamente
+3. Copie o link e envie para seus parceiros
+4. Selecione sua nave e aguarde — quem criou o lobby clica em **INICIAR PARTIDA**
+
+**Mecânicas co-op exclusivas:**
+
+| Mecânica | Descrição |
+|---|---|
+| 🆘 Balão SOS | Ao morrer, um balão vermelho cai na sua posição. Parceiro coleta → você revive com 1 HP. Expira em 25s. |
+| ◈ Bônus de Formação | Voe junto (< 80px) por 3s → +30% pontos para a dupla. HUD mostra indicador ativo. |
+| 🛡️ Escudo Compartilhado | Parceiro com escudo próximo (< 100px) absorve o hit antes de você perder vida. |
+| ⚠️ Boss Split Focus | Chefes alternam o alvo entre jogadores. Quem está na mira recebe halo vermelho pulsante. |
+
+**Rodando o servidor (requer [Bun](https://bun.sh)):**
+
+```bash
+bun server.js
+# Abre http://localhost:3000
+```
+
+Variáveis de ambiente opcionais:
+- `PORT` — porta do servidor (padrão: 3000)
+- `HOST` — host usado nos links de compartilhamento (padrão: `localhost:PORT`)
+
+---
+
+## Rodando Localmente (solo)
 
 Qualquer servidor de arquivos estáticos funciona:
 
@@ -172,6 +216,8 @@ Ou com Node:
 ```bash
 npx serve .
 ```
+
+> Para multiplayer é necessário o servidor Bun acima.
 
 ---
 
@@ -191,6 +237,37 @@ E em 19 de maio de 1986 — a noite em que 21 OVNIs foram interceptados sobre o 
 ---
 
 ## Changelog
+
+### v0.0.5 — Modo Multiplayer Co-op
+
+**Servidor**
+- `server.js`: servidor Bun que serve os arquivos estáticos E gerencia lobbies via WebSocket na mesma porta
+- Modelo autoritativo: servidor controla spawn de inimigos, HP, coletáveis, progressão de ondas e mecânicas co-op
+- Game loop do servidor a 30 ticks/s; clientes rodam a 60fps com predição local e reconciliação
+- Lobbies com ID único de 6 caracteres — compartilháveis via link `/?lobby=ID`; até 4 jogadores
+- Auto-transferência de host ao desconectar
+
+**Modo Multiplayer (cliente)**
+- Novo estado `ST.LOBBY` (tela de seleção/espera) e `ST.MULTI` (jogo em andamento)
+- `RemotePlayer`: renderização de outros jogadores com interpolação de posição (buffer de 100ms para suavidade)
+- Inimigos e coletáveis vêm do servidor — spawn local desativado em `ST.MULTI`
+- Hit de inimigo reportado ao servidor; morte de inimigo confirmada pelo servidor e propagada a todos
+- Morte local entra em modo fantasma; `endGame()` só chamado quando servidor confirma `game_over` (todos mortos)
+
+**Mecânicas co-op**
+- 🆘 **Balão SOS**: servidor spawna ao receber `dead`; qualquer parceiro coleta → `player_revive` com 1 HP + 120f de invencibilidade na posição do revivedor; expira em 25s
+- ◈ **Bônus de Formação**: servidor verifica distância entre pares a cada 10 ticks; < 80px por 3s → broadcast `formation active`; HUD mostra `◈ FORMAÇÃO ×1.3`; quebra ao ultrapassar 120px
+- 🛡️ **Escudo Compartilhado**: cliente detecta parceiro com shield a < 100px antes do `tryHit()`; cancela hit, envia `shield_relay_used`; servidor retransmite para decrementar shield do parceiro
+- ⚠️ **Boss Split Focus**: servidor alterna alvo de cada boss a cada 120 ticks entre jogadores vivos; jogador alvo recebe halo vermelho pulsante com marcadores de mira
+
+**Interface**
+- Botão `🌐 MULTIJOGADOR` pulsante no menu principal (abaixo do seletor de dificuldade)
+- Tela de lobby: lista de jogadores com cor individual, seleção de nave, link de compartilhamento, botões INICIAR/PRONTO
+- HUD de multiplayer: indicador de formação, overlay "ABATIDO" com contagem regressiva do balão SOS
+- Teclado: `M` no menu abre lobby; `←→` selecionam nave no lobby; `Enter` copia link
+- URL `?lobby=ID` carrega e conecta automaticamente ao lobby
+
+---
 
 ### v0.0.4 — Visuais, Física e Estatísticas
 

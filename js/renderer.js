@@ -633,6 +633,22 @@ function drawMenu() {
   ctx.fillStyle = hs > 0 ? "#fbbf24" : "#334155";
   ctx.font = "8px Courier New";
   ctx.fillText(hs > 0 ? `RECORDE: ${hs}` : "Sem recorde ainda", W / 2, dsy + 40);
+
+  // Multiplayer button
+  const mby = dsy + 48;
+  const mbPulse = Math.abs(Math.sin(frame * 0.04));
+  ctx.fillStyle = `rgba(30,10,50,0.9)`;
+  ctx.strokeStyle = `rgba(244,114,182,${0.5 + mbPulse * 0.5})`;
+  ctx.lineWidth = 1.5;
+  if (ctx.roundRect) ctx.roundRect(psx, mby, 236, 22, 4);
+  else ctx.rect(psx, mby, 236, 22);
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle = `rgb(${200 + (mbPulse * 44 | 0)},${114 - (mbPulse * 30 | 0)},182)`;
+  ctx.shadowColor = "#f472b6"; ctx.shadowBlur = mbPulse * 10;
+  ctx.font = "bold 10px Courier New";
+  ctx.fillText("🌐  MULTIJOGADOR", W / 2, mby + 14);
+  ctx.shadowBlur = 0;
+
   ctx.textAlign = "left";
   // alerta de falha de áudio
   if (typeof audioFailed !== "undefined" && audioFailed) {

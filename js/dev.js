@@ -1,6 +1,6 @@
 "use strict";
 
-const ST = Object.freeze({ MENU: 0, PLAY: 1, PAUSE: 2, OVER: 3, SOBRE: 4 });
+const ST = Object.freeze({ MENU: 0, PLAY: 1, PAUSE: 2, OVER: 3, SOBRE: 4, LOBBY: 5, MULTI: 6 });
 let gState = ST.MENU;
 const DEV_BTN = { x: W - 50, y: H - 24, w: 46, h: 20 };
 

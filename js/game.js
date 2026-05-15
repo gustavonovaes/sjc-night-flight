@@ -135,7 +135,8 @@ function update() {
   if (!activeScene || activeScene.phase < 0) {
     dayPhase = (dayPhase + 0.000034 * dev.daySpeed) % 1;
   }
-  if (gState !== ST.PLAY) return;
+  if (gState !== ST.PLAY && gState !== ST.MULTI) return;
+  if (gState === ST.MULTI) mpUpdate();
 
   // radio queue
   if (radioT > 0) radioT--;
@@ -230,27 +231,24 @@ function update() {
   });
   floaters = floaters.filter((f) => f.life > 0);
 
-  if (--spawnT <= 0) {
-    spawnEnemy();
-    const baseSpawnT = diffCfg.spawnBase - waveNum * diffCfg.spawnWaveMult - frame / diffCfg.spawnTimeMult;
-    // DDA só em Aventura: ±20% conforme stress. Radical mantém curva determinística.
-    const ddaAdjust = diffCfg.id === "aventura" ? 1 + (ddaStress - 0.5) * 0.40 : 1;
-    spawnT = Math.max(diffCfg.spawnMin, baseSpawnT * ddaAdjust);
+  if (gState !== ST.MULTI) {
+    if (--spawnT <= 0) {
+      spawnEnemy();
+      const baseSpawnT = diffCfg.spawnBase - waveNum * diffCfg.spawnWaveMult - frame / diffCfg.spawnTimeMult;
+      const ddaAdjust = diffCfg.id === "aventura" ? 1 + (ddaStress - 0.5) * 0.40 : 1;
+      spawnT = Math.max(diffCfg.spawnMin, baseSpawnT * ddaAdjust);
+    }
+    if (--collectT <= 0) {
+      collectT = 220 + Math.floor(Math.random() * 160);
+      collectibles.push(new Collectible(W + 22, 48 + Math.random() * (H - 96)));
+    }
+    if (!bossAlive && frame > 0 && frame % diffCfg.bossInterval === 0) spawnBoss();
+    if (!bossAlive && --ovniEventT <= 0) {
+      ovniEventT = 2600 + Math.floor(Math.random() * 1800);
+      spawnOvniEvent();
+    }
   }
-  // spawn periódico de coletáveis — intervalo aumentado para reduzir quantidade na tela
-  if (--collectT <= 0) {
-    collectT = 220 + Math.floor(Math.random() * 160);
-    collectibles.push(new Collectible(W + 22, 48 + Math.random() * (H - 96)));
-  }
-  // boss spawna a cada ~47s (2800 frames) — intervalo aumentado para o jogador respirar
-  if (!bossAlive && frame > 0 && frame % diffCfg.bossInterval === 0) {
-    spawnBoss();
-  }
-  if (!bossAlive && --ovniEventT <= 0) {
-    ovniEventT = 2600 + Math.floor(Math.random() * 1800);
-    spawnOvniEvent();
-  }
-  if (hordeQueue.length > 0 && --hordeSpawnT <= 0) {
+  if (gState !== ST.MULTI && hordeQueue.length > 0 && --hordeSpawnT <= 0) {
     const h = hordeQueue.shift();
     const hy = 55 + Math.random() * (H - 110);
     enemies.push(new Enemy(h.type, W + 42 + Math.random() * 60, hy));
@@ -289,24 +287,28 @@ function update() {
       if (b.dead || e.dead) return;
       if (circ({ x: b.x, y: b.y, r: b.r }, e.hb())) {
         b.dead = true;
-        const dmg = player && player.boost > 0 && player.shield > 0 ? 2 : 1;
-        const pts = e.hit(dmg);
-        if (pts > 0) {
-          score += pts * combo;
-          floatText(
-            `+${pts * combo}${combo > 1 ? " ×" + combo : ""}`,
-            e.x,
-            e.y,
-            "#60a5fa",
-          );
-          combo = Math.min(combo + 1, diffCfg.comboMax);
-          comboT = 130;
-          playerStats.kills++;
-          if (combo >= 3) playerStats.comboKills++;
-          if (combo > playerStats.maxCombo) playerStats.maxCombo = combo;
-          if (BOSS_TYPES.includes(e.type)) { shakeAmt += 9; playerStats.bossKills++; }
-          if (BOSS_TYPES.includes(e.type)) bossAlive = false;
-          dropCollectibles(e.x, e.y, e.type);
+        if (gState === ST.MULTI && e.mpId) {
+          const dmg = player && player.boost > 0 && player.shield > 0 ? 2 : 1;
+          mpSend({ type: "hit", enemyId: e.mpId, dmg });
+          spark(e.x, e.y);
+        } else {
+          const dmg = player && player.boost > 0 && player.shield > 0 ? 2 : 1;
+          const pts = e.hit(dmg);
+          if (pts > 0) {
+            score += pts * combo;
+            floatText(
+              `+${pts * combo}${combo > 1 ? " ×" + combo : ""}`,
+              e.x, e.y, "#60a5fa",
+            );
+            combo = Math.min(combo + 1, diffCfg.comboMax);
+            comboT = 130;
+            playerStats.kills++;
+            if (combo >= 3) playerStats.comboKills++;
+            if (combo > playerStats.maxCombo) playerStats.maxCombo = combo;
+            if (BOSS_TYPES.includes(e.type)) { shakeAmt += 9; playerStats.bossKills++; }
+            if (BOSS_TYPES.includes(e.type)) bossAlive = false;
+            dropCollectibles(e.x, e.y, e.type);
+          }
         }
       }
     });
@@ -348,6 +350,15 @@ function update() {
     }
     if (circ(b.hb(), { x: player.x, y: player.y, r: 13 })) {
       b.dead = true;
+      // Shield relay: check if a nearby partner can absorb the hit
+      if (gState === ST.MULTI && player.inv <= 0 && player.bis <= 0 && player.shield <= 0) {
+        const relayPartnerId = mpCheckShieldRelay();
+        if (relayPartnerId) {
+          mpSend({ type: "shield_relay_used", partnerId: relayPartnerId });
+          shakeAmt += 4;
+          return; // skip tryHit, continue to next bullet
+        }
+      }
       const h = player.tryHit();
       if (h) {
         playerStats.hits++;
@@ -356,10 +367,11 @@ function update() {
         if (player.lives === 1) playerStats.nearDeathHits++;
         ddaStress = Math.min(1, ddaStress + 0.20);
         shakeAmt += 10;
-        combo = 1;
-        comboT = 0;
-        if (player.lives <= 0) endGame();
-        else if (player.lives === 1) radioSay(RADIO_MSGS.hit_low);
+        combo = 1; comboT = 0;
+        if (player.lives <= 0) {
+          if (gState === ST.MULTI) { mpSend({ type: "dead" }); mp.localDead = true; }
+          else endGame();
+        } else if (player.lives === 1) radioSay(RADIO_MSGS.hit_low);
       }
     }
   });
@@ -377,7 +389,10 @@ function update() {
           e.dead = true;
           if (BOSS_TYPES.includes(e.type)) bossAlive = false;
         }
-        if (player.lives <= 0) endGame();
+        if (player.lives <= 0) {
+          if (gState === ST.MULTI) { mpSend({ type: "dead" }); mp.localDead = true; }
+          else endGame();
+        }
       }
     }
   });
@@ -385,8 +400,10 @@ function update() {
   // coleta de power-ups e itens de pontuação
   collectibles.forEach((c) => {
     if (c.dead) return;
+    if (mp.localDead) return;
     if (circ({ x: c.x, y: c.y, r: c.r }, { x: player.x, y: player.y, r: 20 })) {
       c.dead = true;
+      if (gState === ST.MULTI && c.mpId) mpSend({ type: "collect", collectibleId: c.mpId });
       sfxCollect();
       if (c.type.pw) playerStats.pw[c.type.id] = (playerStats.pw[c.type.id] ?? 0) + 1;
       if (c.type.pw === "shield") {
@@ -586,8 +603,9 @@ function render() {
   const sx = shakeAmt > 0.5 ? (Math.random() - 0.5) * shakeAmt * 2 : 0;
   const sy = shakeAmt > 0.5 ? (Math.random() - 0.5) * shakeAmt * 2 : 0;
   ctx.clearRect(0, 0, W, H);
-  if (gState === ST.MENU) { drawMenu(); return; }
+  if (gState === ST.MENU)  { drawMenu();  return; }
   if (gState === ST.SOBRE) { drawSobre(); return; }
+  if (gState === ST.LOBBY) { drawLobby(); return; }
   ctx.save();
   if (gState === ST.OVER) {
     ctx.filter = "grayscale(1)";
@@ -618,7 +636,8 @@ function render() {
     ctx.fill();
   });
   ctx.globalAlpha = 1;
-  player.draw();
+  if (!mp.localDead) player.draw();
+  mpDrawAll();
   floaters.forEach((f) => {
     ctx.globalAlpha = f.life;
     ctx.fillStyle = f.col;
@@ -633,6 +652,7 @@ function render() {
   ctx.textAlign = "left";
   ctx.restore();
   drawHUD();
+  mpDrawHUD();
   if (touch.active) drawJoystick();
   if (gState === ST.PAUSE) drawPause();
   if (gState === ST.OVER) drawOver();
@@ -641,7 +661,7 @@ function render() {
 }
 
 function drawDevButton() {
-  if (gState !== ST.PLAY && gState !== ST.PAUSE) return;
+  if (gState !== ST.PLAY && gState !== ST.PAUSE && gState !== ST.MULTI) return;
   const { x, y, w, h } = DEV_BTN;
   ctx.save();
   ctx.fillStyle = dev.open ? "rgba(0,255,136,0.18)" : "rgba(0,12,4,0.78)";
@@ -705,12 +725,31 @@ document.addEventListener("keydown", (e) => {
     return;
   }
   if (gState === ST.SOBRE) { gState = ST.MENU; return; }
+
+  // Lobby controls
+  if (gState === ST.LOBBY) {
+    if (e.code === "Escape") { mpDisconnect(); gState = ST.MENU; return; }
+    if (e.code === "ArrowLeft"  || e.code === "KeyA") {
+      selectedPlane = (selectedPlane - 1 + PLANES.length) % PLANES.length;
+      mpSend({ type: "ship", planeId: selectedPlane }); return;
+    }
+    if (e.code === "ArrowRight" || e.code === "KeyD") {
+      selectedPlane = (selectedPlane + 1) % PLANES.length;
+      mpSend({ type: "ship", planeId: selectedPlane }); return;
+    }
+    if (e.code === "Enter" || e.code === "Space") {
+      if (mp.shareUrl) { navigator.clipboard?.writeText(mp.shareUrl).catch(() => {}); return; }
+    }
+    return;
+  }
+
   keys[e.code] = true;
   if (e.code === "Escape" || e.code === "KeyP") {
-    if (gState === ST.PLAY) gState = ST.PAUSE;
-    else if (gState === ST.PAUSE) gState = ST.PLAY;
+    if (gState === ST.PLAY || gState === ST.MULTI) gState = ST.PAUSE;
+    else if (gState === ST.PAUSE) gState = mp.connected && mp.gameStarted ? ST.MULTI : ST.PLAY;
   }
   if (e.code === "KeyM" && gState === ST.PAUSE) {
+    mpDisconnect();
     gState = ST.MENU;
     startMenuMusic(selectedDifficulty);
     return;
@@ -727,6 +766,7 @@ document.addEventListener("keydown", (e) => {
       selectedDifficulty = (selectedDifficulty + 1) % DIFFICULTIES.length;
       startMenuMusic(selectedDifficulty);
     }
+    if (e.code === "KeyM") { ensureAC(); mpConnect(); return; }
   }
   if (
     (e.code === "Enter" || e.code === "Space") &&
@@ -740,10 +780,34 @@ document.addEventListener("keyup", (e) => {
   if (e.code === "Escape") dev.escHold = 0;
 });
 
+// MULTIPLAYER button rect in the menu (below difficulty selector)
+// Matches the position drawn in renderer.js: psx = W/2-118, mby = dsy+48 = (H/2+90+46)+48 = H/2+184
+const _MP_BTN_RECT = { x: W / 2 - 118, y: H / 2 + 184, w: 236, h: 22 };
+
+function _hitMpBtn(p) {
+  return p.x >= _MP_BTN_RECT.x && p.x <= _MP_BTN_RECT.x + _MP_BTN_RECT.w &&
+         p.y >= _MP_BTN_RECT.y && p.y <= _MP_BTN_RECT.y + _MP_BTN_RECT.h;
+}
+
 canvas.addEventListener("click", (e) => {
   const p = toCanvas(e);
-  if (gState === ST.MENU) { ensureAC(); if (!mActive) startMenuMusic(selectedDifficulty); return; }
-  if ((gState === ST.PLAY || gState === ST.PAUSE) && _hitDevBtn(p)) {
+  if (gState === ST.MENU) {
+    ensureAC();
+    if (!mActive) startMenuMusic(selectedDifficulty);
+    if (_hitMpBtn(p)) { mpConnect(); return; }
+    return;
+  }
+  if (gState === ST.LOBBY) {
+    const action = mpLobbyHit(p);
+    if (action === "plane_left")  { selectedPlane = (selectedPlane - 1 + PLANES.length) % PLANES.length; mpSend({ type: "ship", planeId: selectedPlane }); }
+    if (action === "plane_right") { selectedPlane = (selectedPlane + 1) % PLANES.length; mpSend({ type: "ship", planeId: selectedPlane }); }
+    if (action === "start")  mpSend({ type: "start" });
+    if (action === "ready")  mpSend({ type: "ready" });
+    if (action === "back")   { mpDisconnect(); gState = ST.MENU; }
+    if (action === "copy_link") navigator.clipboard?.writeText(mp.shareUrl || "").catch(() => {});
+    return;
+  }
+  if ((gState === ST.PLAY || gState === ST.PAUSE || gState === ST.MULTI) && _hitDevBtn(p)) {
     if (!dev.open) { dev.open = true; dev.openCooldown = 20; }
     else if (dev.openCooldown <= 0) dev.open = false;
   }
@@ -752,7 +816,22 @@ canvas.addEventListener("click", (e) => {
 canvas.addEventListener("touchstart", (e) => {
   e.preventDefault();
   if (gState === ST.SOBRE) { gState = ST.MENU; return; }
-  if (gState === ST.MENU || gState === ST.OVER) { ensureAC(); startGame(); return; }
+  if (gState === ST.LOBBY) {
+    const p = toCanvas(e.changedTouches[0]);
+    const action = mpLobbyHit(p);
+    if (action === "plane_left")  { selectedPlane = (selectedPlane - 1 + PLANES.length) % PLANES.length; mpSend({ type: "ship", planeId: selectedPlane }); }
+    if (action === "plane_right") { selectedPlane = (selectedPlane + 1) % PLANES.length; mpSend({ type: "ship", planeId: selectedPlane }); }
+    if (action === "start")  mpSend({ type: "start" });
+    if (action === "ready")  mpSend({ type: "ready" });
+    if (action === "back")   { mpDisconnect(); gState = ST.MENU; }
+    return;
+  }
+  if (gState === ST.MENU || gState === ST.OVER) {
+    ensureAC();
+    const p = toCanvas(e.changedTouches[0]);
+    if (gState === ST.MENU && _hitMpBtn(p)) { mpConnect(); return; }
+    startGame(); return;
+  }
   const p = toCanvas(e.changedTouches[0]);
   if ((gState === ST.PLAY || gState === ST.PAUSE) && _hitDevBtn(p)) {
     if (!dev.open) { dev.open = true; dev.openCooldown = 20; }
