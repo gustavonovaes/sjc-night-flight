@@ -29,6 +29,7 @@ const mp = {
 
   shieldRelayActive: false,
   shieldRelayT:      0,
+  lastSentBuffs:     null,
 };
 
 // ── RemotePlayer ──────────────────────────────────────────────────────────────
@@ -374,19 +375,30 @@ function mpUpdate() {
 
   // Send position every 3 frames
   if (frame % 3 === 0 && player) {
-    mpSend({
+    const currentBuffs = {
+      boost: player.boost > 0, bis: player.bis > 0,
+      shield: player.shield > 0, avibras: player.avibras > 0,
+    };
+    
+    // Send full data only if buffs changed, otherwise omit
+    const buffsChanged = JSON.stringify(currentBuffs) !== JSON.stringify(mp.lastSentBuffs);
+    
+    const msg = {
       type: "pos",
       x: Math.round(player.x * 10) / 10,
       y: Math.round(player.y * 10) / 10,
       vx: Math.round(player.vx * 100) / 100,
       vy: Math.round(player.vy * 100) / 100,
       tilt: Math.round(player.tilt * 100) / 100,
-      shield: player.shield,
-      buffs: {
-        boost: player.boost > 0, bis: player.bis > 0,
-        shield: player.shield > 0, avibras: player.avibras > 0,
-      },
-    });
+      shield: player.shield > 0 ? player.shield : undefined,
+    };
+    
+    if (buffsChanged) {
+      msg.buffs = currentBuffs;
+      mp.lastSentBuffs = currentBuffs;
+    }
+
+    mpSend(msg);
   }
 
   // SOS pickup detection

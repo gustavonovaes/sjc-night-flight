@@ -6,7 +6,20 @@
 **Objetivo:** Pilotar um avião (Embraer) defendendo o Vale do Paraíba contra frentes frias, drones, araras, OVNIs e o chefe final (Monstro Climático).  
 **Canvas lógico:** 800×450 pixels, escalado por CSS para preencher a tela mantendo a proporção 16:9.
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Mecânicas de jogo
 
@@ -50,7 +63,254 @@
 Selecionado no menu via ↑↓. Configuração persistida em `selectedDifficulty` (índice de `DIFFICULTIES`).
 
 | Parâmetro           | 🌅 AVENTURA        | 🔥 RADICAL         |
-|---------------------|--------------------|--------------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
 | Combo máximo        | ×10                | ×50                |
 | HP dos inimigos     | ×0.65              | ×1.6               |
 | Spawn mínimo (f)    | 44                 | 22                 |
@@ -75,7 +335,98 @@ Baseado em **Flow Theory** (Csikszentmihalyi, 1975): a experiência ótima ocorr
 `ddaStress ∈ [0, 1]` — índice de sobrecarga do jogador:
 
 | Evento | Δ `ddaStress` |
-|--------|---------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
 | Cada frame | `−0.0007` (decai naturalmente ao neutro) |
 | Combo ≥ 5 | `−0.0004` extra por frame |
 | Jogador leva hit | `+0.20` |
@@ -94,19 +445,773 @@ Stress ≈ 1 → spawns 20% mais lentos (janela de recuperação). Stress ≈ 0 
 
 ### Aviões desbloqueáveis
 | Avião | accel | maxSpd | fireN | lives | unlock |
-|-------|-------|--------|-------|-------|--------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
 | EMB-314 Super Tucano | 0.45 | 5.5 | 24 | 3 | 0 |
 | Embraer E2 | 0.38 | 6.8 | 20 | 2 | 3 000 |
 | C-390 Millennium | 0.30 | 4.2 | 30 | 4 | 8 000 |
 
 `Player` recebe um `planeCfg` no construtor que substitui `accel`, `topSpd`, `_fireN` e `lives`. Seleção no menu via ← →.
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Power-ups
 
 | ID            | Label           | Efeito                                                                        | Duração (frames)     | Raro |
-|---------------|-----------------|-------------------------------------------------------------------------------|----------------------|------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
 | `shield`      | ESCUDO          | Absorve o próximo acerto sem perder vida; acumula até 3×                      | `SHIELD_DUR = 300`   |      |
 | `boost`       | BOOST           | Tiro triplo + cadência máxima; acumula até 3×                                 | `BOOST_DUR = 340`    |      |
 | `14bis`       | 14-BIS          | Invencibilidade total; avião transforma-se no biplano de Santos-Dumont        | `BIS_DUR = 480`      | ✓    |
@@ -131,7 +1236,20 @@ Stress ≈ 1 → spawns 20% mais lentos (janela de recuperação). Stress ≈ 0 
 
 Os IDs dos power-ups de Avibras, INPE, Revap, Delta e Ericsson usam sufixo `_pw` nos arrays `CTYPES_PW` e `DROP_TABLE` para não colidir com os IDs dos coletáveis de pontuação homônimos (`avibras`, `ericsson`, `revap` já existem como pontos).
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Inimigos
 
@@ -187,7 +1305,20 @@ Os IDs dos power-ups de Avibras, INPE, Revap, Delta e Ericsson usam sufixo `_pw`
 
 A constante `BOSS_TYPES` (definida em `game.js`) lista todos os tipos de chefe e é usada em múltiplos pontos para verificar colisões e drops.
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Fases e Waves (Hordas)
 
@@ -196,7 +1327,189 @@ O jogo é dividido em **4 fases**, cada uma com 2 waves. Cada wave é anunciada 
 ### Fases
 
 | Fase | Waves | Tema                          |
-|------|-------|-------------------------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
 | 1    | 0–1   | Frente Fria e Patrulha DCTA   |
 | 2    | 2–3   | Araras Furiosas + OVNIs noturnos |
 | 3    | 4–5   | Invasão Coordenada            |
@@ -209,7 +1522,475 @@ O jogo é dividido em **4 fases**, cada uma com 2 waves. Cada wave é anunciada 
 Cada fase apresenta apenas os inimigos temáticos relevantes. Novos tipos são introduzidos gradualmente.
 
 | Wave | Nome                         | Fase | Horda (inimigos em burst)                                         |
-|------|------------------------------|------|-------------------------------------------------------------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
 | 0    | Frente Fria da Mantiqueira   | 1    | 3 clouds + 3 drones                                               |
 | 1    | Patrulha de Drones DCTA      | 1    | 5 drones + 2 clouds + 2 araras                                    |
 | 2    | Bando de Araras Furiosas     | 2    | 5 araras + 3 drones + 1 cloud + 1 balao                           |
@@ -229,7 +2010,20 @@ Cada fase apresenta apenas os inimigos temáticos relevantes. Novos tipos são i
 - No `update()`: a cada frame que `hordeSpawnT` chega a 0 com `hordeQueue.length > 0`, um inimigo é removido da fila e spawnado em Y aleatório.
 - O spawn contínuo normal (`spawnT`) continua em paralelo durante a horda.
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Ciclo dia/noite
 
@@ -240,14 +2034,183 @@ Cada fase apresenta apenas os inimigos temáticos relevantes. Novos tipos são i
 - Funções auxiliares: `hexRgb()` converte hex para `[r,g,b]`; `lerpC()` interpola e retorna string `rgb(...)`.
 - OVNIs só aparecem em fases noturnas: `dayPhase < 0.26 || dayPhase > 0.84`.
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Coletáveis
 
 Definidos em `CTYPES`:
 
 | ID       | Label    | Pontos | Tipo       |
-|----------|----------|--------|------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
 | `inpe`   | INPE     | 50     | pontuação  |
 | `embraer`| EMBRAER  | 100    | pontuação  |
 | `ita`    | ITA      | 75     | pontuação  |
@@ -272,7 +2235,20 @@ O `diffCfg.dropMult` amplifica ou reduz todos os drops de power-up por dificulda
 
 **Visual:** coletáveis de pontuação exibem o nome da empresa centralizado; power-ups exibem o emoji do item em tamanho grande, sem texto.
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Renderização
 
@@ -292,7 +2268,20 @@ O `diffCfg.dropMult` amplifica ou reduz todos os drops de power-up por dificulda
 - **Dados estáticos pré-gerados:** `PARQUE_TREES`, `CARS`, `BLDGS` e `STARS` são criados uma única vez no início — nenhum `Math.random()` é chamado dentro de funções de desenho de fundo para evitar cintilação.
 - **Stars:** ignoradas quando `sky.st < 0.02` (otimização para o dia claro).
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Arquitetura
 
@@ -301,7 +2290,436 @@ O código é dividido em 6 módulos carregados via `<script defer>` em ordem de 
 ### Módulos
 
 | Arquivo               | Responsabilidade                                                              |
-|-----------------------|-------------------------------------------------------------------------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
 | `js/world.js`         | Canvas setup, RNGs, interpolação de céu, estrelas, montanhas, prédios, carros |
 | `js/audio.js`         | Web Audio API: SFX, playlists, loop de música, troca por fase                 |
 | `js/entities.js`      | Constantes de duração, helpers (`circ`, `explode`…), classes de entidades     |
@@ -326,7 +2744,306 @@ Todos os arquivos usam `"use strict"` e compartilham escopo global — sem ES mo
 
 ### Classes
 | Classe        | Responsabilidade                                      |
-|---------------|-------------------------------------------------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
 | `Player`      | Estado do jogador, movimento, tiro, power-ups, draw   |
 | `Enemy`       | Todos os tipos de inimigos via `type` no construtor   |
 | `Bullet`      | Projétil do jogador com rastro histórico              |
@@ -335,12 +3052,584 @@ Todos os arquivos usam `"use strict"` e compartilham escopo global — sem ES mo
 
 ### Classes
 | Classe          | Responsabilidade                                               |
-|-----------------|----------------------------------------------------------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
 | `RemotePlayer`  | Estado + interpolação de jogador remoto no modo multiplayer    |
 
 ### Estados de jogo (`ST`)
 | Estado   | Valor | Descrição                              |
-|----------|-------|----------------------------------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
 | `MENU`   | 0     | Tela inicial                           |
 | `PLAY`   | 1     | Jogo em andamento (solo)               |
 | `PAUSE`  | 2     | Pausado (P ou ESC)                     |
@@ -355,7 +3644,20 @@ requestAnimationFrame → loop() → update() + render()
 ```
 `update()` avança física, spawns e colisões; `render()` desenha tudo na ordem correta de camadas.
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Modo Multiplayer
 
@@ -364,7 +3666,202 @@ requestAnimationFrame → loop() → update() + render()
 **Modelo:** servidor autoritativo + predição client-side.
 
 | Responsabilidade                  | Onde fica    |
-|-----------------------------------|--------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
 | Spawn de inimigos e coletáveis    | Servidor     |
 | HP dos inimigos                   | Servidor     |
 | Progressão de ondas e boss spawn  | Servidor     |
@@ -380,7 +3877,46 @@ O servidor roda a **30 ticks/s** via `setInterval`. Clientes rodam a 60fps e env
 **Cliente → Servidor:**
 
 | Mensagem | Campos | Descrição |
-|---|---|---|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
 | `join` | `lobbyId?` | Cria ou entra em lobby |
 | `ship` | `planeId` | Seleciona avião no lobby |
 | `ready` | — | Alterna estado pronto (toggle) |
@@ -394,7 +3930,46 @@ O servidor roda a **30 ticks/s** via `setInterval`. Clientes rodam a 60fps e env
 **Servidor → Cliente:**
 
 | Mensagem | Campos | Descrição |
-|---|---|---|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
 | `joined` | `playerId,lobbyId,isHost,shareUrl,players[]` | Confirmação de entrada no lobby |
 | `player_join/leave/ship/ready` | `id,...` | Mudanças de estado de outros jogadores |
 | `new_host` | `id` | Transferência de host |
@@ -460,7 +4035,20 @@ O servidor roda a **30 ticks/s** via `setInterval`. Clientes rodam a 60fps e env
 
 **Morte e respawn:** Ao morrer (`lives <= 0`), cliente envia `dead` e ativa `mp.localDead = true`. O player ainda é desenhado (semi-transparente) para outros verem. `endGame()` só é chamado quando servidor confirma `game_over` (todos os jogadores mortos).
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Controles touch
 
@@ -470,14 +4058,287 @@ O servidor roda a **30 ticks/s** via `setInterval`. Clientes rodam a 60fps e env
 - O joystick é desenhado a cada frame sobre o canvas quando `touch.active === true`.
 - Botão `#btn-pause-mobile` visível apenas em dispositivos com `pointer: coarse` (via CSS).
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Áudio
 
 Implementado via **Web Audio API** (criado sob demanda por `ensureAC()` após gesto do usuário).
 
 | Função       | Descrição                                      |
-|--------------|------------------------------------------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
 | `sfxShoot`   | Tom curto de tiro (square wave, 880 Hz)        |
 | `sfxHit`     | Tom grave + ruído (dano ao jogador)            |
 | `sfxBang`    | Explosão (ruído + sawtooth grave)              |
@@ -490,7 +4351,202 @@ Implementado via **Web Audio API** (criado sob demanda por `ensureAC()` após ge
 Música sintetizada via Web Audio API. 10 playlists, cada uma com notas e BPM próprios:
 
 | Idx | Label           | Tempo  | Estilo         | Wave |
-|-----|-----------------|--------|----------------|------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
 | 6   | Chill Hip-Hop I | 350 ms | Dm pentatônica | 0    |
 | 0   | Arcade          | 280 ms | Pentatônica    | 1    |
 | 7   | Chill Hip-Hop II| 310 ms | Am swing       | 2    |
@@ -506,7 +4562,20 @@ Música sintetizada via Web Audio API. 10 playlists, cada uma com notas e BPM pr
 
 `PLAYLIST_TEMPOS[playlistIdx]` define o intervalo entre notas. `stopMusic()` + `startMusic()` fazem o crossover imediato.
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Céu dinâmico (detalhes técnicos)
 
@@ -523,7 +4592,20 @@ function getSky() {
 
 `hexRgb(hex)` extrai `[r, g, b]` do hex. `lerpC(a, b, t)` retorna `"rgb(...)"` com valores inteiros via bitwise OR 0.
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Interface e UX
 
@@ -551,7 +4633,20 @@ Quando `player.shield > 0`, ícones 🛡 em ciano são exibidos à esquerda dos 
 ### Contador de FPS
 Exibido no canto inferior esquerdo com cor dinâmica: verde ≥ 55 fps, amarelo ≥ 40 fps, vermelho < 40 fps. Calculado a cada segundo via timestamp do `requestAnimationFrame`.
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Sistema de Estatísticas
 
@@ -562,7 +4657,293 @@ let playerStats = { pw: {}, kills: 0, hits: 0, grazes: 0, maxCombo: 1 };
 ```
 
 | Campo       | Incrementado em                                        |
-|-------------|--------------------------------------------------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.-|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
 | `kills`     | `dropCollectibles()` — quando inimigo morre (`pts > 0`) |
 | `hits`      | `player.tryHit()` retorna `true` (dano real recebido)  |
 | `grazes`    | Graze detectado (projétil a 14–22px sem hit)           |
@@ -582,7 +4963,20 @@ const last  = JSON.parse(localStorage.getItem("sjc_last_stats") ?? "{}");
 const total = JSON.parse(localStorage.getItem("sjc_totals")    ?? "{}");
 ```
 
+
 ---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
 
 ## Notas de performance
 
@@ -600,7 +4994,345 @@ const total = JSON.parse(localStorage.getItem("sjc_totals")    ?? "{}");
 ## Áudio — balanceamento de volumes
 
 | Função        | Volume anterior | Volume atual | Motivo                             |
-|---------------|-----------------|--------------|------------------------------------|
+|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.--|
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.
+---
+
+## Melhorias Recentes (v0.0.6)
+
+### Segurança
+- **Prevenção de Path Traversal:** Adicionada validação robusta no `server.js` utilizando `path.resolve` e `import.meta.dir` para restringir o acesso a arquivos apenas ao diretório da aplicação.
+- **IDs Seguros:** Implementação de `crypto.randomBytes()` para geração de IDs de lobby e jogador, substituindo `Math.random()` por métodos criptograficamente seguros.
+
+### Performance
+- **Delta Updates no Multiplayer:** Refatoração das mensagens de posição (`pos`) via WebSocket para enviar apenas alterações de estado necessárias (especialmente buffs e escudos), reduzindo significativamente o tráfego de rede.
+
+### Consistência
+- **Sincronização de Dificuldade:** O multiplicador de HP dos inimigos (`diffCfg.hpMult`) agora é aplicado identicamente no servidor e no cliente, corrigindo discrepâncias de dano em partidas multiplayer.|
 | Música de fundo | 0.032         | 0.062        | Muito baixa em relação aos SFX     |
 | `sfxShoot`    | 0.050           | 0.022        | Tiro frequente — saturava o áudio  |
 | `sfxBang`     | 0.070 / 0.040   | 0.045 / 0.025| Explosão mais suave                |

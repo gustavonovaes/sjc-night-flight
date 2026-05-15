@@ -1,8 +1,9 @@
 // SJC Night Flight — Bun server
 // HTTP estático + WebSocket para multiplayer co-op.
-import { join } from "path";
+import { join, normalize, resolve } from "path";
+import { randomBytes } from "crypto";
 
-const PORT = parseInt(process.env.PORT || "3000");
+const PORT = parseInt(process.env.PORT || "5000");
 const W = 800, H = 450;
 
 const BOSS_TYPES = ["boss", "prototipo_x", "cemaden_eye", "engrenagem", "cigarra"];
@@ -26,7 +27,7 @@ const lobbies     = new Map(); // id → Lobby
 const wsToPlayer  = new Map(); // ws → Player
 
 function genId(len = 6) {
-  return Math.random().toString(36).slice(2, 2 + len).toUpperCase();
+  return randomBytes(len).toString("hex").toUpperCase().slice(0, len);
 }
 
 function getOrCreateLobby(id) {
@@ -450,9 +451,15 @@ const MIME = {
 async function serveStatic(req) {
   const url  = new URL(req.url);
   let   path = url.pathname === "/" ? "/index.html" : url.pathname;
-  // Strip query string and prevent path traversal
-  path = path.split("?")[0].replace(/\.\./g, "");
-  const filePath = join(import.meta.dir, path);
+  
+  // Robust path traversal protection
+  const safePath = normalize(path).replace(/^[/\\]+/, "").replace(/^(\.\.(\/|\\|$))+/, "");
+  const filePath = resolve(import.meta.dir, safePath);
+
+  if (!filePath.startsWith(import.meta.dir)) {
+    return new Response("Forbidden", { status: 403 });
+  }
+
   try {
     const file   = Bun.file(filePath);
     const exists = await file.exists();
