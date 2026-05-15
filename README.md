@@ -192,6 +192,39 @@ E em 19 de maio de 1986 — a noite em que 21 OVNIs foram interceptados sobre o 
 
 ## Changelog
 
+### v0.0.4 — Visuais, Física e Estatísticas
+
+**Efeitos de céu e ambientação**
+- Sol: halo atmosférico duplo (raio 160px), raios dinâmicos animados durante nascer/pôr (12 wedges com rotação lenta)
+- Sol: disco renderizado com gradient radial suave, glow maior no horizonte (32px vs 18px anteriores)
+- Lua: halo duplo com gradiente de cor, crateras sutis, sombra de fase refinada
+- Estrelas: cintilação real animada (`sin(tw + frame × spd)`) — antes eram estáticas
+- Horizonte: faixa dourada fina + glow laranja-vermelho durante nascer/pôr do sol
+
+**Física da nave**
+- Aceleração reduzida ~33%: Tucano 0.45→0.30, E2 0.38→0.25, C-390 0.30→0.20
+- Velocidade máxima reduzida: Tucano 5.5→4.0, E2 6.8→5.0, C-390 4.2→3.2
+- Touch: multiplicador de sensibilidade 0.65× (era 1.0×)
+
+**Mecânicas e feedback**
+- Escudo absorve 1 carga por acerto (era: zeravam todos os stacks)
+- Fumaça de dano crítico: partículas laranja-amarronzadas saem da nave com 1 HP
+- Som de destruição (`sfxDestroy`) ao morrer: impacto grave + ruído longo
+- Música de menu toca no primeiro click no canvas (não só no keydown)
+
+**Estatísticas expandidas**
+- Novos contadores: `bossKills`, `shieldBlocks`, `nearDeathHits`, `comboKills`, `longestGrazeStreak`, `wavesWithoutHit`, `shotsFired`, `timeSurvived`
+- Tela de Game Over: 6 linhas de estatísticas com precisão (kills/tiros) e tempo formatado `mm:ss`
+- `timeSurvived` congela ao morrer (era calculado com `frame` em tempo real)
+
+**Tráfego**
+- Carros na rodovia 3× mais lentos no início (spd 0.5–1.4, era 1.5–3.9)
+
+**Infraestrutura**
+- `v=0.0.4` em todos os scripts (cache busting)
+
+---
+
 ### v0.0.3 — DDA, Música e Estatísticas
 
 **Dificuldade**

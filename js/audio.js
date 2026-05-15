@@ -74,6 +74,13 @@ function sfxBossIn() {
   tone(55, 0.6, "sawtooth", 0.11);
   tone(75, 0.6, "square", 0.07);
 }
+function sfxDestroy() {
+  // baixo impacto + ruído longo — nave destruída
+  tone(80,  0.9, "sawtooth", 0.13);
+  tone(50,  1.1, "square",   0.09);
+  noise(1.0, 0.08);
+  [120, 90, 60].forEach((f, i) => setTimeout(() => tone(f, 0.3, "sawtooth", 0.06), i * 120));
+}
 
 // Melodia arcade de menu: arpejos ascendentes em Dó maior, estilo título clássico 8-bit
 const _MENU_THEME = [

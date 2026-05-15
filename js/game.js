@@ -105,7 +105,11 @@ function startGame() {
   off1 = 0; off2 = 0; off3 = 0; offSky = 0;
   radioText = ""; radioT = 0; radioQueue = [];
   grazeCount = 0; cbersMission = null; cbersMissionT = 3800;
-  playerStats = { pw: {}, kills: 0, hits: 0, grazes: 0, maxCombo: 1 };
+  playerStats = { pw: {}, kills: 0, hits: 0, grazes: 0, maxCombo: 1, shotsFired: 0, startFrame: 0,
+    bossKills: 0, shieldBlocks: 0, nearDeathHits: 0, comboKills: 0,
+    longestGrazeStreak: 0, wavesWithoutHit: 0 };
+  _curGrazeStreak = 0;
+  _waveHits = 0;
   ddaStress = 0.5;
   gState = ST.PLAY;
   stopMusic();
@@ -192,8 +196,10 @@ function update() {
     if (player.boost > 0) {
       bullets.push(new Bullet(player.x + 30, player.y + offY, -0.18));
       bullets.push(new Bullet(player.x + 30, player.y + offY,  0.18));
+      playerStats.shotsFired += 2;
     } else {
       bullets.push(new Bullet(player.x + 30, player.y + offY, 0));
+      playerStats.shotsFired++;
     }
   }
 
@@ -296,8 +302,9 @@ function update() {
           combo = Math.min(combo + 1, diffCfg.comboMax);
           comboT = 130;
           playerStats.kills++;
+          if (combo >= 3) playerStats.comboKills++;
           if (combo > playerStats.maxCombo) playerStats.maxCombo = combo;
-            if (BOSS_TYPES.includes(e.type)) shakeAmt += 9;
+          if (BOSS_TYPES.includes(e.type)) { shakeAmt += 9; playerStats.bossKills++; }
           if (BOSS_TYPES.includes(e.type)) bossAlive = false;
           dropCollectibles(e.x, e.y, e.type);
         }
@@ -318,6 +325,8 @@ function update() {
         score += pts;
         grazeCount++;
         playerStats.grazes++;
+        _curGrazeStreak++;
+        if (_curGrazeStreak > playerStats.longestGrazeStreak) playerStats.longestGrazeStreak = _curGrazeStreak;
         floatText(`✦ ${pts}`, player.x, player.y - 18, "#fde68a");
         if (player.avibras > 0) player.missileT = Math.max(0, player.missileT - 14);
       }
@@ -342,6 +351,9 @@ function update() {
       const h = player.tryHit();
       if (h) {
         playerStats.hits++;
+        _waveHits++;
+        _curGrazeStreak = 0;
+        if (player.lives === 1) playerStats.nearDeathHits++;
         ddaStress = Math.min(1, ddaStress + 0.20);
         shakeAmt += 10;
         combo = 1;
@@ -509,6 +521,8 @@ function spawnOvniEvent() {
 
 // Spawna o próximo chefe da rotação e incrementa waveNum.
 function spawnBoss() {
+  if (_waveHits === 0 && waveNum > 0) playerStats.wavesWithoutHit++;
+  _waveHits = 0;
   bossAlive = true;
   // prototipo_x fica por último: é o mais difícil de matar e ganha velocidade a cada lap
   const BOSS_ROTATION = ["boss", "cemaden_eye", "engrenagem", "cigarra", "prototipo_x"];
@@ -530,6 +544,8 @@ function spawnBoss() {
 function endGame() {
   gState = ST.OVER;
   shakeAmt = 0;
+  playerStats.timeSurvived = Math.floor(frame / 60);
+  sfxDestroy();
   stopMusic();
   const prev = parseInt(localStorage.getItem(HS_KEY) || "0");
   if (score > prev) localStorage.setItem(HS_KEY, String(score));
@@ -545,6 +561,14 @@ function endGame() {
     hits: playerStats.hits,
     grazes: playerStats.grazes,
     maxCombo: playerStats.maxCombo,
+    shotsFired: playerStats.shotsFired,
+    timeSurvived: Math.floor(frame / 60),
+    bossKills: playerStats.bossKills,
+    shieldBlocks: playerStats.shieldBlocks,
+    nearDeathHits: playerStats.nearDeathHits,
+    comboKills: playerStats.comboKills,
+    longestGrazeStreak: playerStats.longestGrazeStreak,
+    wavesWithoutHit: playerStats.wavesWithoutHit,
     pw: { ...playerStats.pw },
     ts: Date.now(),
   };
@@ -718,6 +742,7 @@ document.addEventListener("keyup", (e) => {
 
 canvas.addEventListener("click", (e) => {
   const p = toCanvas(e);
+  if (gState === ST.MENU) { ensureAC(); if (!mActive) startMenuMusic(selectedDifficulty); return; }
   if ((gState === ST.PLAY || gState === ST.PAUSE) && _hitDevBtn(p)) {
     if (!dev.open) { dev.open = true; dev.openCooldown = 20; }
     else if (dev.openCooldown <= 0) dev.open = false;

@@ -5,6 +5,8 @@ let gState = ST.MENU;
 const DEV_BTN = { x: W - 50, y: H - 24, w: 46, h: 20 };
 
 let player, bullets, enemies, eBullets, collectibles, particles, floaters;
+let _curGrazeStreak = 0;
+let _waveHits = 0;
 let frame = 0;
 let score = 0;
 let combo = 1;

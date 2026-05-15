@@ -21,20 +21,50 @@ function drawSun(sunVis) {
   const p = Math.max(0, Math.min(1, (dayPhase - 0.27) / 0.46));
   const sx = W * 0.85 - p * W * 0.70;
   const sy = H * 0.52 - Math.sin(p * Math.PI) * H * 0.40;
-  const nearHoriz = p < 0.13 || p > 0.87;
-  const sr = nearHoriz ? 15 : 20;
-  const gc = nearHoriz ? [255, 80, 0] : [255, 220, 80];
-  const sc = nearHoriz ? [255, 110, 30] : [255, 245, 150];
-  const g = ctx.createRadialGradient(sx, sy, 2, sx, sy, 88);
-  g.addColorStop(0, `rgba(${gc[0]},${gc[1]},${gc[2]},${sunVis * 0.38})`);
-  g.addColorStop(0.4, `rgba(${gc[0]},${gc[1]},${gc[2]},${sunVis * 0.08})`);
-  g.addColorStop(1, "rgba(0,0,0,0)");
+  const nearHoriz = p < 0.14 || p > 0.86;
+  const sr = nearHoriz ? 14 : 20;
+  const gc = nearHoriz ? [255, 70, 0] : [255, 220, 80];
+  const sc = nearHoriz ? [255, 120, 20] : [255, 248, 160];
+
+  // amplo halo atmosférico
+  const g2 = ctx.createRadialGradient(sx, sy, sr, sx, sy, 160);
+  g2.addColorStop(0,   `rgba(${gc[0]},${gc[1]},${gc[2]},${sunVis * (nearHoriz ? 0.28 : 0.14)})`);
+  g2.addColorStop(0.5, `rgba(${gc[0]},${gc[1] >> 1},${gc[2]},${sunVis * 0.05})`);
+  g2.addColorStop(1,   "rgba(0,0,0,0)");
+  ctx.fillStyle = g2;
+  ctx.beginPath(); ctx.arc(sx, sy, 160, 0, Math.PI * 2); ctx.fill();
+
+  // raios de sol durante nascer/pôr
+  if (nearHoriz && sunVis > 0.25) {
+    ctx.save();
+    ctx.translate(sx, sy);
+    const rayCount = 12;
+    for (let i = 0; i < rayCount; i++) {
+      const angle = (i / rayCount) * Math.PI * 2 + (frame * 0.0006);
+      const len = 110 + (i % 3) * 30;
+      const width = 0.06 + (i % 2) * 0.04;
+      const rg = ctx.createLinearGradient(0, 0, Math.cos(angle) * len, Math.sin(angle) * len);
+      rg.addColorStop(0,   `rgba(${gc[0]},${gc[1] + 40},0,${sunVis * 0.22})`);
+      rg.addColorStop(1,   "rgba(0,0,0,0)");
+      ctx.fillStyle = rg;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, len, angle - width, angle + width);
+      ctx.closePath();
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // disco solar
+  const g = ctx.createRadialGradient(sx, sy, 2, sx, sy, sr * 2.2);
+  g.addColorStop(0, `rgba(${sc[0]},${sc[1]},${sc[2]},${sunVis})`);
+  g.addColorStop(0.6, `rgba(${gc[0]},${gc[1]},${gc[2]},${sunVis * 0.7})`);
+  g.addColorStop(1, `rgba(${gc[0]},${gc[1]},${gc[2]},0)`);
   ctx.fillStyle = g;
-  ctx.beginPath(); ctx.arc(sx, sy, 88, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = `rgba(${sc[0]},${sc[1]},${sc[2]},${sunVis})`;
   ctx.shadowColor = `rgb(${gc[0]},${gc[1]},${gc[2]})`;
-  ctx.shadowBlur = 22 * sunVis;
-  ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2); ctx.fill();
+  ctx.shadowBlur = (nearHoriz ? 32 : 18) * sunVis;
+  ctx.beginPath(); ctx.arc(sx, sy, sr * 2.2, 0, Math.PI * 2); ctx.fill();
   ctx.shadowBlur = 0;
 }
 
@@ -44,19 +74,28 @@ function drawMoon(moonVis) {
   const p = Math.max(0, Math.min(1, raw / 0.52));
   const mx = W * 0.85 - p * W * 0.70;
   const my = H * 0.50 - Math.sin(p * Math.PI) * H * 0.38;
-  const g = ctx.createRadialGradient(mx, my, 3, mx, my, 48);
-  g.addColorStop(0, `rgba(240,220,150,${moonVis * 0.20})`);
-  g.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = g;
-  ctx.beginPath(); ctx.arc(mx, my, 48, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = `rgba(216,207,158,${moonVis})`;
-  ctx.shadowColor = "#ffe8a8";
-  ctx.shadowBlur = 10 * moonVis;
+  // halo duplo
+  const g2 = ctx.createRadialGradient(mx, my, 14, mx, my, 72);
+  g2.addColorStop(0, `rgba(200,190,120,${moonVis * 0.15})`);
+  g2.addColorStop(0.5, `rgba(160,150,90,${moonVis * 0.07})`);
+  g2.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = g2;
+  ctx.beginPath(); ctx.arc(mx, my, 72, 0, Math.PI * 2); ctx.fill();
+  // corpo lunar
+  ctx.fillStyle = `rgba(228,218,168,${moonVis})`;
+  ctx.shadowColor = "#ffe8b0";
+  ctx.shadowBlur = 14 * moonVis;
   ctx.beginPath(); ctx.arc(mx, my, 13, 0, Math.PI * 2); ctx.fill();
   ctx.shadowBlur = 0;
+  // fase (sombra)
   ctx.globalAlpha = moonVis;
-  ctx.fillStyle = "#0e0620";
-  ctx.beginPath(); ctx.arc(mx + 6, my - 3, 11, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = "#08061e";
+  ctx.beginPath(); ctx.arc(mx + 7, my - 2, 11, 0, Math.PI * 2); ctx.fill();
+  // crateras sutis
+  ctx.fillStyle = "rgba(0,0,0,0.18)";
+  [[mx - 4, my + 3, 2.5], [mx + 2, my - 5, 1.8], [mx - 1, my + 1, 1.2]].forEach(([cx, cy, cr]) => {
+    ctx.beginPath(); ctx.arc(cx, cy, cr, 0, Math.PI * 2); ctx.fill();
+  });
   ctx.globalAlpha = 1;
 }
 
@@ -285,7 +324,7 @@ function drawBg() {
   if (sky.st > 0.02) {
     const maxA = sky.st;
     STARS.forEach((s) => {
-      ctx.globalAlpha = (0.30 + Math.sin(s.tw) * 0.44) * maxA;
+      ctx.globalAlpha = (0.28 + Math.sin(s.tw + frame * s.spd) * 0.44) * maxA;
       ctx.fillStyle = "#fff";
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
@@ -296,6 +335,27 @@ function drawBg() {
   const isSunrise = dayPhase > 0.24 && dayPhase < 0.36;
   const isSunset  = dayPhase > 0.68 && dayPhase < 0.82;
   const isDay     = sky.st < 0.3;
+
+  // glow horizontal no horizonte durante nascer/pôr do sol
+  if (isSunrise || isSunset) {
+    const p2 = isSunrise
+      ? Math.max(0, Math.min(1, (dayPhase - 0.24) / 0.12))
+      : Math.max(0, Math.min(1, (dayPhase - 0.68) / 0.14));
+    const gInt = Math.sin(p2 * Math.PI) * 0.55;
+    const hg2 = ctx.createLinearGradient(0, H * 0.42, 0, H * 0.72);
+    hg2.addColorStop(0, "rgba(0,0,0,0)");
+    hg2.addColorStop(0.5, `rgba(255,90,10,${gInt * 0.28})`);
+    hg2.addColorStop(1, `rgba(255,50,0,${gInt * 0.12})`);
+    ctx.fillStyle = hg2;
+    ctx.fillRect(0, H * 0.42, W, H * 0.30);
+    // faixa dourada fina no horizonte
+    const hStrip = ctx.createLinearGradient(0, H * 0.68, 0, H * 0.75);
+    hStrip.addColorStop(0, `rgba(255,160,30,${gInt * 0.5})`);
+    hStrip.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = hStrip;
+    ctx.fillRect(0, H * 0.68, W, H * 0.07);
+  }
+
   const m1 = isSunrise || isSunset ? "#2a1218" : isDay ? "#1a2c18" : "#16194a";
   const m2 = isSunrise || isSunset ? "#1a0a10" : isDay ? "#102016" : "#0e183c";
   const m3 = isSunrise || isSunset ? "#100608" : isDay ? "#080e0a" : "#080c22";
@@ -689,7 +749,7 @@ function drawOver() {
   ctx.fillText(`RECORDE: ${Math.max(hiScore, score)}  ·  ONDA ${waveNum + 1}  ·  ${diffCfg.icon} ${diffCfg.name}`, W / 2, baseY + 50);
 
   // stats panel
-  const px = 180, pw = W - 360, py = baseY + 66, ph = 148;
+  const px = 180, pw = W - 360, py = baseY + 66, ph = 258;
   ctx.fillStyle = "#0f172a";
   ctx.fillRect(px, py, pw, ph);
   ctx.strokeStyle = "#1e293b";
@@ -702,11 +762,19 @@ function drawOver() {
 
   const st = typeof playerStats !== "undefined" ? playerStats : {};
   const totalPw = Object.values(st.pw || {}).reduce((a, v) => a + v, 0);
+  const shots = st.shotsFired ?? 0;
+  const acc = shots > 0 ? Math.round((st.kills ?? 0) / shots * 100) : 0;
+  const survived = st.timeSurvived ?? 0;
+  const mm = String(Math.floor(survived / 60)).padStart(2, "0");
+  const ss = String(survived % 60).padStart(2, "0");
 
   const rows = [
-    ["Inimigos abatidos", st.kills ?? 0,  "Acertos sofridos", st.hits ?? 0],
-    ["Rasantes",          st.grazes ?? 0, "Combo máximo",     `${st.maxCombo ?? 1}×`],
-    ["Power-ups coletados", totalPw,      "Ondas completadas", waveNum],
+    ["Abates",            st.kills ?? 0,               "Acertos sofridos",  st.hits ?? 0],
+    ["Precisão",          `${acc}%`,                   "Tempo de missão",   `${mm}:${ss}`],
+    ["Bosses abatidos",   st.bossKills ?? 0,            "Ondas perfeitas",   st.wavesWithoutHit ?? 0],
+    ["Bloq. de escudo",   st.shieldBlocks ?? 0,         "Abates em combo",   st.comboKills ?? 0],
+    ["Rasantes",          st.grazes ?? 0,               "Maior sequência",   st.longestGrazeStreak ?? 0],
+    ["Quase mortes",      st.nearDeathHits ?? 0,        "Power-ups",         totalPw],
   ];
 
   const col1x = px + pw * 0.26;

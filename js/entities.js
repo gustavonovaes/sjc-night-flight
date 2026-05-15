@@ -15,9 +15,9 @@ const INV = 120;
 const MAX_LIVES = 3;
 
 const PLANES = [
-  { id: "tucano", name: "EMB-314 Super Tucano", icon: "✈",  accel: 0.45, maxSpd: 5.5, fireN: FIRE_N, lives: 3, unlock: 0 },
-  { id: "e2",     name: "Embraer E2",           icon: "🛫", accel: 0.38, maxSpd: 6.8, fireN: 20,     lives: 2, unlock: 3000 },
-  { id: "c390",   name: "C-390 Millennium",     icon: "🚀", accel: 0.30, maxSpd: 4.2, fireN: 30,     lives: 4, unlock: 8000 },
+  { id: "tucano", name: "EMB-314 Super Tucano", icon: "✈",  accel: 0.30, maxSpd: 4.0, fireN: FIRE_N, lives: 3, unlock: 0 },
+  { id: "e2",     name: "Embraer E2",           icon: "🛫", accel: 0.25, maxSpd: 5.0, fireN: 20,     lives: 2, unlock: 3000 },
+  { id: "c390",   name: "C-390 Millennium",     icon: "🚀", accel: 0.20, maxSpd: 3.2, fireN: 30,     lives: 4, unlock: 8000 },
 ];
 let selectedPlane = 0;
 const TOTAL_KEY = "sjc_total_score";
@@ -133,8 +133,8 @@ class Player {
     const accel = this.delta > 0 ? this.accel * 4 : this.accel;
     const friction = this.delta > 0 ? 0.22 : 0.84;
     if (touch.active) {
-      this.vx = touch.vx * spd * (inv ? -1 : 1);
-      this.vy = touch.vy * spd * (inv ? -1 : 1);
+      this.vx = touch.vx * spd * 0.65 * (inv ? -1 : 1);
+      this.vy = touch.vy * spd * 0.65 * (inv ? -1 : 1);
     } else {
       const eu = inv ? dn : up, ed = inv ? up : dn;
       const el = inv ? rt : lt, er = inv ? lt : rt;
@@ -158,9 +158,20 @@ class Player {
         vy: (Math.random() - 0.5) * 0.5,
         life: 1,
         size: 2 + Math.random() * 3,
-        // Asa Delta: rastro arco-íris vibrante
         hue: this.delta > 0 ? (frame * 6) % 360 : 185 + Math.random() * 55,
       });
+    // fumaça de dano crítico: partículas escuras quando 1 HP
+    if (this.lives === 1) {
+      this.trail.push({
+        x: this.x - 30 + Math.random() * 20,
+        y: this.y + (Math.random() - 0.5) * 18,
+        vx: -(0.2 + Math.random() * 0.6),
+        vy: (Math.random() - 0.5) * 1.5 - 0.4,
+        life: 1,
+        size: 8 + Math.random() * 10,
+        smoke: true,
+      });
+    }
     this.trail.forEach((p) => {
       p.x += p.vx;
       p.y += p.vy;
@@ -220,9 +231,10 @@ class Player {
     if (dev.godMode || this.bis > 0) return false;
     if (this.inv > 0) return false;
     if (this.shield > 0) {
-      this.shield = 0;
+      this.shield = Math.max(0, this.shield - SHIELD_DUR);
       this.inv = 80;
       sfxHit();
+      if (typeof playerStats !== "undefined") playerStats.shieldBlocks++;
       return false;
     }
     this.lives--;
@@ -232,10 +244,15 @@ class Player {
     return true;
   }
   draw() {
-    // Rastro sem gradient — evita criar CanvasGradient por partícula a cada frame
     this.trail.forEach((p) => {
-      ctx.globalAlpha = p.life * 0.42;
-      ctx.fillStyle = `hsl(${p.hue},88%,70%)`;
+      if (p.smoke) {
+        ctx.globalAlpha = p.life * 0.75;
+        const v = Math.floor(120 + p.life * 80);
+        ctx.fillStyle = `rgb(${v},${Math.floor(v * 0.6)},${Math.floor(v * 0.4)})`;
+      } else {
+        ctx.globalAlpha = p.life * 0.42;
+        ctx.fillStyle = `hsl(${p.hue},88%,70%)`;
+      }
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
       ctx.fill();

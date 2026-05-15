@@ -1,6 +1,6 @@
 "use strict";
 
-const VERSION = "v0.0.3";
+const VERSION = "v0.0.4";
 
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
@@ -120,5 +120,5 @@ const PARQUE_TREES = [-100, -74, -50, -26, -2, 22, 46, 70, 98].map((ox, i) => ({
 const CARS = Array.from({ length: 28 }, (_, i) => ({
   lane: i % 2,
   offset: (i * 193.7) % (W * 5),
-  spd: 1.5 + (i % 6) * 0.48,
+  spd: 0.5 + (i % 6) * 0.18,
 }));
