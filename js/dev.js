@@ -23,7 +23,7 @@ let hordeQueue = [];
 let hordeSpawnT = 0;
 let currentPhase = 0;
 
-const HS_KEY = "sjc_flight_hs";
+let HS_KEY = "sjc_hi_aventura";
 
 const dev = {
   open: false,
@@ -188,8 +188,6 @@ function devHandleKey(code) {
 let radioText = "";
 let radioT = 0;
 let radioQueue = [];
-let windX = 0;
-let windTimer = 1800;
 let grazeCount = 0;
 let cbersMission = null;
 let cbersMissionT = 3800;

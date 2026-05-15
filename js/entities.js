@@ -22,6 +22,34 @@ const PLANES = [
 let selectedPlane = 0;
 const TOTAL_KEY = "sjc_total_score";
 
+const DIFFICULTIES = [
+  {
+    id: "aventura", name: "AVENTURA", icon: "🌅", col: "#34d399",
+    desc: "Diversão garantida — curta cada onda",
+    comboMax: 10,
+    spawnMin: 44, spawnBase: 170, spawnWaveMult: 5, spawnTimeMult: 300,
+    bossInterval: 4800, doubleBossWave: 18,
+    hpMult: 0.65,
+    dropMult: 1.5,
+    hsKey: "sjc_hi_aventura",
+  },
+  {
+    id: "radical", name: "RADICAL", icon: "🔥", col: "#ef4444",
+    desc: "Caos total — combo até 50×",
+    comboMax: 50,
+    spawnMin: 22, spawnBase: 100, spawnWaveMult: 7, spawnTimeMult: 230,
+    bossInterval: 1800, doubleBossWave: 5,
+    hpMult: 1.6,
+    dropMult: 0.65,
+    hsKey: "sjc_hi_radical",
+  },
+];
+let selectedDifficulty = 0;
+let diffCfg = DIFFICULTIES[0];
+let playerStats = { pw: {}, kills: 0, hits: 0, grazes: 0, maxCombo: 1 };
+// DDA: stress index 0 (calm/breezing) → 1 (overwhelmed). Ajusta spawn rate ±20%.
+let ddaStress = 0.5;
+
 function circ(a, b) {
   const dx = a.x - b.x;
   const dy = a.y - b.y;
@@ -76,6 +104,7 @@ class Player {
     this.tilt = 0;
     this.planeId = cfg.id;
     this.lives = cfg.lives;
+    this.maxLives = cfg.lives;
     this.accel = cfg.accel;
     this.topSpd = cfg.maxSpd;
     this._fireN = cfg.fireN;
@@ -158,9 +187,9 @@ class Player {
       this.fireT = rate;
       shots.push(...this._shoot());
     }
-    // Avibras: dispara míssil a cada 90 frames
+    // Avibras: dispara míssil a cada 90 frames (45 com RADAR AVIBRAS)
     if (this.avibras > 0 && --this.missileT <= 0) {
-      this.missileT = 90;
+      this.missileT = this.inpe > 0 ? 45 : 90;
       const target = _findMissileTarget();
       if (target) {
         shots.push(new HomingMissile(this.x + 20, this.y - 12, target));
@@ -171,6 +200,14 @@ class Player {
   }
   _shoot() {
     sfxShoot();
+    if (this.boost > 0 && this.delta > 0)
+      return [
+        new Bullet(this.x + 44, this.y - 18, -0.16),
+        new Bullet(this.x + 44, this.y - 9,  -0.08),
+        new Bullet(this.x + 44, this.y,       0),
+        new Bullet(this.x + 44, this.y + 9,   0.08),
+        new Bullet(this.x + 44, this.y + 18,  0.16),
+      ];
     if (this.boost > 0)
       return [
         new Bullet(this.x + 44, this.y - 10, -0.08),
@@ -798,6 +835,9 @@ class Enemy {
         break;
       }
     }
+    if (diffCfg && diffCfg.hpMult !== 1 && this.mhp !== undefined) {
+      this.hp = this.mhp = Math.max(1, Math.ceil(this.mhp * diffCfg.hpMult));
+    }
     this.ox = x;
   }
   update() {
@@ -1013,9 +1053,9 @@ class Enemy {
     if (!isBoss && this.x < -220) this.dead = true;
     return nb;
   }
-  hit() {
+  hit(dmg = 1) {
     if (this.type === "cemaden_eye" && !this.vulnerable) return 0;
-    this.hp--;
+    this.hp -= dmg;
     spark(this.x, this.y);
     if (this.hp <= 0) {
       sfxBang();
@@ -1328,7 +1368,7 @@ class Enemy {
       const by = this.y - this.r - 8;
       ctx.fillStyle = "rgba(0,0,0,.55)";
       ctx.fillRect(bx, by, bw, 4);
-      ctx.fillStyle = `hsl(${(this.hp / this.mhp) * 118},80%,50%)`;
+      ctx.fillStyle = "#ef4444";
       ctx.fillRect(bx, by, bw * (this.hp / this.mhp), 4);
     }
   }
@@ -1336,7 +1376,7 @@ class Enemy {
     const hp = this.hp / this.mhp;
     const bw = 150, bx = this.x - bw / 2, by = this.y - this.r - 22;
     ctx.fillStyle = "rgba(0,0,0,.55)"; ctx.fillRect(bx, by, bw, 9);
-    ctx.fillStyle = `hsl(${hp * 118},80%,50%)`; ctx.fillRect(bx, by, bw * hp, 9);
+    ctx.fillStyle = "#ef4444"; ctx.fillRect(bx, by, bw * hp, 9);
     if (label) {
       ctx.fillStyle = "#fff"; ctx.font = "bold 10px Courier New";
       ctx.textAlign = "center"; ctx.fillText(label, this.x, by - 4); ctx.textAlign = "left";
@@ -1451,6 +1491,7 @@ const CTYPES_PW = [
   { id: "revap_pw",    lbl: "REVAP SHOCK",  pts: 0, col: "#bfdbfe", glow: "#60a5fa", icon: "❄️", pw: "revap"    },
   { id: "delta_pw",    lbl: "ASA DELTA",    pts: 0, col: "#a78bfa", glow: "#7c3aed", icon: "🪂", pw: "delta"    },
   { id: "ericsson_pw", lbl: "WINGMAN 5G",   pts: 0, col: "#818cf8", glow: "#6366f1", icon: "📶", pw: "ericsson" },
+  { id: "hp_up",       lbl: "VIDA +1",      pts: 0, col: "#f472b6", glow: "#db2777", icon: "❤️", pw: "hp_up", rare: true },
 ];
 
 const CTYPES = [...CTYPES_SCORE, ...CTYPES_PW];
@@ -1495,27 +1536,32 @@ const DROP_TABLE = {
   // bosses garantem drops generosos para recompensar a dificuldade
   boss:   { shield: 0.85, boost: 0.85, "14bis": 0.55,
             avibras_pw: 0.65, inpe_sat: 0.65, revap_pw: 0.65, delta_pw: 0.60, ericsson_pw: 0.65,
+            hp_up: 0.05,
             embraer: 0.55, inpe: 0.55, dcta: 0.55, ita: 0.45,
             tech: 0.45, jj: 0.25, gm: 0.25, ericsson: 0.25,
             fccr: 0.28, sesc: 0.28, parque: 0.22, vicentina: 0.22 },
 
   prototipo_x: { shield: 0.80, boost: 0.80, "14bis": 0.50,
             avibras_pw: 0.60, inpe_sat: 0.60, revap_pw: 0.60, delta_pw: 0.65, ericsson_pw: 0.60,
+            hp_up: 0.05,
             embraer: 0.50, inpe: 0.46, dcta: 0.55, ita: 0.46,
             tech: 0.40, dcta: 0.50, fccr: 0.25, parque: 0.20 },
 
   cemaden_eye: { shield: 0.82, boost: 0.82, "14bis": 0.52,
             avibras_pw: 0.62, inpe_sat: 0.66, revap_pw: 0.62, delta_pw: 0.57, ericsson_pw: 0.62,
+            hp_up: 0.05,
             embraer: 0.50, inpe: 0.60, dcta: 0.50, ita: 0.44,
             tech: 0.40, ericsson: 0.24, fccr: 0.25, parque: 0.20 },
 
   engrenagem:  { shield: 0.86, boost: 0.86, "14bis": 0.56,
             avibras_pw: 0.66, inpe_sat: 0.62, revap_pw: 0.66, delta_pw: 0.60, ericsson_pw: 0.66,
+            hp_up: 0.05,
             embraer: 0.52, inpe: 0.50, dcta: 0.56, ita: 0.47,
             tech: 0.42, gm: 0.26, ericsson: 0.26, fccr: 0.27, parque: 0.22 },
 
   cigarra:     { shield: 0.95, boost: 0.95, "14bis": 0.75,
             avibras_pw: 0.80, inpe_sat: 0.80, revap_pw: 0.80, delta_pw: 0.75, ericsson_pw: 0.80,
+            hp_up: 0.08,
             embraer: 0.65, inpe: 0.65, dcta: 0.65, ita: 0.55,
             tech: 0.55, jj: 0.35, gm: 0.35, ericsson: 0.35,
             fccr: 0.38, sesc: 0.38, parque: 0.32, vicentina: 0.32 },
@@ -1587,8 +1633,14 @@ function dropCollectibles(x, y, enemyType) {
     if (dropped >= maxDrops) return;
     const base = table[ct.id] ?? 0;
     if (base === 0) return;
+    let chance = base;
+    if (ct.pw) {
+      const picks = playerStats.pw[ct.id] ?? 0;
+      // saturation: cada coleta reduz a chance do próximo drop desse powerup
+      chance *= (diffCfg.dropMult ?? 1) / (1 + picks * 0.14);
+    }
     const boost = ct.id === "14bis" ? 1 + Math.max(0, combo - 5) * 0.9 : 1;
-    if (Math.random() < base * boost) {
+    if (Math.random() < chance * boost) {
       const c = new Collectible(x, y);
       c.type = ct;
       collectibles.push(c);

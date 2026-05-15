@@ -1,5 +1,7 @@
 "use strict";
 
+const VERSION = "v0.0.3";
+
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
 const W = 800;

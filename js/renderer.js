@@ -332,12 +332,26 @@ function drawHUD() {
     ctx.shadowBlur = 0;
   }
   ctx.textAlign = "right";
-  for (let i = 0; i < MAX_LIVES; i++) {
+  for (let i = 0; i < Math.max(player.maxLives, player.lives); i++) {
     ctx.globalAlpha = i < player.lives ? 1 : 0.18;
     ctx.font = "17px sans-serif";
     ctx.fillText("✈", W - 10 - i * 22, 24);
   }
   ctx.globalAlpha = 1;
+  // escudos ativos: ícones ciano à esquerda das vidas, 1 por stack
+  if (player.shield > 0) {
+    const stacks = Math.min(3, Math.ceil(player.shield / SHIELD_DUR));
+    const lifeSlots = Math.max(player.maxLives, player.lives);
+    ctx.shadowColor = "#00eeff";
+    ctx.shadowBlur = 8 + Math.sin(frame * 0.18) * 4;
+    ctx.font = "13px sans-serif";
+    for (let i = 0; i < stacks; i++) {
+      ctx.globalAlpha = 0.85 + Math.sin(frame * 0.18 + i) * 0.12;
+      ctx.fillText("🛡", W - 10 - (lifeSlots + i) * 22, 24);
+    }
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1;
+  }
   // Buffs ativos com barra de progresso e tempo restante
   const BUFFS = [
     { val: player.shield,   max: SHIELD_DUR   * 3, col: "#34d399", icon: "🛡️" },
@@ -371,14 +385,26 @@ function drawHUD() {
     ctx.restore();
     buffY += 18;
   });
-  if (Math.abs(windX) > 0.05) {
-    ctx.save();
-    ctx.fillStyle = "#93c5fd";
-    ctx.font = "10px monospace";
-    ctx.textAlign = "center";
-    ctx.globalAlpha = 0.75;
-    ctx.fillText(`${windX > 0 ? "→→" : "←←"} VENTO`, W / 2, 15);
-    ctx.restore();
+  // Combos de powerups ativos
+  const activeCombos = [];
+  if (player.boost > 0 && player.shield > 0)   activeCombos.push({ name: "⚡🛡️ FORTALEZA",      col: "#fbbf24" });
+  if (player.avibras > 0 && player.inpe > 0)    activeCombos.push({ name: "🚀📡 RADAR AVIBRAS",   col: "#f97316" });
+  if (player.delta > 0 && player.boost > 0)     activeCombos.push({ name: "🪂⚡ HIPERSÔNICO",     col: "#a78bfa" });
+  if (player.revap > 0 && player.shield > 0)    activeCombos.push({ name: "❄️🛡️ ESCUDO GLACIAL", col: "#bfdbfe" });
+  if (activeCombos.length > 0) {
+    let cy = combo > 1 ? 72 : 58;
+    activeCombos.forEach(c => {
+      ctx.save();
+      ctx.textAlign = "left";
+      ctx.font = "bold 9px Courier New";
+      ctx.fillStyle = c.col;
+      ctx.shadowColor = c.col;
+      ctx.shadowBlur = 6;
+      ctx.fillText(`COMBO: ${c.name}`, 12, cy);
+      ctx.shadowBlur = 0;
+      ctx.restore();
+      cy += 13;
+    });
   }
   ctx.textAlign = "left";
   if (waveT > 0) {
@@ -410,12 +436,34 @@ function drawHUD() {
     ctx.fillText("⚙ DEV", W / 2, H - 22);
     ctx.restore();
   }
+  if (diffCfg && diffCfg.id === "radical") {
+    ctx.save();
+    ctx.fillStyle = "#ef4444";
+    ctx.font = "bold 10px monospace";
+    ctx.textAlign = "left";
+    ctx.shadowColor = "#ef4444";
+    ctx.shadowBlur = 6;
+    ctx.fillText("🔥 RADICAL", 12, H - 8);
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  }
   if (dev.godMode) {
     ctx.save();
     ctx.fillStyle = "#00ff88";
     ctx.font = "bold 10px monospace";
     ctx.textAlign = "right";
     ctx.fillText("⚙ GOD", W - 8, H - 8);
+    ctx.restore();
+  }
+  if (typeof audioFailed !== "undefined" && audioFailed) {
+    ctx.save();
+    ctx.font = "11px monospace";
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#fbbf24";
+    ctx.shadowColor = "#f59e0b";
+    ctx.shadowBlur = 6;
+    ctx.fillText("🔇 !", 8, H - 8);
+    ctx.shadowBlur = 0;
     ctx.restore();
   }
   // FPS — canto inferior direito, acima do botão DEV
@@ -465,25 +513,9 @@ function drawMenu() {
   ctx.rotate(Math.cos(frame * 0.04) * 0.1);
   drawMiniPlane();
   ctx.restore();
-  ctx.fillStyle = "#94a3b8";
-  ctx.font = "11px Courier New";
-  ctx.fillText(
-    "↑↓←→ ou WASD para mover  ·  Destrua inimigos  ·  Colete tokens",
-    W / 2,
-    H / 2 + 52,
-  );
   ctx.fillStyle = "#64748b";
   ctx.font = "10px Courier New";
-  ctx.fillText(
-    "INIMIGOS: ☁️ Frente Fria  🔺 Drone DCTA  🦜 Arara Real  🛸 Disco Voador  💀 Chefe",
-    W / 2,
-    H / 2 + 70,
-  );
-  ctx.fillText(
-    "POWER-UPS: 🛡️ Escudo CEMADEN   ⚡ Turbo Embraer",
-    W / 2,
-    H / 2 + 86,
-  );
+  ctx.fillText("WASD/Setas — mover  ·  I — sobre o jogo", W / 2, H / 2 + 50);
   ctx.fillStyle = Math.floor(frame / 18) % 2 ? "#fbbf24" : "#f59e0b";
   ctx.font = "bold 15px Courier New";
   ctx.shadowColor = "#fbbf24";
@@ -491,52 +523,75 @@ function drawMenu() {
   const startHint = "ontouchstart" in window
     ? "TOQUE NA TELA PARA DECOLAR"
     : "PRESSIONE ENTER PARA DECOLAR";
-  ctx.fillText(startHint, W / 2, H / 2 + 112);
+  ctx.fillText(startHint, W / 2, H / 2 + 70);
   ctx.shadowBlur = 0;
-  ctx.fillStyle = "#475569";
-  ctx.font = "9px Courier New";
-  ctx.fillText("I — sobre o jogo", W / 2, H / 2 + 126);
 
   // Plane selector panel
   const total = parseInt(localStorage.getItem(TOTAL_KEY) || "0");
   const pl = PLANES[selectedPlane];
   const unlocked = total >= pl.unlock;
-  const psx = W / 2 - 118, psy = H / 2 + 138;
+  const psx = W / 2 - 118, psy = H / 2 + 90;
   ctx.fillStyle = "#1e293b";
-  ctx.fillRect(psx, psy, 236, 46);
+  ctx.fillRect(psx, psy, 236, 42);
   ctx.strokeStyle = unlocked ? "#334155" : "#7f1d1d";
   ctx.lineWidth = 1;
-  ctx.strokeRect(psx, psy, 236, 46);
+  ctx.strokeRect(psx, psy, 236, 42);
   ctx.fillStyle = unlocked ? "#f1f5f9" : "#64748b";
   ctx.font = "bold 10px Courier New";
-  ctx.fillText(`◀  ${unlocked ? pl.icon : "🔒"} ${pl.name}  ▶`, W / 2, psy + 15);
+  ctx.fillText(`◀  ${unlocked ? pl.icon : "🔒"} ${pl.name}  ▶`, W / 2, psy + 14);
   ctx.font = "8.5px Courier New";
   ctx.fillStyle = "#94a3b8";
-  ctx.fillText(`SPD ${pl.maxSpd.toFixed(1)}  HP ${pl.lives}  CAD ${pl.fireN}`, W / 2, psy + 28);
+  ctx.fillText(`SPD ${pl.maxSpd.toFixed(1)}  HP ${pl.lives}  CAD ${pl.fireN}`, W / 2, psy + 27);
   if (!unlocked) {
     ctx.fillStyle = "#fbbf24";
     ctx.font = "7.5px Courier New";
-    ctx.fillText(`Desbloqueie com ${pl.unlock} pts totais  (você: ${total})`, W / 2, psy + 41);
+    ctx.fillText(`Desbloqueie com ${pl.unlock} pts totais  (você: ${total})`, W / 2, psy + 38);
   } else {
     ctx.fillStyle = "#334155";
     ctx.font = "7.5px Courier New";
-    ctx.fillText("◀ ▶  ou  A D  para trocar", W / 2, psy + 41);
+    ctx.fillText("◀ ▶  ou  A D  para trocar", W / 2, psy + 38);
   }
 
-  const hs = parseInt(localStorage.getItem(HS_KEY) || "0");
-  if (hs > 0) {
-    ctx.fillStyle = "#fbbf24";
-    ctx.font = "10px Courier New";
-    ctx.fillText(`RECORDE: ${hs}`, W / 2, psy + 58);
-  }
-  ctx.fillStyle = "#2d3748";
-  ctx.font = "9px Courier New";
-  ctx.fillText(
-    "Embraer · INPE · ITA · DCTA · Parque Tecnológico · CEMADEN",
-    W / 2,
-    H - 8,
-  );
+  // Difficulty selector panel
+  const diff = DIFFICULTIES[selectedDifficulty];
+  const dsy = psy + 46;
+  ctx.fillStyle = "#1e293b";
+  ctx.fillRect(psx, dsy, 236, 44);
+  ctx.strokeStyle = diff.col + "88";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(psx, dsy, 236, 44);
+  ctx.fillStyle = diff.col;
+  ctx.shadowColor = diff.col;
+  ctx.shadowBlur = 6;
+  ctx.font = "bold 11px Courier New";
+  ctx.fillText(`↑↓  ${diff.icon} ${diff.name}  ↑↓`, W / 2, dsy + 16);
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "8px Courier New";
+  ctx.fillText(diff.desc, W / 2, dsy + 29);
+  const hs = parseInt(localStorage.getItem(diff.hsKey) || "0");
+  ctx.fillStyle = hs > 0 ? "#fbbf24" : "#334155";
+  ctx.font = "8px Courier New";
+  ctx.fillText(hs > 0 ? `RECORDE: ${hs}` : "Sem recorde ainda", W / 2, dsy + 40);
   ctx.textAlign = "left";
+  // alerta de falha de áudio
+  if (typeof audioFailed !== "undefined" && audioFailed) {
+    ctx.save();
+    ctx.font = "11px monospace";
+    ctx.fillStyle = "#fbbf24";
+    ctx.shadowColor = "#f59e0b";
+    ctx.shadowBlur = 6;
+    ctx.fillText("🔇 !", 8, H - 8);
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  }
+  // versão
+  ctx.save();
+  ctx.textAlign = "right";
+  ctx.font = "8px Courier New";
+  ctx.fillStyle = "#334155";
+  ctx.fillText(typeof VERSION !== "undefined" ? VERSION : "", W - 6, H - 6);
+  ctx.restore();
 }
 
 function drawMiniPlane() {
@@ -605,44 +660,102 @@ function drawMiniPlane() {
 }
 
 function drawOver() {
-  ctx.fillStyle = "rgba(0,0,0,.86)";
+  ctx.fillStyle = "rgba(0,0,0,.88)";
   ctx.fillRect(0, 0, W, H);
   ctx.textAlign = "center";
+
   const nr = score >= hiScore && score > 0;
   if (nr) {
     ctx.fillStyle = "#fbbf24";
     ctx.shadowColor = "#fbbf24";
     ctx.shadowBlur = 18;
-    ctx.font = "bold 13px Courier New";
-    ctx.fillText("★ NOVO RECORDE! ★", W / 2, H / 2 - 112);
+    ctx.font = "bold 12px Courier New";
+    ctx.fillText("★ NOVO RECORDE! ★", W / 2, 30);
     ctx.shadowBlur = 0;
   }
   ctx.fillStyle = "#ef4444";
   ctx.shadowColor = "#ef4444";
   ctx.shadowBlur = 14;
-  ctx.font = "bold 34px Courier New";
-  ctx.fillText("GAME OVER", W / 2, H / 2 - 72);
+  ctx.font = "bold 30px Courier New";
+  ctx.fillText("GAME OVER", W / 2, nr ? 58 : 44);
   ctx.shadowBlur = 0;
+
+  const baseY = nr ? 58 : 44;
   ctx.fillStyle = "#fff";
-  ctx.font = "bold 19px Courier New";
-  ctx.fillText(`PONTUAÇÃO: ${score}`, W / 2, H / 2 - 32);
+  ctx.font = "bold 17px Courier New";
+  ctx.fillText(`PONTUAÇÃO: ${score}`, W / 2, baseY + 32);
   ctx.fillStyle = "#fbbf24";
-  ctx.font = "13px Courier New";
-  ctx.fillText(`RECORDE: ${Math.max(hiScore, score)}`, W / 2, H / 2 - 8);
-  ctx.fillStyle = "#94a3b8";
-  ctx.font = "12px Courier New";
-  const msg =
-    score > 6000
-      ? "Excelente! SJC está orgulhosa!"
-      : score > 2500
-        ? "Bom trabalho, Guardião do Vale!"
-        : "SJC precisa de você... Tente de novo!";
-  ctx.fillText(msg, W / 2, H / 2 + 22);
+  ctx.font = "11px Courier New";
+  ctx.fillText(`RECORDE: ${Math.max(hiScore, score)}  ·  ONDA ${waveNum + 1}  ·  ${diffCfg.icon} ${diffCfg.name}`, W / 2, baseY + 50);
+
+  // stats panel
+  const px = 180, pw = W - 360, py = baseY + 66, ph = 148;
+  ctx.fillStyle = "#0f172a";
+  ctx.fillRect(px, py, pw, ph);
+  ctx.strokeStyle = "#1e293b";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(px, py, pw, ph);
+
+  ctx.fillStyle = "#475569";
+  ctx.font = "9px Courier New";
+  ctx.fillText("─── ESTATÍSTICAS DA MISSÃO ───", W / 2, py + 14);
+
+  const st = typeof playerStats !== "undefined" ? playerStats : {};
+  const totalPw = Object.values(st.pw || {}).reduce((a, v) => a + v, 0);
+
+  const rows = [
+    ["Inimigos abatidos", st.kills ?? 0,  "Acertos sofridos", st.hits ?? 0],
+    ["Rasantes",          st.grazes ?? 0, "Combo máximo",     `${st.maxCombo ?? 1}×`],
+    ["Power-ups coletados", totalPw,      "Ondas completadas", waveNum],
+  ];
+
+  const col1x = px + pw * 0.26;
+  const col2x = px + pw * 0.76;
+  const colMid = px + pw / 2;
+
+  rows.forEach(([l1, v1, l2, v2], i) => {
+    const ry = py + 36 + i * 36;
+    // divider
+    ctx.strokeStyle = "#1e293b";
+    ctx.lineWidth = 1;
+    if (i > 0) { ctx.beginPath(); ctx.moveTo(px + 12, ry - 10); ctx.lineTo(px + pw - 12, ry - 10); ctx.stroke(); }
+    // vertical divider
+    ctx.beginPath(); ctx.moveTo(colMid, ry - 8); ctx.lineTo(colMid, ry + 18); ctx.stroke();
+
+    ctx.fillStyle = "#64748b";
+    ctx.font = "8px Courier New";
+    ctx.textAlign = "center";
+    ctx.fillText(l1, col1x, ry);
+    ctx.fillText(l2, col2x, ry);
+
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "bold 14px Courier New";
+    ctx.fillText(v1, col1x, ry + 16);
+    ctx.fillText(v2, col2x, ry + 16);
+  });
+
+  // top powerup
+  const pwEntries = Object.entries(st.pw || {}).sort((a, b) => b[1] - a[1]);
+  if (pwEntries.length > 0) {
+    const [topId, topN] = pwEntries[0];
+    const PW_ICONS = { shield:"🛡", boost:"⚡", "14bis":"🛩", avibras:"🚀", inpe:"📡", revap:"❄️", asadelta:"🪂", wingman:"📶", hp_up:"❤️" };
+    ctx.fillStyle = "#475569";
+    ctx.font = "8px Courier New";
+    ctx.fillText(`FAVORITO: ${PW_ICONS[topId] || "⬡"} ×${topN}`, W / 2, py + ph - 8);
+  }
+
+  const msg = score > 6000 ? "Excelente! SJC está orgulhosa!"
+    : score > 2500 ? "Bom trabalho, Guardião do Vale!"
+    : "SJC precisa de você... Tente de novo!";
+  ctx.fillStyle = "#64748b";
+  ctx.font = "11px Courier New";
+  ctx.fillText(msg, W / 2, py + ph + 20);
+
   ctx.fillStyle = Math.floor(frame / 18) % 2 ? "#60a5fa" : "#3b82f6";
   ctx.shadowColor = "#3b82f6";
   ctx.shadowBlur = 10;
-  ctx.font = "bold 13px Courier New";
-  ctx.fillText("ENTER para jogar novamente", W / 2, H / 2 + 62);
+  ctx.font = "bold 12px Courier New";
+  ctx.fillText("ENTER para jogar novamente", W / 2, H - 16);
   ctx.shadowBlur = 0;
   ctx.textAlign = "left";
 }
@@ -728,7 +841,8 @@ function drawSobre() {
       "Combo: destruir seguidos = multiplicador",
       "Rasante: passe perto de bala sem levar dano",
       "Missão CBERS: escorte o satélite até sair",
-      "Vento lateral e raios à noite",
+      "🌅 AVENTURA: diversão garantida, combo 10×, mais powerups",
+      "🔥 RADICAL: spawns agressivos, bosses duros, combo 50×",
     ]},
     { title: "🚀 POWER-UPS", col: "#fb923c", lines: [
       "🛡️ Escudo — absorve 1 acerto (acumula ×3)",

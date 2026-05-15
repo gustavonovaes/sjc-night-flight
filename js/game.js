@@ -3,8 +3,6 @@
 // Tipos que contam como "boss vivo" — usados em múltiplos pontos do jogo
 const BOSS_TYPES = ["boss", "prototipo_x", "cemaden_eye", "engrenagem", "cigarra"];
 
-let _prevTickerState = null;
-
 const RADIO_MSGS = {
   wave_0: "Torre SJC: Frente fria detectada sobre a Dutra. Proteja o Vale!",
   wave_1: "DCTA Controle: Contatos radar múltiplos. Drones hostis confirmados.",
@@ -75,6 +73,9 @@ function announce(n) {
 // Inicializa uma nova partida: reseta todos os estados globais e começa a onda 0.
 function startGame() {
   ensureAC();
+  for (const k in keys) delete keys[k];
+  diffCfg = DIFFICULTIES[selectedDifficulty];
+  HS_KEY = diffCfg.hsKey;
   const pl = PLANES[selectedPlane];
   const totalPts = parseInt(localStorage.getItem(TOTAL_KEY) || "0");
   // usa o avião selecionado apenas se desbloqueado; caso contrário, usa o padrão
@@ -103,9 +104,11 @@ function startGame() {
   playlistIdx = 6;
   off1 = 0; off2 = 0; off3 = 0; offSky = 0;
   radioText = ""; radioT = 0; radioQueue = [];
-  windX = 0; windTimer = 1800;
   grazeCount = 0; cbersMission = null; cbersMissionT = 3800;
+  playerStats = { pw: {}, kills: 0, hits: 0, grazes: 0, maxCombo: 1 };
+  ddaStress = 0.5;
   gState = ST.PLAY;
+  stopMusic();
   startMusic();
   announce(0);
 }
@@ -137,14 +140,6 @@ function update() {
     if (--next.delay <= 0) { radioQueue.shift(); radioText = next.text; radioT = 200; }
   }
 
-  // wind
-  if (--windTimer <= 0) {
-    windX = (Math.random() - 0.5) * 0.65;
-    windTimer = 1400 + Math.floor(Math.random() * 1200);
-    setTimeout(() => { windX = 0; }, 9000);
-  }
-  if (player) player.vx += windX * 0.1;
-
   const isNight = dayPhase < 0.26 || dayPhase > 0.84;
 
   scrollSpd = 2 + frame / 2200;
@@ -160,6 +155,9 @@ function update() {
   shakeAmt *= 0.84;
   if (comboT > 0 && --comboT === 0) combo = 1;
   if (waveT > 0) waveT--;
+  // DDA — Flow Theory: stress decai com o tempo; combo alto acelera a recuperação
+  ddaStress = Math.max(0, ddaStress - 0.0007);
+  if (combo >= 5) ddaStress = Math.max(0, ddaStress - 0.0004);
 
   const nb = player.update(keys);
   bullets.push(...nb);
@@ -167,7 +165,7 @@ function update() {
   bullets = bullets.filter((b) => !b.dead);
 
   if (player.revap > 0) {
-    const revapR = player.revap === REVAP_DUR ? 300 : 80;
+    const revapR = player.revap === REVAP_DUR ? 300 : (player.shield > 0 ? 120 : 80);
     eBullets = eBullets.filter(b => {
       const dx = b.x - player.x, dy = b.y - player.y;
       if (dx * dx + dy * dy < revapR * revapR) {
@@ -228,8 +226,10 @@ function update() {
 
   if (--spawnT <= 0) {
     spawnEnemy();
-    // gradual: começa lento e acelera com o tempo e as waves
-    spawnT = Math.max(22, 120 - waveNum * 8 - frame / 180);
+    const baseSpawnT = diffCfg.spawnBase - waveNum * diffCfg.spawnWaveMult - frame / diffCfg.spawnTimeMult;
+    // DDA só em Aventura: ±20% conforme stress. Radical mantém curva determinística.
+    const ddaAdjust = diffCfg.id === "aventura" ? 1 + (ddaStress - 0.5) * 0.40 : 1;
+    spawnT = Math.max(diffCfg.spawnMin, baseSpawnT * ddaAdjust);
   }
   // spawn periódico de coletáveis — intervalo aumentado para reduzir quantidade na tela
   if (--collectT <= 0) {
@@ -237,7 +237,7 @@ function update() {
     collectibles.push(new Collectible(W + 22, 48 + Math.random() * (H - 96)));
   }
   // boss spawna a cada ~47s (2800 frames) — intervalo aumentado para o jogador respirar
-  if (!bossAlive && frame > 0 && frame % 2800 === 0) {
+  if (!bossAlive && frame > 0 && frame % diffCfg.bossInterval === 0) {
     spawnBoss();
   }
   if (!bossAlive && --ovniEventT <= 0) {
@@ -283,7 +283,8 @@ function update() {
       if (b.dead || e.dead) return;
       if (circ({ x: b.x, y: b.y, r: b.r }, e.hb())) {
         b.dead = true;
-        const pts = e.hit();
+        const dmg = player && player.boost > 0 && player.shield > 0 ? 2 : 1;
+        const pts = e.hit(dmg);
         if (pts > 0) {
           score += pts * combo;
           floatText(
@@ -292,8 +293,10 @@ function update() {
             e.y,
             "#60a5fa",
           );
-          combo = Math.min(combo + 1, 10);
+          combo = Math.min(combo + 1, diffCfg.comboMax);
           comboT = 130;
+          playerStats.kills++;
+          if (combo > playerStats.maxCombo) playerStats.maxCombo = combo;
             if (BOSS_TYPES.includes(e.type)) shakeAmt += 9;
           if (BOSS_TYPES.includes(e.type)) bossAlive = false;
           dropCollectibles(e.x, e.y, e.type);
@@ -314,6 +317,7 @@ function update() {
         const pts = 6 * combo;
         score += pts;
         grazeCount++;
+        playerStats.grazes++;
         floatText(`✦ ${pts}`, player.x, player.y - 18, "#fde68a");
         if (player.avibras > 0) player.missileT = Math.max(0, player.missileT - 14);
       }
@@ -337,6 +341,8 @@ function update() {
       b.dead = true;
       const h = player.tryHit();
       if (h) {
+        playerStats.hits++;
+        ddaStress = Math.min(1, ddaStress + 0.20);
         shakeAmt += 10;
         combo = 1;
         comboT = 0;
@@ -370,6 +376,7 @@ function update() {
     if (circ({ x: c.x, y: c.y, r: c.r }, { x: player.x, y: player.y, r: 20 })) {
       c.dead = true;
       sfxCollect();
+      if (c.type.pw) playerStats.pw[c.type.id] = (playerStats.pw[c.type.id] ?? 0) + 1;
       if (c.type.pw === "shield") {
         player.shield = Math.min(player.shield + SHIELD_DUR, SHIELD_DUR * 3);
         sfxPowerup();
@@ -405,6 +412,11 @@ function update() {
         player.ericsson = Math.min(player.ericsson + ERICSSON_DUR, ERICSSON_DUR * 2);
         sfxPowerup();
         floatText("📶 WINGMAN 5G!", player.x, player.y, "#818cf8");
+      } else if (c.type.pw === "hp_up") {
+        player.lives = Math.min(player.lives + 1, player.maxLives + 2);
+        sfxPowerup();
+        floatText("❤️ VIDA +1!", player.x, player.y, "#f472b6");
+        radioSay("Torre SJC: Reforço recebido! HP restaurado, Guardião!");
       } else {
         score += c.type.pts * combo;
         floatText(
@@ -508,36 +520,56 @@ function spawnBoss() {
   shakeAmt = 14;
   waveNum++;
   radioSay(RADIO_MSGS.boss);
-  if (waveNum > 8) {
+  if (waveNum > diffCfg.doubleBossWave) {
     const second = BOSS_ROTATION[(Math.floor(waveNum) + 2) % BOSS_ROTATION.length];
     setTimeout(() => { if (gState === ST.PLAY) enemies.push(new Enemy(second, W + 300, H / 3)); }, 4000);
   }
 }
 
-// Encerra a partida: salva recorde individual e pontuação acumulada no localStorage.
+// Encerra a partida: salva recorde individual, pontuação acumulada e estatísticas da partida.
 function endGame() {
   gState = ST.OVER;
+  shakeAmt = 0;
   stopMusic();
   const prev = parseInt(localStorage.getItem(HS_KEY) || "0");
   if (score > prev) localStorage.setItem(HS_KEY, String(score));
   hiScore = Math.max(score, prev);
   const totalPrev = parseInt(localStorage.getItem(TOTAL_KEY) || "0");
   localStorage.setItem(TOTAL_KEY, String(totalPrev + score));
+  // Salva estatísticas da partida para achievements futuros
+  const snapshot = {
+    score,
+    wave: waveNum,
+    difficulty: diffCfg.id,
+    kills: playerStats.kills,
+    hits: playerStats.hits,
+    grazes: playerStats.grazes,
+    maxCombo: playerStats.maxCombo,
+    pw: { ...playerStats.pw },
+    ts: Date.now(),
+  };
+  localStorage.setItem("sjc_last_stats", JSON.stringify(snapshot));
+  // acumula totais de vida para achievements globais
+  const totals = JSON.parse(localStorage.getItem("sjc_totals") || "{}");
+  totals.kills  = (totals.kills  || 0) + playerStats.kills;
+  totals.grazes = (totals.grazes || 0) + playerStats.grazes;
+  totals.games  = (totals.games  || 0) + 1;
+  localStorage.setItem("sjc_totals", JSON.stringify(totals));
+  startMenuMusic(selectedDifficulty);
 }
 
 function render() {
-  if (gState !== _prevTickerState) {
-    _prevTickerState = gState;
-    const t = document.getElementById("ticker");
-    if (t) t.style.display = gState === ST.MENU ? "" : "none";
-  }
   const sx = shakeAmt > 0.5 ? (Math.random() - 0.5) * shakeAmt * 2 : 0;
   const sy = shakeAmt > 0.5 ? (Math.random() - 0.5) * shakeAmt * 2 : 0;
   ctx.clearRect(0, 0, W, H);
   if (gState === ST.MENU) { drawMenu(); return; }
   if (gState === ST.SOBRE) { drawSobre(); return; }
   ctx.save();
-  if (shakeAmt > 0.5) ctx.translate(sx, sy);
+  if (gState === ST.OVER) {
+    ctx.filter = "grayscale(1)";
+  } else if (shakeAmt > 0.5) {
+    ctx.translate(sx, sy);
+  }
   drawBg();
   collectibles.forEach((c) => c.draw());
   if (cbersMission) {
@@ -655,16 +687,22 @@ document.addEventListener("keydown", (e) => {
     else if (gState === ST.PAUSE) gState = ST.PLAY;
   }
   if (e.code === "KeyM" && gState === ST.PAUSE) {
-    stopMusic();
     gState = ST.MENU;
+    startMenuMusic(selectedDifficulty);
     return;
   }
   if (e.code === "KeyI" && gState === ST.MENU) { gState = ST.SOBRE; return; }
   if (gState === ST.MENU) {
+    ensureAC();
+    if (!mActive) startMenuMusic(selectedDifficulty);
     if (e.code === "ArrowLeft" || e.code === "KeyA")
       selectedPlane = (selectedPlane - 1 + PLANES.length) % PLANES.length;
     if (e.code === "ArrowRight" || e.code === "KeyD")
       selectedPlane = (selectedPlane + 1) % PLANES.length;
+    if (e.code === "ArrowUp" || e.code === "ArrowDown" || e.code === "KeyW" || e.code === "KeyS") {
+      selectedDifficulty = (selectedDifficulty + 1) % DIFFICULTIES.length;
+      startMenuMusic(selectedDifficulty);
+    }
   }
   if (
     (e.code === "Enter" || e.code === "Space") &&

@@ -20,15 +20,18 @@
 - Modo Boost: tiro triplo (central + diagonal acima + diagonal abaixo).
 
 ### Vidas e invencibilidade
-- `MAX_LIVES = 3`. Cada acerto remove uma vida e ativa invencibilidade por `INV = 120` frames (o avião pisca).
+- Cada avião define seu próprio `lives` (e `maxLives`); o HUD exibe `Math.max(maxLives, lives)` ícones. `MAX_LIVES = 3` é a constante legada, mas C-390 começa com 4.
+- Cada acerto remove uma vida e ativa invencibilidade por `INV = 120` frames (o avião pisca).
 - Com escudo ativo: absorve um acerto sem perder vida, ativa invencibilidade por 80 frames.
 - Com 14-BIS ativo: imune a qualquer dano.
+- VIDA +1 (`hp_up`): incrementa `player.lives` até `maxLives + 2`.
 
 ### Combo e pontuação
-- Cada inimigo destruído incrementa o multiplicador de combo (máximo ×10) e reseta o timer de combo para 130 frames.
+- Cada inimigo destruído incrementa o multiplicador de combo e reseta o timer para 130 frames.
+- Combo máximo: ×10 em Aventura, ×50 em Radical.
 - Se nenhum inimigo for destruído em 130 frames, o combo volta para 1.
 - Pontos = valor base do inimigo × multiplicador de combo atual.
-- Recordes são salvos em `localStorage` com a chave `sjc_flight_hs`.
+- Recordes por dificuldade em `localStorage` (`sjc_hi_aventura`, `sjc_hi_radical`).
 - Pontuação **cumulativa** entre partidas salva em `sjc_total_score` — usada para desbloquear aviões.
 
 ### Grazing
@@ -41,8 +44,49 @@
 - Disparado em: início de cada wave, spawn de boss, evento OVNI, coleta de Avibras/14-BIS, HP crítico (1 vida).
 
 ### Eventos atmosféricos
-- **Vento lateral** (`windX`): a cada ~1400–2600 frames `windX` é definido aleatoriamente (±0.32), dura 9s e aplica `player.vx += windX * 0.1` por frame. Indicador visual exibido no topo do HUD.
-- **Relâmpago** (apenas à noite): chance de 0.06%/frame de flash branco 3 frames + shake +4.
+
+### Modos de dificuldade
+
+Selecionado no menu via ↑↓. Configuração persistida em `selectedDifficulty` (índice de `DIFFICULTIES`).
+
+| Parâmetro           | 🌅 AVENTURA        | 🔥 RADICAL         |
+|---------------------|--------------------|--------------------|
+| Combo máximo        | ×10                | ×50                |
+| HP dos inimigos     | ×0.65              | ×1.6               |
+| Spawn mínimo (f)    | 44                 | 22                 |
+| Spawn base (f)      | 170                | 100                |
+| spawnWaveMult       | 5                  | 7                  |
+| spawnTimeMult       | 300                | 230                |
+| Interval boss (f)   | 4800 (~80s)        | 1800 (~30s)        |
+| 2º boss na onda     | 18+                | 5+                 |
+| Mult. drops powerup | ×1.5               | ×0.65              |
+| HS localStorage     | `sjc_hi_aventura`  | `sjc_hi_radical`   |
+
+**Curva de spawn no Radical:** wave 0 = 100f → wave 3 = ~70f → wave 6 = ~22f (mínimo). Atinge o piso na fase 4, não na fase 1.
+
+`diffCfg` é definido em `startGame()` e referenciado em: spawn timer, boss interval, combo cap, double-boss wave, `Enemy` constructor (`hpMult`), `dropCollectibles` (`dropMult`).
+
+### DDA — Dynamic Difficulty Adjustment
+
+Baseado em **Flow Theory** (Csikszentmihalyi, 1975): a experiência ótima ocorre quando desafio ≈ habilidade do jogador. Abaixo → tédio; acima → ansiedade.
+
+**Só ativo em Aventura.** Radical usa curva determinística — o jogador precisa evoluir, sem concessões.
+
+`ddaStress ∈ [0, 1]` — índice de sobrecarga do jogador:
+
+| Evento | Δ `ddaStress` |
+|--------|---------------|
+| Cada frame | `−0.0007` (decai naturalmente ao neutro) |
+| Combo ≥ 5 | `−0.0004` extra por frame |
+| Jogador leva hit | `+0.20` |
+
+Aplicado ao timer de spawn:
+```
+ddaAdjust = 1 + (ddaStress − 0.5) × 0.4   // [0.80 … 1.20]
+spawnT    = max(spawnMin, baseSpawnT × ddaAdjust)
+```
+
+Stress ≈ 1 → spawns 20% mais lentos (janela de recuperação). Stress ≈ 0 → spawns 20% mais rápidos (pressão extra). Ajuste invisível ao jogador — cria o "flow channel" de Csikszentmihalyi. Resetado para `0.5` em `startGame()`.
 
 ### Missão CBERS
 - Satélite entra pela direita a cada ~3800 frames; se escoltado off-screen esquerda concede +800 pontos.
@@ -61,16 +105,17 @@
 
 ## Power-ups
 
-| ID            | Label           | Efeito                                                                        | Duração (frames)     |
-|---------------|-----------------|-------------------------------------------------------------------------------|----------------------|
-| `shield`      | ESCUDO          | Absorve o próximo acerto sem perder vida; acumula até 3×                      | `SHIELD_DUR = 300`   |
-| `boost`       | BOOST           | Tiro triplo + cadência máxima; acumula até 3×                                 | `BOOST_DUR = 340`    |
-| `14bis`       | 14-BIS          | Invencibilidade total; avião transforma-se no biplano de Santos-Dumont        | `BIS_DUR = 480`      |
-| `avibras_pw`  | PULSO AVIBRAS   | Dispara 2 mísseis teleguiados a cada 90 frames; prioriza OVNIs e chefe        | `AVIBRAS_DUR = 540`  |
-| `inpe_sat`    | SATÉLITE INPE   | Ímã que atrai coletáveis num raio de 220px; revela barra de HP de todos os inimigos | `INPE_DUR = 420` |
-| `revap_pw`    | REVAP SHOCK     | Onda de choque instantânea: destrói projéteis inimigos num raio de 300px; mantém campo de 80px | `REVAP_DUR = 260` |
-| `delta_pw`    | ASA DELTA       | Aceleração/frenagem quase instantâneas (accel 1.8, friction 0.22); combo não reseta; rastro arco-íris | `DELTA_DUR = 420` |
-| `ericsson_pw` | WINGMAN 5G      | Drone wingman que replica o tiro do jogador (diagonal duplo com Boost ativo)  | `ERICSSON_DUR = 540` |
+| ID            | Label           | Efeito                                                                        | Duração (frames)     | Raro |
+|---------------|-----------------|-------------------------------------------------------------------------------|----------------------|------|
+| `shield`      | ESCUDO          | Absorve o próximo acerto sem perder vida; acumula até 3×                      | `SHIELD_DUR = 300`   |      |
+| `boost`       | BOOST           | Tiro triplo + cadência máxima; acumula até 3×                                 | `BOOST_DUR = 340`    |      |
+| `14bis`       | 14-BIS          | Invencibilidade total; avião transforma-se no biplano de Santos-Dumont        | `BIS_DUR = 480`      | ✓    |
+| `avibras_pw`  | PULSO AVIBRAS   | Dispara 2 mísseis teleguiados a cada 90 frames; prioriza OVNIs e chefe        | `AVIBRAS_DUR = 540`  |      |
+| `inpe_sat`    | SATÉLITE INPE   | Ímã que atrai coletáveis num raio de 220px; revela barra de HP de todos os inimigos | `INPE_DUR = 420` |  |
+| `revap_pw`    | REVAP SHOCK     | Onda de choque instantânea: destrói projéteis inimigos num raio de 300px; mantém campo de 80px | `REVAP_DUR = 260` | |
+| `delta_pw`    | ASA DELTA       | Aceleração/frenagem quase instantâneas (accel 1.8, friction 0.22); combo não reseta; rastro arco-íris | `DELTA_DUR = 420` | |
+| `ericsson_pw` | WINGMAN 5G      | Drone wingman que replica o tiro do jogador (diagonal duplo com Boost ativo)  | `ERICSSON_DUR = 540` |      |
+| `hp_up`       | VIDA +1         | +1 HP (máx. `maxLives + 2`). **Apenas drop de boss.** Chance base: 5% (cigarra 8%) | —              | ✓ ✓  |
 
 ### Notas de implementação
 
@@ -80,6 +125,7 @@
 - **Revap Shock** age no primeiro frame com raio de limpeza total (300px) e mantém campo de 80px pelo restante da duração.
 - **Asa Delta** substitui `accel = 0.45` e `friction = 0.84` pelos valores agile. O rastro usa `hue = (frame * 6) % 360` para efeito arco-íris.
 - **Wingman 5G** dispara no mesmo frame que o jogador (quando `player.fireT === 1`) a partir da posição `(player.x+30, player.y+38)`.
+- **VIDA +1** marcado como `rare: true`. Só consta na `DROP_TABLE` de bosses. Chance base 5% (cigarra 8%). Incrementa `player.lives` até `maxLives + 2` (permite HP acima do máximo original do avião).
 
 ### IDs no DROP_TABLE
 
@@ -210,7 +256,19 @@ Definidos em `CTYPES`:
 | `boost`  | BOOST    | 0      | power-up   |
 | `14bis`  | 14-BIS   | 0      | power-up raro |
 
-Coletáveis surgem periodicamente (a cada ~220–380 frames). Ao destruir um inimigo, `dropCollectibles()` consulta a `DROP_TABLE` — cada entrada tem uma chance independente por tipo de inimigo, com **limite de drops por kill: 2 para inimigos comuns, 6 para bosses**. Isso evita que matar um único inimigo polua a tela de coletáveis.
+Coletáveis surgem periodicamente (a cada ~220–380 frames). Ao destruir um inimigo, `dropCollectibles()` consulta a `DROP_TABLE` — cada entrada tem uma chance independente por tipo de inimigo, com **limite de drops por kill: 2 para inimigos comuns, 6 para bosses**.
+
+### Raridade adaptativa de power-ups
+
+Para cada power-up, a chance de drop é ajustada dinamicamente:
+
+```
+chance = base × diffCfg.dropMult / (1 + picks × 0.14)
+```
+
+onde `picks` = quantas vezes o jogador coletou aquele power-up nesta partida (via `playerStats.pw`). Coletáveis de pontuação (empresas) não sofrem saturação — suas chances são fixas por tipo de inimigo.
+
+O `diffCfg.dropMult` amplifica ou reduz todos os drops de power-up por dificuldade (Aventura ×1.5, Radical ×0.65).
 
 **Visual:** coletáveis de pontuação exibem o nome da empresa centralizado; power-ups exibem o emoji do item em tamanho grande, sem texto.
 
@@ -219,7 +277,7 @@ Coletáveis surgem periodicamente (a cada ~220–380 frames). Ao destruir um ini
 ## Renderização
 
 - **Canvas 2D** com dimensões lógicas fixas 800×450.
-- CSS escala o elemento `<canvas>` para `min(100vw, (100vh - 28px) * 800/450)`, preservando proporção.
+- CSS escala o elemento `<canvas>` para `min(100vw, 100dvh * 800/450)` (largura) e `min(100dvh, 100vw * 450/800)` (altura), ocupando todo o espaço disponível sem overflow, com suporte a `100dvh` para mobile.
 - **Parallax de múltiplas camadas:**
   1. Gradiente de céu dinâmico (4 paradas, interpolado por `getSky()`).
   2. Estrelas e nebulosa (pré-geradas em `STARS`, animadas por `tw`).
@@ -371,8 +429,43 @@ Recursos: god mode, sem projéteis, spawn de inimigos, todos os power-ups, veloc
 ### HUD de buffs
 Cada buff ativo exibe ícone + segundos restantes + barra de progresso à direita da tela. Buffs acumuláveis (shield, boost, avibras, inpe, delta, ericsson) mostram progresso relativo ao máximo acumulável.
 
+### Indicador de escudo no HUD de vidas
+
+Quando `player.shield > 0`, ícones 🛡 em ciano são exibidos à esquerda dos ícones ✈ de vida, um por stack ativo (`Math.ceil(player.shield / SHIELD_DUR)`, máx. 3). Pulsam via `shadowBlur` animado. Comunicam visualmente a camada de proteção extra sem alterar o contador de HP.
+
 ### Contador de FPS
 Exibido no canto inferior esquerdo com cor dinâmica: verde ≥ 55 fps, amarelo ≥ 40 fps, vermelho < 40 fps. Calculado a cada segundo via timestamp do `requestAnimationFrame`.
+
+---
+
+## Sistema de Estatísticas
+
+`playerStats` é um objeto global definido em `entities.js` e resetado em `startGame()`:
+
+```js
+let playerStats = { pw: {}, kills: 0, hits: 0, grazes: 0, maxCombo: 1 };
+```
+
+| Campo       | Incrementado em                                        |
+|-------------|--------------------------------------------------------|
+| `kills`     | `dropCollectibles()` — quando inimigo morre (`pts > 0`) |
+| `hits`      | `player.tryHit()` retorna `true` (dano real recebido)  |
+| `grazes`    | Graze detectado (projétil a 14–22px sem hit)           |
+| `maxCombo`  | Quando `combo > playerStats.maxCombo`                  |
+| `pw[id]`    | Ao coletar qualquer power-up (`c.type.pw` truthy)      |
+
+### Persistência ao fim da partida
+
+`endGame()` salva dois objetos no `localStorage`:
+
+- **`sjc_last_stats`** — snapshot completo da última partida: score, wave, dificuldade, kills, hits, grazes, maxCombo, pw (contagens), timestamp.
+- **`sjc_totals`** — acumulado de todas as partidas: kills, grazes, games. Base para achievements futuros.
+
+```js
+// Exemplo de leitura
+const last  = JSON.parse(localStorage.getItem("sjc_last_stats") ?? "{}");
+const total = JSON.parse(localStorage.getItem("sjc_totals")    ?? "{}");
+```
 
 ---
 

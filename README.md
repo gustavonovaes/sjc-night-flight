@@ -19,6 +19,7 @@ Pilote um avião Embraer defendendo o Vale contra frentes frias, drones, araras,
 | P / Escape          | Pausar / Despausar       |
 | M (na pausa)        | Voltar ao menu principal |
 | ← → ou A D (menu)   | Trocar avião             |
+| ↑ ↓ ou W S (menu)   | Trocar dificuldade       |
 | I (no menu)         | Tela Sobre               |
 | Segurar Escape (4s) | Abrir painel DEV         |
 
@@ -42,6 +43,9 @@ Pilote um avião Embraer defendendo o Vale contra frentes frias, drones, araras,
 | ❄️ REVAP SHOCK   | Ondachoque: elimina projéteis inimigos num raio de 300px; mantém campo de 80px                             | 260 frames |
 | 🪂 ASA DELTA     | Aceleração/desaceleração quase instantânea; combo nunca zera; rastro arco-íris                             | 420 frames |
 | 📶 WINGMAN 5G    | Drone aliado espelha seus tiros + anel de escudo orbital que intercepta projéteis inimigos                 | 540 frames |
+| ❤️ VIDA +1       | +1 HP (máx. `maxLives + 2`). **Drop raro exclusivo de chefes.** Chance diminui a cada vez coletado.       | —          |
+
+> Power-ups têm raridade adaptativa: cada coleta reduz levemente a chance do próximo drop do mesmo tipo. Em Aventura os drops são 50% mais frequentes; em Radical, 35% mais raros.
 
 ---
 
@@ -55,10 +59,18 @@ Voe perto de balas inimigas (a ~22px) sem ser atingido para ganhar pontos bônus
 
 Uma caixa de rádio aparece no canto inferior esquerdo com mensagens da Torre SJC, FAB, CEMADEN e Avibras reagindo ao início de ondas, aparição de chefes, coleta de power-ups e pouca vida.
 
-### Eventos Atmosféricos
+### Modos de Dificuldade
 
-- **Vento lateral**: rajadas periódicas empurram o jogador horizontalmente (exibido no centro superior)
-- **Raios**: flashes brancos aleatórios à noite com um breve tremor de câmera
+| Modo | Inimigos | Powerups | Combo máx | Boss a cada | 2º boss |
+|------|----------|----------|-----------|-------------|---------|
+| 🌅 **AVENTURA** | HP ×0.65, spawn suave, DDA ativo | +50% drops | ×10 | ~80s | Onda 18+ |
+| 🔥 **RADICAL** | HP ×1.6, spawn linear até fase 4 | -35% drops | ×50 | ~30s | Onda 5+ |
+
+Troque no menu com ↑↓. Recordes são separados por dificuldade.
+
+> **Aventura** usa DDA (Dynamic Difficulty Adjustment): o spawn rate se ajusta ±20% conforme o stress do jogador, mantendo o estado de flow. **Radical** tem curva determinística sem concessões.
+
+### Eventos Atmosféricos
 
 ### Missão Satélite CBERS
 
@@ -90,7 +102,7 @@ Um satélite CBERS-4 entra pela direita a cada ~1 minuto. Escorte-o até sair pe
 | ⚙️ Grande Engrenagem | Chefe de pressão. Sobe e desce, dispara orbes ricocheteantes, spawna drones. HP: 55+                                    |
 | 🦗 A Cigarra         | Chefe final. Muda de forma a cada ~5s, inverte os controles do jogador ao transformar, tiros em feixe colorido. HP: 90+ |
 
-Os chefes se revezam em sequência. A partir da onda 8, um segundo chefe aparece 4 segundos após o primeiro.
+Os chefes se revezam em sequência. Em Aventura, um segundo chefe aparece a partir da onda 12; em Radical, a partir da onda 5.
 
 ---
 
@@ -180,6 +192,38 @@ E em 19 de maio de 1986 — a noite em que 21 OVNIs foram interceptados sobre o 
 
 ## Changelog
 
+### v0.0.3 — DDA, Música e Estatísticas
+
+**Dificuldade**
+- DDA (Dynamic Difficulty Adjustment) baseado em Flow Theory (Csikszentmihalyi 1975): Aventura ajusta spawn rate ±20% conforme `ddaStress` do jogador — sobe em acertos, decai com tempo e combo alto
+- Radical permanece determinístico sem DDA — curva de dificuldade linear e sem concessões
+- Aventura: `spawnMin=44`, `spawnBase=170`, `bossInterval=4800 (~80s)`, `doubleBossWave=18`
+- Radical: `spawnMin=22`, `spawnBase=100`, `bossInterval=1800 (~30s)`, `doubleBossWave=5` — curva corrigida para ser linear (era muito fácil no início e impossível no final)
+
+**Estatísticas do jogador**
+- `playerStats` acumula kills, hits, grazes, maxCombo e coletas por powerup durante a partida
+- Ao final: `sjc_last_stats` salva snapshot completo; `sjc_totals` acumula kills/grazes/partidas em localStorage (base para achievements futuros)
+
+**Raridade adaptativa de power-ups**
+- Fórmula de saturação: `chance *= dropMult / (1 + picks * 0.14)` — power-ups coletados em excesso ficam progressivamente mais raros
+- ❤️ HP: chance muito baixa (0.05), exclusivo de chefes, diminui a cada coleta
+- Coletáveis de pontos não são afetados pela saturação
+
+**Áudio**
+- Música de menu com melodia arcade estilo título clássico 8-bit (32 notas em Dó maior)
+- Aventura: 235ms/nota; Radical: 185ms/nota (mais intenso)
+- Música toca no menu, na tela "Sobre", na tela de Game Over e ao pausar+voltar ao menu
+- Ícone `🔇 !` no canto da tela se AudioContext falhar (ex: bloqueio do navegador)
+
+**Interface**
+- Indicador de escudo: ícones 🛡 em ciano após as vidas — até 3 stacks visíveis no HUD
+- Versão exibida no canto inferior direito da tela de menu
+
+**Infraestrutura**
+- Scripts carregados com query string de versão (`?v=0.0.3`) para forçar cache busting em updates
+
+---
+
 ### v0.0.2 — Balanceamento e Performance
 
 **Dificuldade e progressão**
@@ -226,7 +270,7 @@ E em 19 de maio de 1986 — a noite em que 21 OVNIs foram interceptados sobre o 
 - Sistema de combo com multiplicador de pontos e bônus de queda do 14-BIS
 - Mecânica de rasante: pontos bônus ao passar perto de projéteis sem ser atingido
 - Missão CBERS: escolta de satélite por tempo limitado
-- Eventos atmosféricos: vento lateral e raios noturnos
+- Dois modos de dificuldade: Aventura e Radical
 - Diálogo de rádio contextual (Torre SJC, FAB, CEMADEN, Avibras)
 - Ciclo dia/noite com música procedural em 4 fases
 - Painel DEV (Escape 4s) para testes em tempo real

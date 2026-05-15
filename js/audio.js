@@ -1,16 +1,22 @@
 "use strict";
 
 let AC = null;
+let audioFailed = false;
 function ensureAC() {
-  if (!AC) {
-    AC = new (window.AudioContext || window.webkitAudioContext)();
+  try {
+    if (!AC) {
+      AC = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (AC.state === "suspended") AC.resume();
+    audioFailed = false;
+  } catch (e) {
+    audioFailed = true;
   }
-  // Browsers suspendem o AudioContext até haver interação do usuário
-  if (AC.state === "suspended") AC.resume();
 }
 
 function tone(freq, dur, type, vol) {
   try {
+    if (!AC) return;
     const o = AC.createOscillator();
     const g = AC.createGain();
     o.connect(g);
@@ -69,7 +75,15 @@ function sfxBossIn() {
   tone(75, 0.6, "square", 0.07);
 }
 
-// Repertório: arcade clássico + chill hip-hop (fases 1-2) + rock (fases 3-4)
+// Melodia arcade de menu: arpejos ascendentes em Dó maior, estilo título clássico 8-bit
+const _MENU_THEME = [
+  523.25, 659.25, 783.99, 1046.50, 987.77, 783.99, 659.25, 523.25,
+  440,    523.25, 659.25, 880,     783.99, 659.25, 523.25, 392,
+  349.23, 440,    523.25, 698.46,  659.25, 523.25, 440,    349.23,
+  392,    493.88, 587.33, 783.99,  698.46, 587.33, 493.88, 392,
+];
+
+// Repertório: arcade clássico + chill hip-hop (fases 1-2) + rock (fases 3-4) + menu
 const PLAYLISTS = [
   // 0 — Tema original arcade
   [220, 261.63, 329.63, 392, 493.88, 392, 329.63, 261.63, 220, 261.63, 369.99, 440],
@@ -101,10 +115,14 @@ const PLAYLISTS = [
   // 9 — Rock II — pesado/heavy, modo inferior
   [220, 220, 0, 220, 293.66, 0, 329.63, 0, 293.66, 220, 0, 0, 220, 0, 196,
    0, 220, 0, 0, 293.66, 329.63, 0, 293.66, 0, 220, 0, 0, 196, 0, 0, 440, 220],
+  // 10 — Menu Arcade (Aventura) — mesma melodia, tempo 235ms
+  _MENU_THEME,
+  // 11 — Menu Arcade (Radical) — mesma melodia, tempo 185ms (mais intenso)
+  _MENU_THEME,
 ];
-const PLAYLIST_TEMPOS = [280, 280, 280, 280, 280, 280, 350, 310, 210, 180];
+const PLAYLIST_TEMPOS = [280, 280, 280, 280, 280, 280, 350, 310, 210, 180, 235, 185];
 const PLAYLIST_LABELS = ["Arcade", "Tetris", "Space Invaders", "Galaga", "Pac-Man", "Mario",
-  "Chill Hip-Hop I", "Chill Hip-Hop II", "Rock I", "Rock II"];
+  "Chill Hip-Hop I", "Chill Hip-Hop II", "Rock I", "Rock II", "Menu Arcade", "Menu Arcade Fast"];
 // índice = onda (0-9+); cicla após a última
 const WAVE_PLAYLIST = [6, 0, 7, 1, 2, 8, 3, 4, 9, 5];
 
@@ -140,4 +158,23 @@ function stopMusic() {
     clearTimeout(mTimer);
     mTimer = null;
   }
+}
+
+// Música de menu: melodia arcade estilo título clássico 8-bit
+// Aventura = playlist 10 (235ms/nota), Radical = playlist 11 (185ms/nota — mais intenso)
+function startMenuMusic(diffIdx) {
+  stopMusic();
+  playlistIdx = diffIdx === 1 ? 11 : 10;
+  mIdx = 0;
+  mActive = true;
+  const next = () => {
+    if (!mActive) return;
+    if (gState === ST.MENU || gState === ST.SOBRE || gState === ST.OVER) {
+      const pl = PLAYLISTS[playlistIdx];
+      const freq = pl[mIdx++ % pl.length];
+      if (freq) tone(freq, 0.20, "triangle", 0.055);
+    }
+    mTimer = setTimeout(next, PLAYLIST_TEMPOS[playlistIdx] || 280);
+  };
+  next();
 }
