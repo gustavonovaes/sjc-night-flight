@@ -320,24 +320,25 @@ O projeto é TypeScript estrito (`strict: true`, `isolatedModules: true`) compil
 
 ### Módulos
 
-| Arquivo              | Responsabilidade                                                                  |
-| -------------------- | --------------------------------------------------------------------------------- |
-| `src/types.ts`       | Enums (`ST`), interfaces (`PlaneCfg`, `DiffCfg`, `PlayerStats`…)                  |
+| Arquivo              | Responsabilidade                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| `src/types.ts`       | Enums (`ST`), interfaces (`PlaneCfg`, `DiffCfg`, `PlayerStats`…)                                  |
 | `src/constants.ts`   | Dados imutáveis: `PLANES`, `DIFFICULTIES`, `WAVES`, `BOSS_TYPES`, `BOSS_ROTATION`, terrain, áudio |
-| `src/state.ts`       | Singleton de estado mutável (`state`) — substitui globals espalhados              |
-| `src/world.ts`       | Canvas setup, `DPR`, `VERSION`, `getSky(dayPhase)`, interpolação de céu           |
-| `src/audio.ts`       | Web Audio API: SFX com throttle `_ok()`, playlists, `startMenuMusic(diffIdx)`     |
-| `src/entities.ts`    | Classes: `Player`, `Enemy`, `Bullet`, `HomingMissile`, `EBullet`, `Collectible`   |
-| `src/renderer.ts`    | Scroll offsets, `drawBg()`, `drawHUD()`, `drawMenu()`, overlays                   |
-| `src/dev.ts`         | Painel DEV; expõe callbacks via `setDevCallbacks()`                               |
-| `src/multiplayer.ts` | WebSocket, lobby, `RemotePlayer`, `drawLobby()`; expõe `setMpCallbacks()`         |
-| `src/game.ts`        | Loop principal, `startGame()`, `update()`, `render()`, event listeners, waves     |
-| `src/main.ts`        | Entry point: registra listeners, chama `mpAutoJoin()`                             |
-| `src/server.ts`      | Servidor Bun: HTTP estático (`dist/`) + WebSocket + game loop 30 ticks/s          |
+| `src/state.ts`       | Singleton de estado mutável (`state`) — substitui globals espalhados                              |
+| `src/world.ts`       | Canvas setup, `DPR`, `VERSION`, `getSky(dayPhase)`, interpolação de céu                           |
+| `src/audio.ts`       | Web Audio API: SFX com throttle `_ok()`, playlists, `startMenuMusic(diffIdx)`                     |
+| `src/entities.ts`    | Classes: `Player`, `Enemy`, `Bullet`, `HomingMissile`, `EBullet`, `Collectible`                   |
+| `src/renderer.ts`    | Scroll offsets, `drawBg()`, `drawHUD()`, `drawMenu()`, overlays                                   |
+| `src/dev.ts`         | Painel DEV; expõe callbacks via `setDevCallbacks()`                                               |
+| `src/multiplayer.ts` | WebSocket, lobby, `RemotePlayer`, `drawLobby()`; expõe `setMpCallbacks()`                         |
+| `src/game.ts`        | Loop principal, `startGame()`, `update()`, `render()`, event listeners, waves                     |
+| `src/main.ts`        | Entry point: registra listeners, chama `mpAutoJoin()`                                             |
+| `src/server.ts`      | Servidor Bun: HTTP estático (`dist/`) + WebSocket + game loop 30 ticks/s                          |
 
 **Build:** `bun run build` → Vite empacota `src/main.ts` em `dist/`. Em dev, `bun run dev` sobe servidor Vite com proxy WebSocket.
 
 **Deploy:**
+
 - **fly.io:** `Dockerfile` multi-stage (stage `builder`: `bun install` + Vite build; stage runtime: Bun + `dist/` + `src/server.ts`). Configurado via `fly.toml`.
 - **GitHub Pages:** GitHub Actions (`deploy.yml`) faz push para `main` → build → publica `dist/` na branch `gh-pages`.
 
@@ -346,7 +347,7 @@ O projeto é TypeScript estrito (`strict: true`, `isolatedModules: true`) compil
 Ciclos `game ↔ dev` e `game ↔ multiplayer` são quebrados via registro de callbacks em `game.ts`:
 
 ```ts
-setDevCallbacks({ spawnBoss, spawnBossType });        // dev.ts
+setDevCallbacks({ spawnBoss, spawnBossType }); // dev.ts
 setMpCallbacks({ startGame, endGame, announce, radioSay }); // multiplayer.ts
 ```
 
@@ -354,15 +355,15 @@ Isso permite que `dev.ts` e `multiplayer.ts` chamem funções de `game.ts` sem i
 
 ### Classes
 
-| Classe          | Responsabilidade                                                          |
-| --------------- | ------------------------------------------------------------------------- |
-| `Player`        | Estado do jogador, movimento, tiro, power-ups, draw                       |
-| `Enemy`         | Todos os tipos de inimigos via `type` no construtor                       |
-| `Bullet`        | Projétil do jogador com rastro histórico                                  |
-| `HomingMissile` | Míssil teleguiado do Pulso Avibras com steering por frame                 |
-| `EBullet`       | Projétil inimigo (bolt / beam / orb)                                      |
-| `Collectible`   | Token coletável animado com tipo aleatório de `CTYPES`                    |
-| `RemotePlayer`  | Estado + interpolação de jogador remoto no modo multiplayer               |
+| Classe          | Responsabilidade                                            |
+| --------------- | ----------------------------------------------------------- |
+| `Player`        | Estado do jogador, movimento, tiro, power-ups, draw         |
+| `Enemy`         | Todos os tipos de inimigos via `type` no construtor         |
+| `Bullet`        | Projétil do jogador com rastro histórico                    |
+| `HomingMissile` | Míssil teleguiado do Pulso Avibras com steering por frame   |
+| `EBullet`       | Projétil inimigo (bolt / beam / orb)                        |
+| `Collectible`   | Token coletável animado com tipo aleatório de `CTYPES`      |
+| `RemotePlayer`  | Estado + interpolação de jogador remoto no modo multiplayer |
 
 ### Estados de jogo (`ST`)
 
@@ -511,15 +512,15 @@ O servidor roda a **30 ticks/s** via `setInterval`. Clientes rodam a 60fps e env
 
 Implementado via **Web Audio API** (criado sob demanda por `ensureAC()` após gesto do usuário).
 
-| Função         | Descrição                                         |
-| -------------- | ------------------------------------------------- |
-| `sfxShoot`     | Tom curto de tiro (square wave, 880 Hz)           |
-| `sfxHit`       | Tom grave + ruído (dano ao jogador)               |
-| `sfxBang`      | Explosão (ruído + sawtooth grave)                 |
-| `sfxCollect`   | Arpegio ascendente (coletável)                    |
-| `sfxPowerup`   | Arpegio mais longo (power-up ativado)             |
-| `sfxBossIn`    | Tom grave duplo (spawn de boss/OVNI event)        |
-| `sfxDestroy`   | Impacto grave + ruído longo (morte do jogador)    |
+| Função       | Descrição                                      |
+| ------------ | ---------------------------------------------- |
+| `sfxShoot`   | Tom curto de tiro (square wave, 880 Hz)        |
+| `sfxHit`     | Tom grave + ruído (dano ao jogador)            |
+| `sfxBang`    | Explosão (ruído + sawtooth grave)              |
+| `sfxCollect` | Arpegio ascendente (coletável)                 |
+| `sfxPowerup` | Arpegio mais longo (power-up ativado)          |
+| `sfxBossIn`  | Tom grave duplo (spawn de boss/OVNI event)     |
+| `sfxDestroy` | Impacto grave + ruído longo (morte do jogador) |
 
 **Throttle anti-empilhamento (`_ok`):** todas as funções SFX passam por `_ok(key, gapSec)` antes de disparar. Usa `AC.currentTime` para bloquear chamadas duplicadas dentro do intervalo mínimo (shoot 50ms, hit 80ms, bang 60ms, bossIn 250ms, destroy 250ms, collect 150ms). Evita saturação de osciladores Web Audio em rajadas.
 
@@ -557,7 +558,10 @@ export const SKY_KF: SkyKeyframe[] = [
 ];
 
 // world.ts
-const KFP: SkyKeyframeProcessed[] = SKY_KF.map((k) => ({ ...k, cr: k.c.map(hexRgb) }));
+const KFP: SkyKeyframeProcessed[] = SKY_KF.map((k) => ({
+  ...k,
+  cr: k.c.map(hexRgb),
+}));
 
 export function getSky(dayPhase: number): SkyValues {
   // busca os dois keyframes adjacentes a dayPhase

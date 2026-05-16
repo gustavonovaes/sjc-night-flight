@@ -11,13 +11,13 @@ Gere uma nova entrada de release no README.md e em docs/design.md com base nas m
 3. **Escreva a entrada** no formato abaixo e insira logo após a linha `## Changelog` no README.md (antes da entrada anterior):
 
 ```
-### vX.Y.Z — <título curto que resume o tema da release>
+### vX.Y.Z — <título curto que resume o tema da release> _(YYYY-MM-DD)_
 
 - **<Categoria>:** <descrição objetiva da mudança e seu impacto>
 - ...
 ```
 
-Categorias comuns: Migração, Balanceamento, Gameplay, Deploy, Áudio, Performance, Segurança, Correção, Infraestrutura.
+A data `YYYY-MM-DD` é a data atual (hoje). Categorias comuns: Migração, Balanceamento, Gameplay, Deploy, Áudio, Performance, Segurança, Correção, Infraestrutura.
 
 4. **Atualize docs/design.md** somente se houver mudanças estruturais (nova mecânica, mudança de arquitetura, stack nova). **Não adicione entradas de changelog em docs/design.md** — o histórico de versões fica exclusivamente no README.md.
 

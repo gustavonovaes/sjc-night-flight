@@ -80,11 +80,11 @@ export class Player {
     const friction = this.delta > 0 ? 0.22 : 0.84;
 
     if (state.touch.active) {
-      this.vx = state.touch.vx * spd * 0.65 * (inv ? -1 : 1);
+      this.vx = state.touch.vx * spd * 0.65;
       this.vy = state.touch.vy * spd * 0.65 * (inv ? -1 : 1);
     } else {
       const eu = inv ? dn : up, ed = inv ? up : dn;
-      const el = inv ? rt : lt, er = inv ? lt : rt;
+      const el = lt, er = rt;
       if (eu) this.vy = Math.max(this.vy - accel, -spd);
       if (ed) this.vy = Math.min(this.vy + accel,  spd);
       if (!eu && !ed) this.vy *= friction;
@@ -531,8 +531,8 @@ export class Enemy {
         break;
       }
       case "arara": {
-        const aSpeed = 1 + Math.min(w, 8) * 0.07;
-        this.vx = -(3.8 + Math.random() * 2) * aSpeed;
+        const aSpeed = 1 + Math.min(w, 8) * 0.04;
+        this.vx = -(2.8 + Math.random() * 1.4) * aSpeed;
         this.vy = (Math.random() - 0.5) * (2.8 + w * 0.2);
         this.hp = this.mhp = w >= 6 ? 2 : 1; this.r = 13;
         this.wingP = Math.random() * Math.PI * 2;
@@ -600,7 +600,7 @@ export class Enemy {
       }
       case "cigarra": {
         this.vx = -0.5;
-        this.hp = this.mhp = 90 + w * 15; this.r = 58;
+        this.hp = this.mhp = 55 + w * 8; this.r = 58;
         this.shootT = Math.max(10, 22 - w);
         this.morphT = 280; this.morphShape = 0; this.beamHue = 0;
         break;
@@ -705,8 +705,8 @@ export class Enemy {
         if (this.x < -80) {
           this.x = W + 100; this.laps++;
           this.dashing = false;
-          this.dashT = Math.max(80, 170 - this.laps * 10);
-          this.vx = -(5.5 + this.laps * 0.7);
+          this.dashT = Math.max(90, 190 - this.laps * 8);
+          this.vx = -(5.5 + this.laps * 0.4);
         }
         if (player && Math.abs(this.x - player.x) < 36) {
           player.pullX += (this.x < player.x ? -1 : 1) * 4;
@@ -719,13 +719,13 @@ export class Enemy {
         if (--this.dashT <= 0) this.dashing = true;
       }
       if (--this.shootT <= 0) {
-        this.shootT = Math.max(22, 65 - this.laps * 5 - state.waveNum * 2);
+        this.shootT = Math.max(30, 85 - this.laps * 4 - state.waveNum * 2);
         sfxBossIn();
         if (player) {
           const baseAng = Math.atan2(player.y - this.y, player.x - this.x);
           const spread = 0.18 + this.laps * 0.025;
           const spd = 4.0 + this.laps * 0.2;
-          for (let a = -2; a <= 2; a++)
+          for (let a = -1; a <= 1; a++)
             nb.push(new EBullet(this.x, this.y, "orb",
               Math.cos(baseAng + a * spread) * spd, Math.sin(baseAng + a * spread) * spd));
         }
@@ -786,7 +786,7 @@ export class Enemy {
       this.beamHue = (this.beamHue + 2) % 360;
       if (--this.morphT <= 0) {
         this.morphT = 280; this.morphShape = (this.morphShape + 1) % 3;
-        if (player) player.inverted = 180;
+        if (player) { player.inverted = 180; player.inv = Math.max(player.inv, 180); }
         state.shakeAmt += 8;
         for (const c of (state.collectibles as Collectible[])) {
           const dx = this.x - c.x, dy = this.y - c.y;

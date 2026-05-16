@@ -97,6 +97,9 @@ export const state = {
   } as DevState,
   devItemRects: [] as DevItemRect[],
 
+  // Slow-motion effect (cigarra morph)
+  slowMoT: 0,
+
   // Audio
   AC: null as AudioContext | null,
   audioFailed: false,

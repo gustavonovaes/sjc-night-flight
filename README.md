@@ -10,7 +10,17 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 
 ## Changelog
 
-### v0.0.8 — Migração TypeScript + Vite, Balanceamento e CI/CD
+### v0.0.9 — Balanceamento de Chefes e Câmera Lenta Cinematográfica _(2026-05-16)_
+
+- **Cigarra — câmera lenta:** enquanto a Cigarra estiver viva o jogo roda a ~50% de velocidade com vinheta roxa nas bordas e label "⏪ CÂMERA LENTA" no centro inferior; efeito dissolve ao matá-la.
+- **Cigarra — invulnerabilidade no morph:** ao mudar de forma (`morphT`), o jogador fica invulnerável por 180 frames — evita morte instantânea durante a inversão de controles.
+- **Cigarra — inversão só vertical:** a inversão de controles agora afeta apenas o eixo Y (cima/baixo); horizontal permanece normal.
+- **Cigarra — HP reduzido:** `90 + wave×15` → `55 + wave×8`.
+- **Protótipo X — nerfs:** aceleração por lap `0.7` → `0.4`; pausa entre dashes aumentada (`max(80,170-lap×10)` → `max(90,190-lap×8)`); `shootT` mínimo `22` → `30`; spread de 5 orbs → 3 orbs por disparo.
+- **Arara Real — nerfs:** velocidade base `3.8+rand×2.0` → `2.8+rand×1.4`; bônus por wave `0.07` → `0.04`; probabilidade de spawn reduzida em todas as fases (wave 2: 55%→45%, wave 3: 30%→18%, waves 4-6+: ~26%→~16%).
+- **design.md:** atualizado para refletir arquitetura TypeScript/Vite, valores corretos de constantes, módulos e sistemas novos.
+
+### v0.0.8 — Migração TypeScript + Vite, Balanceamento e CI/CD _(2026-05-16)_
 
 - **Migração:** todo o código JS vanilla migrado para TypeScript em `src/`. Vite como bundler (`bun run build` → `dist/`); entry point `src/main.ts`; tipos em `src/types.ts`.
 - **Servidor:** `server.js` → `src/server.ts` (Bun + TypeScript); serve estáticos de `dist/` via `STATIC_DIR`; suporte a `PORT` via env var.
@@ -20,7 +30,7 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 - **Áudio:** throttle por SFX via `_ok(key, gapSec)` em `src/audio.ts` — evita empilhamento de osciladores Web Audio em rajadas (shoot 50ms, bossIn 250ms, destroy 250ms).
 - **Infraestrutura:** `CLAUDE.md` e `GEMINI.md` adicionados; `CLAUDE.md` lido automaticamente pelo Claude Code. Skill `/gerar-release` em `.claude/commands/`.
 
-### v0.0.7 — Correções Multiplayer
+### v0.0.7 — Correções Multiplayer _(2026-05-16)_
 
 - **Precisão corrigida:** `shotsFired` agora contabilizado corretamente; cálculo `shotsHit/shotsFired` não ultrapassa 100%.
 - **Cap de jogadores:** servidor rejeita entrada no lobby após 4 jogadores com mensagem de erro.
@@ -31,13 +41,13 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 - **Inimigos fora da tela:** `enemy_die` broadcast para inimigos que saem pela esquerda sem ser abatidos (sem pontos).
 - **Segundo boss:** timeout do segundo boss limpo corretamente ao encerrar partida (sem vazamento).
 
-### v0.0.6 — Melhorias de Segurança e Performance
+### v0.0.6 — Melhorias de Segurança e Performance _(2026-05-15)_
 
 - **Segurança:** Implementação de proteção contra path traversal no servidor estático e substituição da geração de IDs de lobby por `crypto.randomBytes()`.
 - **Performance:** Otimização do tráfego de rede multiplayer com envio apenas de dados delta (buffs e escudos enviados apenas quando alterados).
 - **Consistência:** Sincronização do multiplicador de HP dos inimigos (`diffCfg.hpMult`) entre servidor e cliente.
 
-### v0.0.5 — Modo Multiplayer Co-op
+### v0.0.5 — Modo Multiplayer Co-op _(2026-05-15)_
 
 **Servidor**
 
@@ -72,7 +82,7 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 
 ---
 
-### v0.0.4 — Visuais, Física e Estatísticas
+### v0.0.4 — Visuais, Física e Estatísticas _(2026-05-14)_
 
 **Efeitos de céu e ambientação**
 
@@ -111,7 +121,7 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 
 ---
 
-### v0.0.3 — DDA, Música e Estatísticas
+### v0.0.3 — DDA, Música e Estatísticas _(2026-05-14)_
 
 **Dificuldade**
 
@@ -149,7 +159,7 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 
 ---
 
-### v0.0.2 — Balanceamento e Performance
+### v0.0.2 — Balanceamento e Performance _(2026-05-14)_
 
 **Dificuldade e progressão**
 
@@ -191,7 +201,7 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 
 ---
 
-### v0.0.1 — Lançamento inicial
+### v0.0.1 — Lançamento inicial _(2026-05-13)_
 
 - Jogo base: shooter side-scrolling em JS vanilla, sem bundler ou framework
 - 3 aviões jogáveis (Super Tucano, Embraer E2, C-390) com stats distintos e desbloqueio por pontuação acumulada

@@ -168,29 +168,29 @@ function spawnEnemy(): void {
     else          state.enemies.push(new Enemy("drone", W + 42, y));
   } else if (w === 1) {
     if      (r < 0.30) state.enemies.push(new Enemy("cloud", W + 85, y));
-    else if (r < 0.75) state.enemies.push(new Enemy("drone", W + 42, y));
+    else if (r < 0.82) state.enemies.push(new Enemy("drone", W + 42, y));
     else               state.enemies.push(new Enemy("arara", W + 32, y));
   } else if (w === 2) {
     if      (r < 0.18) state.enemies.push(new Enemy("cloud", W + 85, y));
-    else if (r < 0.45) state.enemies.push(new Enemy("drone", W + 42, y));
+    else if (r < 0.55) state.enemies.push(new Enemy("drone", W + 42, y));
     else               state.enemies.push(new Enemy("arara", W + 32, y));
   } else if (w === 3) {
     if      (r < 0.15) state.enemies.push(new Enemy("cloud", W + 85, y));
-    else if (r < 0.38) state.enemies.push(new Enemy("drone", W + 42, y));
-    else if (r < 0.68) state.enemies.push(new Enemy("arara", W + 32, y));
+    else if (r < 0.42) state.enemies.push(new Enemy("drone", W + 42, y));
+    else if (r < 0.60) state.enemies.push(new Enemy("arara", W + 32, y));
     else if (isNight)  state.enemies.push(new Enemy("ovni",  W + 55, y));
     else               state.enemies.push(new Enemy("drone", W + 42, y));
   } else if (w === 4) {
     if      (r < 0.12) state.enemies.push(new Enemy("cloud",       W + 85, y));
-    else if (r < 0.32) state.enemies.push(new Enemy("drone",       W + 42, y));
-    else if (r < 0.58) state.enemies.push(new Enemy("arara",       W + 32, y));
-    else if (r < 0.78) state.enemies.push(new Enemy("ovni",        W + 55, y));
+    else if (r < 0.34) state.enemies.push(new Enemy("drone",       W + 42, y));
+    else if (r < 0.52) state.enemies.push(new Enemy("arara",       W + 32, y));
+    else if (r < 0.76) state.enemies.push(new Enemy("ovni",        W + 55, y));
     else               state.enemies.push(new Enemy("helicoptero", W + 60, y));
   } else if (w === 5) {
     if      (r < 0.10) state.enemies.push(new Enemy("cloud",       W + 85, y));
-    else if (r < 0.26) state.enemies.push(new Enemy("drone",       W + 42, y));
-    else if (r < 0.50) state.enemies.push(new Enemy("arara",       W + 32, y));
-    else if (r < 0.74) state.enemies.push(new Enemy("ovni",        W + 55, y));
+    else if (r < 0.28) state.enemies.push(new Enemy("drone",       W + 42, y));
+    else if (r < 0.44) state.enemies.push(new Enemy("arara",       W + 32, y));
+    else if (r < 0.72) state.enemies.push(new Enemy("ovni",        W + 55, y));
     else               state.enemies.push(new Enemy("helicoptero", W + 60, y));
     if (Math.random() < 0.22) {
       const y2 = 55 + Math.random() * (H - 110);
@@ -198,9 +198,9 @@ function spawnEnemy(): void {
     }
   } else {
     if      (r < 0.08) state.enemies.push(new Enemy("cloud",       W + 85, y));
-    else if (r < 0.22) state.enemies.push(new Enemy("drone",       W + 42, y));
-    else if (r < 0.46) state.enemies.push(new Enemy("arara",       W + 32, y));
-    else if (r < 0.68) state.enemies.push(new Enemy("ovni",        W + 55, y));
+    else if (r < 0.24) state.enemies.push(new Enemy("drone",       W + 42, y));
+    else if (r < 0.40) state.enemies.push(new Enemy("arara",       W + 32, y));
+    else if (r < 0.66) state.enemies.push(new Enemy("ovni",        W + 55, y));
     else               state.enemies.push(new Enemy("helicoptero", W + 60, y));
     if (Math.random() < 0.30) {
       const y2 = 55 + Math.random() * (H - 110);
@@ -404,6 +404,7 @@ function update(): void {
             if ((BOSS_TYPES as readonly string[]).includes(e.type)) {
               state.shakeAmt += 9; state.playerStats.bossKills++;
               state.bossAlive = false;
+              if (e.type === "cigarra") state.slowMoT = 40;
             }
             dropCollectibles(e.x, e.y, e.type);
           }
@@ -592,6 +593,28 @@ function render(): void {
   ctx.globalAlpha = 1;
   ctx.textAlign = "left";
   ctx.restore();
+
+  // Slow-mo cinematic overlay (cigarra alive)
+  const _cigarraAlive = state.enemies.some((e) => e.type === "cigarra");
+  if (_cigarraAlive || state.slowMoT > 0) {
+    const a = state.slowMoT > 0 ? Math.min(state.slowMoT / 20, 1) : 1;
+    const grad = ctx.createRadialGradient(W / 2, H / 2, H * 0.25, W / 2, H / 2, H * 0.85);
+    grad.addColorStop(0, "rgba(0,0,0,0)");
+    grad.addColorStop(1, `rgba(60,0,90,${(a * 0.5).toFixed(2)})`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalAlpha = a * 0.85;
+    ctx.font = "bold 11px Courier New";
+    ctx.fillStyle = "#e879f9";
+    ctx.textAlign = "center";
+    ctx.shadowColor = "#e879f9";
+    ctx.shadowBlur = 10;
+    ctx.fillText("⏪ CÂMERA LENTA", W / 2, H - 12);
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1;
+    ctx.textAlign = "left";
+  }
+
   drawHUD();
   mpDrawHUD();
   if (state.touch.active) drawJoystick();
@@ -789,6 +812,7 @@ document.getElementById("btn-pause-mobile")?.addEventListener("click", () => {
 export function startLoop(): void {
   mpAutoJoin();
   startMenuMusic(0);
+  let _rafSkip = 0;
   (function loop(ts: number): void {
     state._fpsCount++;
     if (ts - state._fpsTs >= 1000) {
@@ -796,7 +820,20 @@ export function startLoop(): void {
       state._fpsCount = 0;
       state._fpsTs = ts;
     }
-    update();
+    if (state.slowMoT > 0) {
+      state.slowMoT--;
+      _rafSkip = (_rafSkip + 1) % 3;
+      if (_rafSkip === 0) update();
+    } else {
+      const cigarraAlive = (state.gState === ST.PLAY || state.gState === ST.MULTI)
+        && state.enemies.some((e) => e.type === "cigarra");
+      if (cigarraAlive) {
+        _rafSkip = (_rafSkip + 1) % 2;
+        if (_rafSkip === 0) update();
+      } else {
+        update();
+      }
+    }
     render();
     requestAnimationFrame(loop);
   })(0);
