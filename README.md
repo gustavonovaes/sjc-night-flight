@@ -4,7 +4,7 @@ Shooter side-scrolling arcade ambientado em São José dos Campos (SJC), inspira
 
 Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, drones, araras, OVNIs e chefes cada vez mais poderosos. Modo multiplayer co-op para até 4 jogadores com lobby compartilhável por link.
 
-**[Jogar online →](https://gustavonovaes.github.io/sjc-night-flight/)**
+**[Jogar online →](https://sjc-night-flight.fly.dev/)**
 
 ---
 
