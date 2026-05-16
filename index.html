@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="Gustavo Novaes <contato@gustavonovaes.dev>" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <!-- PWA / fullscreen no iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-fullscreen"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#030314" />
+    <title>SJC Night Flight — Guardião do Vale</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        /* dvh cobre área real excluindo barra do browser em mobile */
+        height: 100dvh;
+        background: #030314;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        font-family: "Courier New", Courier, monospace;
+        color: #e0e0ff;
+        user-select: none;
+        /* safe area para notch/ilha dinâmica */
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+      }
+      #wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+      }
+      canvas {
+        display: block;
+        width: min(100vw, calc(100dvh * 800 / 450));
+        height: min(100dvh, calc(100vw * 450 / 800));
+        touch-action: none;
+      }
+      #btn-pause-mobile {
+        display: none;
+        position: fixed;
+        top: max(10px, env(safe-area-inset-top, 10px));
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(10, 10, 40, 0.75);
+        border: 1px solid rgba(37, 99, 235, 0.5);
+        color: #60a5fa;
+        font-size: 20px;
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        cursor: pointer;
+        z-index: 999;
+        line-height: 1;
+      }
+      @media (pointer: coarse) {
+        #btn-pause-mobile {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      :fullscreen body,
+      :-webkit-full-screen body {
+        padding: 0;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-FJ9rw4fh.js"></script>
+  </head>
+  <body>
+    <div id="wrap">
+      <canvas id="c"></canvas>
+      <button id="btn-pause-mobile">⏸</button>
+    </div>
+  </body>
+</html>
