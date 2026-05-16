@@ -765,7 +765,7 @@ function drawOver() {
   ctx.fillText(`RECORDE: ${Math.max(hiScore, score)}  ·  ONDA ${waveNum + 1}  ·  ${diffCfg.icon} ${diffCfg.name}`, W / 2, baseY + 50);
 
   // stats panel
-  const px = 180, pw = W - 360, py = baseY + 66, ph = 258;
+  const px = 180, pw = W - 360, py = baseY + 66, ph = 224;
   ctx.fillStyle = "#0f172a";
   ctx.fillRect(px, py, pw, ph);
   ctx.strokeStyle = "#1e293b";
@@ -779,18 +779,17 @@ function drawOver() {
   const st = typeof playerStats !== "undefined" ? playerStats : {};
   const totalPw = Object.values(st.pw || {}).reduce((a, v) => a + v, 0);
   const shots = st.shotsFired ?? 0;
-  const acc = shots > 0 ? Math.round((st.kills ?? 0) / shots * 100) : 0;
+  const acc = shots > 0 ? Math.round((st.shotsHit ?? 0) / shots * 100) : 0;
   const survived = st.timeSurvived ?? 0;
   const mm = String(Math.floor(survived / 60)).padStart(2, "0");
   const ss = String(survived % 60).padStart(2, "0");
 
   const rows = [
-    ["Abates",            st.kills ?? 0,               "Acertos sofridos",  st.hits ?? 0],
-    ["Precisão",          `${acc}%`,                   "Tempo de missão",   `${mm}:${ss}`],
-    ["Bosses abatidos",   st.bossKills ?? 0,            "Ondas perfeitas",   st.wavesWithoutHit ?? 0],
-    ["Bloq. de escudo",   st.shieldBlocks ?? 0,         "Abates em combo",   st.comboKills ?? 0],
-    ["Rasantes",          st.grazes ?? 0,               "Maior sequência",   st.longestGrazeStreak ?? 0],
-    ["Quase mortes",      st.nearDeathHits ?? 0,        "Power-ups",         totalPw],
+    ["Abates",            st.kills ?? 0,               "Tempo de missão",        `${mm}:${ss}`],
+    ["Precisão",          `${acc}%`,                   "Ondas perfeitas",        st.wavesWithoutHit ?? 0],
+    ["Chefes abatidos",   st.bossKills ?? 0,           "Abates em combo",        st.comboKills ?? 0],
+    ["Bloq. de escudo",   st.shieldBlocks ?? 0,        "Quase mortes",           st.nearDeathHits ?? 0],
+    ["Rasantes",          st.grazes ?? 0,              "Power-ups coletados",    totalPw],
   ];
 
   const col1x = px + pw * 0.26;
@@ -822,10 +821,11 @@ function drawOver() {
   const pwEntries = Object.entries(st.pw || {}).sort((a, b) => b[1] - a[1]);
   if (pwEntries.length > 0) {
     const [topId, topN] = pwEntries[0];
-    const PW_ICONS = { shield:"🛡", boost:"⚡", "14bis":"🛩", avibras:"🚀", inpe:"📡", revap:"❄️", asadelta:"🪂", wingman:"📶", hp_up:"❤️" };
+    const pwType = typeof COLLECT_TYPES !== "undefined" ? COLLECT_TYPES.find(t => t.id === topId) : null;
+    const pwLabel = pwType ? `${pwType.icon} ${pwType.lbl}` : topId;
     ctx.fillStyle = "#475569";
     ctx.font = "8px Courier New";
-    ctx.fillText(`FAVORITO: ${PW_ICONS[topId] || "⬡"} ×${topN}`, W / 2, py + ph - 8);
+    ctx.fillText(`FAVORITO: ${pwLabel} ×${topN}`, W / 2, py + ph - 8);
   }
 
   const msg = score > 6000 ? "Excelente! SJC está orgulhosa!"
@@ -926,7 +926,7 @@ function drawSobre() {
       "Rasante: passe perto de bala sem levar dano",
       "Missão CBERS: escorte o satélite até sair",
       "🌅 AVENTURA: diversão garantida, combo 10×, mais powerups",
-      "🔥 RADICAL: spawns agressivos, bosses duros, combo 50×",
+      "🔥 RADICAL: spawns agressivos, chefes duros, combo 50×",
     ]},
     { title: "🚀 POWER-UPS", col: "#fb923c", lines: [
       "🛡️ Escudo — absorve 1 acerto (acumula ×3)",

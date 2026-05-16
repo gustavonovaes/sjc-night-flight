@@ -38,9 +38,9 @@ const DIFFICULTIES = [
     desc: "Caos total — combo até 50×",
     comboMax: 50,
     spawnMin: 22, spawnBase: 100, spawnWaveMult: 7, spawnTimeMult: 230,
-    bossInterval: 1800, doubleBossWave: 5,
-    hpMult: 1.6,
-    dropMult: 0.65,
+    bossInterval: 1800, doubleBossWave: 9,
+    hpMult: 1.35,
+    dropMult: 0.8,
     hsKey: "sjc_hi_radical",
   },
 ];
@@ -1378,8 +1378,7 @@ class Enemy {
       ctx.restore();
       this._drawHPBar("A CIGARRA");
     }
-    const showHp = (this.hp < this.mhp || (player && player.inpe > 0)) && !isBossType;
-    if (showHp) {
+    if (!isBossType) {
       const bw = this.r * 1.4;
       const bx = this.x - bw / 2;
       const by = this.y - this.r - 8;

@@ -105,9 +105,9 @@ function startGame() {
   off1 = 0; off2 = 0; off3 = 0; offSky = 0;
   radioText = ""; radioT = 0; radioQueue = [];
   grazeCount = 0; cbersMission = null; cbersMissionT = 3800;
-  playerStats = { pw: {}, kills: 0, hits: 0, grazes: 0, maxCombo: 1, shotsFired: 0, startFrame: 0,
+  playerStats = { pw: {}, kills: 0, hits: 0, grazes: 0, maxCombo: 1, shotsFired: 0, shotsHit: 0,
     bossKills: 0, shieldBlocks: 0, nearDeathHits: 0, comboKills: 0,
-    longestGrazeStreak: 0, wavesWithoutHit: 0 };
+    longestGrazeStreak: 0, wavesWithoutHit: 0, startTime: Date.now() };
   _curGrazeStreak = 0;
   _waveHits = 0;
   ddaStress = 0.5;
@@ -165,6 +165,7 @@ function update() {
   if (combo >= 5) ddaStress = Math.max(0, ddaStress - 0.0004);
 
   const nb = player.update(keys);
+  playerStats.shotsFired += nb.length;
   bullets.push(...nb);
   bullets.forEach((b) => b.update());
   bullets = bullets.filter((b) => !b.dead);
@@ -287,6 +288,7 @@ function update() {
       if (b.dead || e.dead) return;
       if (circ({ x: b.x, y: b.y, r: b.r }, e.hb())) {
         b.dead = true;
+        playerStats.shotsHit++;
         if (gState === ST.MULTI && e.mpId) {
           const dmg = player && player.boost > 0 && player.shield > 0 ? 2 : 1;
           mpSend({ type: "hit", enemyId: e.mpId, dmg });
@@ -553,7 +555,7 @@ function spawnBoss() {
   radioSay(RADIO_MSGS.boss);
   if (waveNum > diffCfg.doubleBossWave) {
     const second = BOSS_ROTATION[(Math.floor(waveNum) + 2) % BOSS_ROTATION.length];
-    setTimeout(() => { if (gState === ST.PLAY) enemies.push(new Enemy(second, W + 300, H / 3)); }, 4000);
+    setTimeout(() => { if (gState === ST.PLAY) enemies.push(new Enemy(second, W + 300, H / 3)); }, 7000);
   }
 }
 
@@ -561,7 +563,7 @@ function spawnBoss() {
 function endGame() {
   gState = ST.OVER;
   shakeAmt = 0;
-  playerStats.timeSurvived = Math.floor(frame / 60);
+  playerStats.timeSurvived = Math.floor((Date.now() - playerStats.startTime) / 1000);
   sfxDestroy();
   stopMusic();
   const prev = parseInt(localStorage.getItem(HS_KEY) || "0");
@@ -579,7 +581,8 @@ function endGame() {
     grazes: playerStats.grazes,
     maxCombo: playerStats.maxCombo,
     shotsFired: playerStats.shotsFired,
-    timeSurvived: Math.floor(frame / 60),
+    shotsHit: playerStats.shotsHit,
+    timeSurvived: playerStats.timeSurvived,
     bossKills: playerStats.bossKills,
     shieldBlocks: playerStats.shieldBlocks,
     nearDeathHits: playerStats.nearDeathHits,
@@ -731,14 +734,24 @@ document.addEventListener("keydown", (e) => {
     if (e.code === "Escape") { mpDisconnect(); gState = ST.MENU; return; }
     if (e.code === "ArrowLeft"  || e.code === "KeyA") {
       selectedPlane = (selectedPlane - 1 + PLANES.length) % PLANES.length;
-      mpSend({ type: "ship", planeId: selectedPlane }); return;
+      mpSend({ type: "ship", planeId: selectedPlane });
+      const _lrp = mp.players.get(mp.playerId); if (_lrp) _lrp.planeId = selectedPlane;
+      return;
     }
     if (e.code === "ArrowRight" || e.code === "KeyD") {
       selectedPlane = (selectedPlane + 1) % PLANES.length;
-      mpSend({ type: "ship", planeId: selectedPlane }); return;
+      mpSend({ type: "ship", planeId: selectedPlane });
+      const _lrp = mp.players.get(mp.playerId); if (_lrp) _lrp.planeId = selectedPlane;
+      return;
     }
     if (e.code === "Enter" || e.code === "Space") {
-      if (mp.shareUrl) { navigator.clipboard?.writeText(mp.shareUrl).catch(() => {}); return; }
+      if (mp.isHost) mpSend({ type: "start" });
+      else mpSend({ type: "ready" });
+      return;
+    }
+    if (e.code === "KeyC") {
+      navigator.clipboard?.writeText(mp.shareUrl || "").catch(() => {});
+      return;
     }
     return;
   }
@@ -799,8 +812,8 @@ canvas.addEventListener("click", (e) => {
   }
   if (gState === ST.LOBBY) {
     const action = mpLobbyHit(p);
-    if (action === "plane_left")  { selectedPlane = (selectedPlane - 1 + PLANES.length) % PLANES.length; mpSend({ type: "ship", planeId: selectedPlane }); }
-    if (action === "plane_right") { selectedPlane = (selectedPlane + 1) % PLANES.length; mpSend({ type: "ship", planeId: selectedPlane }); }
+    if (action === "plane_left")  { selectedPlane = (selectedPlane - 1 + PLANES.length) % PLANES.length; mpSend({ type: "ship", planeId: selectedPlane }); const _lrp = mp.players.get(mp.playerId); if (_lrp) _lrp.planeId = selectedPlane; }
+    if (action === "plane_right") { selectedPlane = (selectedPlane + 1) % PLANES.length; mpSend({ type: "ship", planeId: selectedPlane }); const _lrp = mp.players.get(mp.playerId); if (_lrp) _lrp.planeId = selectedPlane; }
     if (action === "start")  mpSend({ type: "start" });
     if (action === "ready")  mpSend({ type: "ready" });
     if (action === "back")   { mpDisconnect(); gState = ST.MENU; }

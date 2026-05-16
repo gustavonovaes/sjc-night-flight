@@ -51,6 +51,7 @@ function getOrCreateLobby(id) {
     bossTargets: new Map(),  // bossId → targetPlayerId
     formationPairs: new Map(),
     tickInterval: null,
+    doubleBossTimeout: null,
     eidC: 0,
     cidC: 0,
   };
@@ -119,8 +120,10 @@ function tickLobby(lobby) {
     if (e.x < -250) {
       lobby.enemies.delete(id);
       if (BOSS_TYPES.includes(e.type)) lobby.bossAlive = false;
+      broadcastAll(lobby, { type: "enemy_die", id, pts: 0, killedBy: null });
     }
   }
+
 
   // Collectible cleanup
   for (const [id, c] of lobby.collectibles) {
@@ -237,7 +240,8 @@ function spawnServerBoss(lobby) {
   lobby.hordeSpawnT = 70;
 
   if (lobby.wave > 18) {
-    setTimeout(() => {
+    lobby.doubleBossTimeout = setTimeout(() => {
+      lobby.doubleBossTimeout = null;
       if (!lobby.gameRunning) return;
       const second = BOSS_ROTATION[(Math.floor(lobby.wave) + 2) % BOSS_ROTATION.length];
       const id2 = `boss2_${lobby.frame}`;
@@ -269,6 +273,10 @@ function handleMessage(ws, msg) {
       send(ws, { type: "error", msg: "Partida em andamento — aguarde próxima sessão" });
       return;
     }
+    if (lobby.players.size >= 4) {
+      send(ws, { type: "error", msg: "Lobby cheio (máx. 4 jogadores)" });
+      return;
+    }
 
     const pid    = "p_" + genId(8);
     const isHost = lobby.players.size === 0;
@@ -282,10 +290,11 @@ function handleMessage(ws, msg) {
     if (isHost) lobby.host = ws;
     wsToPlayer.set(ws, pState);
 
-    const host = process.env.HOST || `localhost:${PORT}`;
+    const baseUrl = process.env.APP_URL ||
+      (process.env.FLY_APP_NAME ? `https://${process.env.FLY_APP_NAME}.fly.dev` : `http://localhost:${PORT}`);
     send(ws, {
       type: "joined", playerId: pid, lobbyId, isHost,
-      shareUrl: `http://${host}/?lobby=${lobbyId}`,
+      shareUrl: `${baseUrl}/?lobby=${lobbyId}`,
       players: lobbyPlayerList(lobby),
     });
     broadcast(lobby, { type: "player_join", id: pid, name: pState.name, planeId: 0 }, ws);
@@ -320,11 +329,14 @@ function handleMessage(ws, msg) {
       player.vy = msg.vy ?? 0;
       player.tilt = msg.tilt ?? 0;
       player.shield = msg.shield || 0;
+      if (msg.lives !== undefined) player.lives = msg.lives;
+      if (msg.score !== undefined) player.score = msg.score;
       broadcast(lobby, {
         type: "player_update",
         id: player.id, x: player.x, y: player.y,
         vx: player.vx, vy: player.vy, tilt: player.tilt,
         lives: player.lives, dead: player.dead, buffs: msg.buffs,
+        score: player.score ?? 0,
       }, ws);
       break;
     }
@@ -414,6 +426,7 @@ function startLobbyGame(lobby) {
 function stopLobbyGame(lobby) {
   lobby.gameRunning = false;
   if (lobby.tickInterval) { clearInterval(lobby.tickInterval); lobby.tickInterval = null; }
+  if (lobby.doubleBossTimeout) { clearTimeout(lobby.doubleBossTimeout); lobby.doubleBossTimeout = null; }
 }
 
 function handleOpen(ws) { ws.data = {}; }

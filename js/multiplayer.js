@@ -43,6 +43,7 @@ class RemotePlayer {
     this.host    = false;
     this.dead    = false;
     this.lives   = 3;
+    this.score   = 0;
     this.buffs   = {};
     // Interpolation
     this.snapshots  = [];
@@ -62,11 +63,12 @@ class RemotePlayer {
     this.tilt = data.tilt || 0;
     if (data.lives !== undefined) this.lives = data.lives;
     if (data.dead  !== undefined) this.dead  = data.dead;
+    if (data.score !== undefined) this.score = data.score;
     if (data.buffs) this.buffs = data.buffs;
   }
 
   interpolate() {
-    const now   = performance.now() - 100;
+    const now   = performance.now() - 50;
     const snaps = this.snapshots;
     if (snaps.length === 0) {
       this.displayX += this.vx; this.displayY += this.vy; return;
@@ -111,6 +113,20 @@ class RemotePlayer {
       ctx.beginPath(); ctx.arc(lx, this.displayY + 24, 2.5, 0, Math.PI * 2); ctx.fill();
     }
     ctx.globalAlpha = 1;
+
+    // Active buff icons above plane
+    const BUFF_ICON_MAP = [
+      ["shield", "🛡"], ["boost", "⚡"], ["bis", "🛩"], ["avibras", "🚀"],
+      ["inpe", "📡"], ["revap", "❄"], ["delta", "🪂"], ["ericsson", "📶"],
+    ];
+    const activeIcons = BUFF_ICON_MAP.filter(([k]) => this.buffs[k]).map(([, ic]) => ic);
+    if (activeIcons.length > 0) {
+      ctx.font = "9px sans-serif";
+      ctx.textAlign = "center";
+      ctx.globalAlpha = 0.9;
+      ctx.fillText(activeIcons.join(""), this.displayX, this.displayY - 32);
+      ctx.globalAlpha = 1;
+    }
   }
 }
 
@@ -146,7 +162,11 @@ function mpConnect(lobbyId) {
   mp.ws.onerror   = ()  => { mp.error = "Falha na conexão WebSocket"; };
   mp.ws.onclose   = ()  => {
     mp.connected = false;
-    if (gState === ST.LOBBY || gState === ST.MULTI) gState = ST.MENU;
+    if (gState === ST.LOBBY || gState === ST.MULTI) {
+      gState = ST.MENU;
+      stopMusic();
+      startMenuMusic(selectedDifficulty);
+    }
   };
 }
 
@@ -255,7 +275,8 @@ function mpHandleMessage(msg) {
         const idx = enemies.findIndex(e => e.mpId === msg.id);
         if (idx !== -1) {
           const e = enemies[idx];
-          explode(msg.x || e.x, msg.y || e.y, "#ef4444", 8);
+          e.dead = true; // let HomingMissile references know target is gone
+          explode(e.x, e.y, "#ef4444", 8);
           if (BOSS_TYPES.includes(e.type)) { bossAlive = false; shakeAmt += 9; }
           enemies.splice(idx, 1);
         }
@@ -290,7 +311,8 @@ function mpHandleMessage(msg) {
       break;
     }
     case "sos_spawn": {
-      mp.sosItems.set(msg.id, { id: msg.id, x: msg.x, y: msg.y, deadId: msg.deadId, life: 1500, maxLife: 1500 });
+      // Server SOS lasts 1500 ticks at 30fps = 50s; use real-time so countdown is frame-rate independent
+      mp.sosItems.set(msg.id, { id: msg.id, x: msg.x, y: msg.y, deadId: msg.deadId, spawnTime: performance.now(), duration: 50000 });
       break;
     }
     case "sos_take":
@@ -349,7 +371,7 @@ function mpHandleMessage(msg) {
 function mpStartGame() {
   mp.enemies.clear(); mp.collectibles.clear();
   mp.sosItems.clear(); mp.bossTargetId = null;
-  mp.formationActive = false; mp.localDead = false;
+  mp.formationActive = false; mp.localDead = false; mp.gameStarted = true;
   startGame();          // sets gState = ST.PLAY, creates player, etc.
   gState = ST.MULTI;   // override to multiplayer state
   enemies      = [];   // server controls enemies
@@ -373,11 +395,17 @@ function _mpLocalRevive(x, y, revivedBy) {
 function mpUpdate() {
   if (gState !== ST.MULTI) return;
 
-  // Send position every 3 frames
-  if (frame % 3 === 0 && player) {
+  // Send position every 2 frames
+  if (frame % 2 === 0 && player) {
     const currentBuffs = {
-      boost: player.boost > 0, bis: player.bis > 0,
-      shield: player.shield > 0, avibras: player.avibras > 0,
+      shield:   player.shield   > 0,
+      boost:    player.boost    > 0,
+      bis:      player.bis      > 0,
+      avibras:  player.avibras  > 0,
+      inpe:     player.inpe     > 0,
+      revap:    player.revap    > 0,
+      delta:    player.delta    > 0,
+      ericsson: player.ericsson > 0,
     };
     
     // Send full data only if buffs changed, otherwise omit
@@ -391,6 +419,8 @@ function mpUpdate() {
       vy: Math.round(player.vy * 100) / 100,
       tilt: Math.round(player.tilt * 100) / 100,
       shield: player.shield > 0 ? player.shield : undefined,
+      lives: player.lives,
+      score,
     };
     
     if (buffsChanged) {
@@ -446,14 +476,92 @@ function mpDrawAll() {
 function mpDrawHUD() {
   if (gState !== ST.MULTI) return;
   mpDrawFormationHud();
+  mpDrawScoreboard();
   if (mp.localDead) mpDrawDeadOverlay();
 }
 
+const _BUFF_ICONS = [
+  ["shield", "🛡"], ["boost", "⚡"], ["bis", "🛩"], ["avibras", "🚀"],
+  ["inpe", "📡"], ["revap", "❄"], ["delta", "🪂"], ["ericsson", "📶"],
+];
+
+function _localBuffs() {
+  if (!player) return {};
+  return {
+    shield: player.shield > 0, boost: player.boost > 0, bis: player.bis > 0,
+    avibras: player.avibras > 0, inpe: player.inpe > 0, revap: player.revap > 0,
+    delta: player.delta > 0, ericsson: player.ericsson > 0,
+  };
+}
+
+function mpDrawScoreboard() {
+  // Build sorted list: local player + remote players
+  const entries = [];
+  entries.push({ id: mp.playerId, score, dead: mp.localDead, isLocal: true, buffs: _localBuffs() });
+  let colorIdx = 0;
+  for (const [id, rp] of mp.players) {
+    if (id === mp.playerId) { colorIdx++; continue; }
+    entries.push({ id, score: rp.score, dead: rp.dead, isLocal: false, color: rp.color, buffs: rp.buffs || {} });
+    colorIdx++;
+  }
+  entries.sort((a, b) => b.score - a.score);
+
+  const rowH = 20, padX = 6, padY = 4;
+  const panelW = 148, panelH = padY * 2 + entries.length * rowH;
+  const px = W - panelW - 4, py = 46;
+
+  ctx.save();
+  ctx.globalAlpha = 0.82;
+  ctx.fillStyle = "rgba(5,10,30,0.85)";
+  ctx.strokeStyle = "#1e3a5f";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(px, py, panelW, panelH, 3);
+  else ctx.rect(px, py, panelW, panelH);
+  ctx.fill(); ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  entries.forEach((e, i) => {
+    const rowTop = py + padY + i * rowH;
+    const ry = rowTop + 9;
+    const col = e.isLocal ? MP_COLORS[0] : (e.color || "#94a3b8");
+    // rank
+    ctx.fillStyle = i === 0 ? "#fbbf24" : "#475569";
+    ctx.font = "bold 8px Courier New";
+    ctx.textAlign = "left";
+    ctx.fillText(`${i + 1}`, px + padX, ry);
+    // color dot
+    ctx.fillStyle = e.dead ? "#475569" : col;
+    ctx.beginPath(); ctx.arc(px + padX + 10, ry - 3, 3, 0, Math.PI * 2); ctx.fill();
+    // label
+    ctx.fillStyle = e.dead ? "#475569" : (e.isLocal ? "#fff" : "#cbd5e1");
+    ctx.font = e.isLocal ? "bold 8px Courier New" : "8px Courier New";
+    ctx.fillText(e.isLocal ? "VOCÊ" : (e.dead ? "✝" : ""), px + padX + 16, ry);
+    // score
+    ctx.fillStyle = e.dead ? "#334155" : (i === 0 ? "#fbbf24" : "#94a3b8");
+    ctx.font = "bold 8px Courier New";
+    ctx.textAlign = "right";
+    ctx.fillText(e.score.toLocaleString(), px + panelW - padX, ry);
+    // buff icons row
+    const icons = _BUFF_ICONS.filter(([k]) => e.buffs[k]).map(([, ic]) => ic);
+    if (icons.length > 0) {
+      ctx.font = "8px sans-serif";
+      ctx.textAlign = "left";
+      ctx.globalAlpha = 0.85;
+      ctx.fillText(icons.join(""), px + padX + 14, rowTop + rowH - 2);
+      ctx.globalAlpha = 1;
+    }
+  });
+  ctx.textAlign = "left";
+  ctx.restore();
+}
+
 function mpDrawSosItems() {
+  const now = performance.now();
   for (const sos of mp.sosItems.values()) {
-    sos.life--;
-    if (sos.life <= 0) continue;
-    const alpha = Math.min(1, sos.life / 60) * (0.65 + Math.sin(frame * 0.12) * 0.35);
+    const pct = Math.max(0, 1 - (now - sos.spawnTime) / sos.duration);
+    if (pct <= 0) continue;
+    const alpha = Math.min(1, pct * 3) * (0.65 + Math.sin(frame * 0.12) * 0.35);
     const deadRp = mp.players.get(sos.deadId);
     ctx.save();
     ctx.globalAlpha = alpha;
@@ -469,7 +577,6 @@ function mpDrawSosItems() {
       ctx.fillStyle = "#ef4444"; ctx.font = "6px Courier New";
       ctx.fillText(deadRp.name || "Piloto", sos.x, sos.y - 15);
     }
-    const pct = sos.life / sos.maxLife;
     ctx.fillStyle = `rgba(239,68,68,0.5)`;
     ctx.fillRect(sos.x - 12, sos.y + 20, 24 * pct, 2);
     ctx.restore();
@@ -533,16 +640,18 @@ function mpDrawDeadOverlay() {
 
   // Count live SOS balloons for local player
   let sosFound = false;
+  const now = performance.now();
   for (const sos of mp.sosItems.values()) {
     if (sos.deadId === mp.playerId) {
       sosFound = true;
-      const pct = sos.life / sos.maxLife;
+      const pct = Math.max(0, 1 - (now - sos.spawnTime) / sos.duration);
+      const secs = Math.ceil(pct * sos.duration / 1000);
       ctx.fillStyle = "rgba(239,68,68,0.3)";
       ctx.fillRect(W / 2 - 60, H / 2 + 22, 120, 6);
       ctx.fillStyle = "#ef4444";
       ctx.fillRect(W / 2 - 60, H / 2 + 22, 120 * pct, 6);
       ctx.fillStyle = "#94a3b8"; ctx.font = "8px Courier New";
-      ctx.fillText("balão SOS expira em...", W / 2, H / 2 + 40);
+      ctx.fillText(`balão SOS expira em ${secs}s`, W / 2, H / 2 + 40);
       break;
     }
   }
@@ -591,10 +700,10 @@ function drawLobby() {
   ctx.fillStyle = "#334155"; ctx.font = "7px Courier New";
   ctx.fillText(mp.shareUrl || "", W / 2, 97);
   ctx.fillStyle = Math.floor(frame / 22) % 2 ? "#60a5fa" : "#3b82f6";
-  ctx.font = "7.5px Courier New"; ctx.fillText("[ ENTER = copiar link ]", W / 2, 108);
+  ctx.font = "7.5px Courier New"; ctx.fillText("[ C = copiar link  |  ENTER = iniciar/pronto ]", W / 2, 108);
 
   // Player list
-  const lx = W / 2 - 150, ly = 118, lw = 300, lh = 110;
+  const lx = W / 2 - 150, ly = 118, lw = 300, lh = Math.max(110, 24 + mp.players.size * 21 + 4);
   ctx.fillStyle = "rgba(10,15,40,0.82)"; ctx.fillRect(lx, ly, lw, lh);
   ctx.strokeStyle = "#1e3a5f"; ctx.lineWidth = 1; ctx.strokeRect(lx, ly, lw, lh);
   ctx.fillStyle = "#60a5fa"; ctx.font = "bold 8px Courier New";
@@ -616,9 +725,9 @@ function drawLobby() {
     ctx.textAlign = "left";
     ctx.fillText(`${plane.icon} ${plane.name}${tags.length ? " [" + tags.join("/") + "]" : ""}`, lx + 24, ry + 8);
     ctx.textAlign = "right";
-    ctx.fillStyle = rp.ready ? "#34d399" : "#475569";
-    ctx.font = "bold 7.5px Courier New";
-    ctx.fillText(rp.ready ? "PRONTO ●" : "aguard ○", lx + lw - 6, ry + 8);
+    ctx.font = "12px serif";
+    ctx.fillStyle = "#fff";
+    ctx.fillText(rp.ready ? "✅" : "⏳", lx + lw - 6, ry + 8);
     ctx.textAlign = "center";
     pi++;
   }
@@ -640,24 +749,50 @@ function drawLobby() {
   const localRp  = mp.players.get(mp.playerId);
   const isReady  = localRp?.ready;
 
+  ctx.save();
+  ctx.textAlign = "center";
   if (mp.isHost) {
     const canStart = mp.players.size >= 1;
-    ctx.fillStyle  = canStart ? "rgba(20,60,35,0.9)" : "#1e293b";
-    ctx.strokeStyle = canStart ? "#34d399" : "#334155"; ctx.lineWidth = 1.5;
+    // solid background — invisible only if truly transparent
+    ctx.fillStyle = canStart ? "#14532d" : "#1e293b";
+    ctx.beginPath();
     if (ctx.roundRect) ctx.roundRect(W / 2 - 85, btY, 170, 24, 4);
     else ctx.rect(W / 2 - 85, btY, 170, 24);
-    ctx.fill(); ctx.stroke();
-    ctx.fillStyle = canStart ? "#f1f5f9" : "#64748b"; ctx.font = "bold 10px Courier New";
-    ctx.fillText("▶  INICIAR PARTIDA", W / 2, btY + 15);
+    ctx.fill();
+    ctx.strokeStyle = canStart ? "#4ade80" : "#475569";
+    ctx.lineWidth = 2;
+    ctx.shadowColor = canStart ? "#4ade80" : "transparent";
+    ctx.shadowBlur  = canStart ? 12 : 0;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = canStart ? "#ffffff" : "#64748b";
+    ctx.font = "bold 11px Courier New";
+    ctx.shadowColor = canStart ? "#86efac" : "transparent";
+    ctx.shadowBlur  = canStart ? 6 : 0;
+    ctx.fillText("▶  INICIAR PARTIDA", W / 2, btY + 16);
+    ctx.shadowBlur = 0;
   } else {
-    ctx.fillStyle  = isReady ? "rgba(10,50,30,0.9)" : "#1e293b";
-    ctx.strokeStyle = isReady ? "#34d399" : "#334155"; ctx.lineWidth = 1.5;
+    const btnCol = isReady ? "#14532d" : "#1e3a5f";
+    const brdCol = isReady ? "#4ade80" : "#60a5fa";
+    ctx.fillStyle = btnCol;
+    ctx.beginPath();
     if (ctx.roundRect) ctx.roundRect(W / 2 - 55, btY, 110, 24, 4);
     else ctx.rect(W / 2 - 55, btY, 110, 24);
-    ctx.fill(); ctx.stroke();
-    ctx.fillStyle = isReady ? "#34d399" : "#94a3b8"; ctx.font = "bold 10px Courier New";
-    ctx.fillText(isReady ? "✓  PRONTO" : "MARCAR PRONTO", W / 2, btY + 15);
+    ctx.fill();
+    ctx.strokeStyle = brdCol;
+    ctx.lineWidth = 2;
+    ctx.shadowColor = brdCol;
+    ctx.shadowBlur  = 10;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 11px Courier New";
+    ctx.shadowColor = brdCol;
+    ctx.shadowBlur  = 5;
+    ctx.fillText(isReady ? "✓  PRONTO" : "MARCAR PRONTO", W / 2, btY + 16);
+    ctx.shadowBlur = 0;
   }
+  ctx.restore();
   _drawLobbyBack(btY + 30);
   ctx.textAlign = "left";
 }
@@ -677,7 +812,7 @@ function _drawLobbyBack(y = H - 28) {
 function mpLobbyHit(p) {
   if (gState !== ST.LOBBY) return null;
   if (!mp.connected) return null;
-  const ly = 118, lh = 110;
+  const ly = 118, lh = Math.max(110, 24 + mp.players.size * 21 + 4);
   const sy = ly + lh + 8;    // ship selector top
   const btY = sy + 42;       // button top
 

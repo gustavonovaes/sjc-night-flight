@@ -10,6 +10,17 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 
 ## Changelog
 
+### v0.0.7 — Correções Multiplayer
+
+- **Precisão corrigida:** `shotsFired` agora contabilizado corretamente; cálculo `shotsHit/shotsFired` não ultrapassa 100%.
+- **Cap de jogadores:** servidor rejeita entrada no lobby após 4 jogadores com mensagem de erro.
+- **Lobby responsivo:** altura da lista de jogadores é dinâmica; sem overflow com 3–4 jogadores.
+- **Unpause multiplayer:** `mp.gameStarted` agora é definido ao iniciar partida; `P/Escape` retorna ao estado correto.
+- **Nave local no lobby:** nave selecionada refletida imediatamente na lista do próprio jogador.
+- **Música ao desconectar:** volta ao menu e reinicia música ao fechar conexão WebSocket em ST.LOBBY ou ST.MULTI.
+- **Inimigos fora da tela:** `enemy_die` broadcast para inimigos que saem pela esquerda sem ser abatidos (sem pontos).
+- **Segundo boss:** timeout do segundo boss limpo corretamente ao encerrar partida (sem vazamento).
+
 ### v0.0.6 — Melhorias de Segurança e Performance
 - **Segurança:** Implementação de proteção contra path traversal no servidor estático e substituição da geração de IDs de lobby por `crypto.randomBytes()`.
 - **Performance:** Otimização do tráfego de rede multiplayer com envio apenas de dados delta (buffs e escudos enviados apenas quando alterados).
