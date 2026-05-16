@@ -1,4 +1,4 @@
-import type { PlaneConfig, DifficultyConfig, CollectibleType, WaveDef, HordeItem, DevScene, Star, Building, TreeData, CarData, SkyKeyframe } from "./types";
+import type { PlaneConfig, DifficultyConfig, CollectibleType, WaveDef, HordeItem, DevScene, Star, Building, TreeData, CarData, SkyKeyframe, PerkDef } from "./types";
 
 export const W = 800;
 export const H = 450;
@@ -38,6 +38,19 @@ export const BOSS_LABELS: Record<string, string> = {
   engrenagem:  "GRANDE ENGRENAGEM",
   cigarra:     "A CIGARRA",
 };
+
+// ── Level-up perks ────────────────────────────────────────────────────────────
+export const PERKS: PerkDef[] = [
+  { id: "bullet_resist", icon: "🛡",  col: "#60a5fa", name: "Colete Balístico",    desc: "30% de chance de ignorar\nprojéteis inimigos" },
+  { id: "impact_resist", icon: "⚙",  col: "#94a3b8", name: "Chassi Reforçado",    desc: "30% de chance de sobreviver\ncolisões com inimigos" },
+  { id: "damage_up",     icon: "💥", col: "#f87171", name: "Munição Perfurante",   desc: "+1 dano por tiro\n(elimina inimigos em menos hits)" },
+  { id: "speed_up",      icon: "⚡", col: "#34d399", name: "Motor Aprimorado",     desc: "+0.8 de velocidade\nmáxima permanente" },
+  { id: "extra_life",    icon: "❤",  col: "#ef4444", name: "Veterano",             desc: "+1 vida extra\npermanente" },
+  { id: "fire_rate",     icon: "🔫", col: "#fbbf24", name: "Gatilho Afiado",       desc: "Cadência de tiro +15%\npermanente" },
+  { id: "graze_range",   icon: "✦",  col: "#fde68a", name: "Rasante Habilidoso",   desc: "Área de rasante +35%\n(projéteis e inimigos)" },
+  { id: "combo_time",    icon: "🎯", col: "#c084fc", name: "Foco Total",           desc: "Combo dura 30%\nmais tempo" },
+  { id: "inv_extend",    icon: "⏱",  col: "#818cf8", name: "Reflexos Aguçados",    desc: "Invulnerabilidade pós-dano\n+50%" },
+];
 
 export const PLANES: PlaneConfig[] = [
   { id: "tucano", name: "EMB-314 Super Tucano", icon: "✈",  accel: 0.30, maxSpd: 4.0, fireN: FIRE_N, lives: 3, unlock: 0 },

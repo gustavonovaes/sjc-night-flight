@@ -1,7 +1,7 @@
 import { ST } from "./types";
 import type {
   Particle, FloatText, RadioQueueItem, HordeItem, CbersMission,
-  DevState, DevItemRect, TouchState, PlayerStats, DifficultyConfig,
+  DevState, DevItemRect, TouchState, PlayerStats, DifficultyConfig, PerkDef,
 } from "./types";
 import { DIFFICULTIES } from "./constants";
 
@@ -96,6 +96,10 @@ export const state = {
     cursor: 0,
   } as DevState,
   devItemRects: [] as DevItemRect[],
+
+  // Level-up system
+  playerLevel: 0,
+  levelUpCards: null as PerkDef[] | null,
 
   // Slow-motion effect (cigarra morph)
   slowMoT: 0,

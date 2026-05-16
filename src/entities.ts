@@ -6,7 +6,7 @@ import {
   CTYPES, DROP_TABLE, PLANES,
 } from "./constants";
 import { sfxShoot, sfxHit, sfxBang, sfxPowerup, sfxBossIn } from "./audio";
-import type { Circle, Particle, FloatText, TrailParticle, CollectibleType } from "./types";
+import type { Circle, Particle, FloatText, TrailParticle, CollectibleType, PlayerPerks } from "./types";
 
 // ── Collision helpers ─────────────────────────────────────────────────────────
 
@@ -59,6 +59,14 @@ export class Player {
   inv = 0; inverted = 0;
   fireT = 0; missileT = 0;
   trail: TrailParticle[] = [];
+  perks: PlayerPerks = {
+    bulletEvasion:   0,
+    impactEvasion:   0,
+    dmgBonus:        0,
+    grazeRadiusMult: 1.0,
+    comboTimeMult:   1.0,
+    invMult:         1.0,
+  };
 
   constructor(planeCfg = PLANES[0]) {
     this.x = 110;
@@ -178,7 +186,7 @@ export class Player {
       return false;
     }
     this.lives--;
-    this.inv = INV;
+    this.inv = Math.round(INV * this.perks.invMult);
     sfxHit();
     explode(this.x, this.y, "#ff4444", 14);
     return true;
@@ -600,7 +608,7 @@ export class Enemy {
       }
       case "cigarra": {
         this.vx = -0.5;
-        this.hp = this.mhp = 55 + w * 8; this.r = 58;
+        this.hp = this.mhp = 35 + w * 5; this.r = 58;
         this.shootT = Math.max(10, 22 - w);
         this.morphT = 280; this.morphShape = 0; this.beamHue = 0;
         break;

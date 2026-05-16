@@ -1,11 +1,29 @@
 export enum ST {
-  MENU  = 0,
-  PLAY  = 1,
-  PAUSE = 2,
-  OVER  = 3,
-  ABOUT = 4,
-  LOBBY = 5,
-  MULTI = 6,
+  MENU    = 0,
+  PLAY    = 1,
+  PAUSE   = 2,
+  OVER    = 3,
+  ABOUT   = 4,
+  LOBBY   = 5,
+  MULTI   = 6,
+  LEVELUP = 7,
+}
+
+export interface PerkDef {
+  id: string;
+  name: string;
+  desc: string;
+  icon: string;
+  col: string;
+}
+
+export interface PlayerPerks {
+  bulletEvasion:   number; // 0-1: prob. de ignorar projéteis
+  impactEvasion:   number; // 0-1: prob. de ignorar colisões
+  dmgBonus:        number; // dano extra por tiro (inteiro)
+  grazeRadiusMult: number; // multiplicador do raio de rasante (padrão 1.0)
+  comboTimeMult:   number; // multiplicador da duração do combo (padrão 1.0)
+  invMult:         number; // multiplicador da invulnerabilidade pós-dano (padrão 1.0)
 }
 
 export interface PlaneConfig {

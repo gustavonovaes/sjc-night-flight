@@ -3,7 +3,7 @@ import { ctx, W, H, getSky, VERSION } from "./world";
 import {
   STARS, PLANES, DIFFICULTIES, BLDGS, MT1, MT2, MT3, CARS, PARQUE_TREES,
   TOTAL_KEY, DEV_BTN, SHIELD_DUR, BOOST_DUR, BIS_DUR, AVIBRAS_DUR,
-  INPE_DUR, REVAP_DUR, DELTA_DUR, ERICSSON_DUR, JOY_MAX, CTYPES,
+  INPE_DUR, REVAP_DUR, DELTA_DUR, ERICSSON_DUR, JOY_MAX, CTYPES, PERKS,
 } from "./constants";
 import { ST } from "./types";
 import type { TreeData } from "./types";
@@ -447,24 +447,25 @@ export function drawHUD(): void {
     ctx.restore();
     buffY += 18;
   });
+  // Sinergias de power-up: exibidas abaixo da lista de buffs (lado direito, junto com eles)
   const activeCombos: { name: string; col: string }[] = [];
   if (player.boost > 0 && player.shield > 0)   activeCombos.push({ name: "⚡🛡️ FORTALEZA",      col: "#fbbf24" });
   if (player.avibras > 0 && player.inpe > 0)    activeCombos.push({ name: "🚀📡 RADAR AVIBRAS",   col: "#f97316" });
   if (player.delta > 0 && player.boost > 0)     activeCombos.push({ name: "🪂⚡ HIPERSÔNICO",     col: "#a78bfa" });
   if (player.revap > 0 && player.shield > 0)    activeCombos.push({ name: "❄️🛡️ ESCUDO GLACIAL", col: "#bfdbfe" });
   if (activeCombos.length > 0) {
-    let cy = combo > 1 ? 72 : 58;
+    if (buffY > 40) buffY += 4; // pequena separação visual após os buffs
     activeCombos.forEach(c => {
       ctx.save();
-      ctx.textAlign = "left";
+      ctx.textAlign = "right";
       ctx.font = "bold 9px Courier New";
       ctx.fillStyle = c.col;
       ctx.shadowColor = c.col;
       ctx.shadowBlur = 6;
-      ctx.fillText(`COMBO: ${c.name}`, 12, cy);
+      ctx.fillText(c.name, W - 10, buffY);
       ctx.shadowBlur = 0;
       ctx.restore();
-      cy += 13;
+      buffY += 13;
     });
   }
   ctx.textAlign = "left";
@@ -1032,3 +1033,89 @@ export function drawJoystick(): void {
   ctx.stroke();
   ctx.restore();
 }
+
+// ── Level-up screen ───────────────────────────────────────────────────────────
+export function drawLevelUp(): void {
+  const cards = state.levelUpCards;
+  if (!cards) return;
+
+  // Overlay escuro
+  ctx.globalAlpha = 0.78;
+  ctx.fillStyle = "#0a0a1a";
+  ctx.fillRect(0, 0, W, H);
+  ctx.globalAlpha = 1;
+
+  // Cabeçalho
+  ctx.textAlign = "center";
+  ctx.font = "bold 22px Courier New";
+  ctx.fillStyle = "#fde68a";
+  ctx.shadowColor = "#fde68a";
+  ctx.shadowBlur = 18;
+  ctx.fillText(`⭐ NÍVEL ${state.playerLevel} ⭐`, W / 2, 62);
+  ctx.shadowBlur = 0;
+  ctx.font = "12px Courier New";
+  ctx.fillStyle = "#94a3b8";
+  ctx.fillText("escolha um aprimoramento permanente", W / 2, 84);
+
+  // Cards
+  const CW = 180, CH = 145, GAP = 20;
+  const startX = (W - (CW * 3 + GAP * 2)) / 2;
+  const startY = 108;
+
+  cards.forEach((perk, i) => {
+    const cx = startX + i * (CW + GAP);
+    const cy = startY;
+
+    // Fundo
+    ctx.globalAlpha = 0.92;
+    ctx.fillStyle = "#1e1e2e";
+    ctx.beginPath();
+    (ctx as CanvasRenderingContext2D & { roundRect: (...a: unknown[]) => void }).roundRect(cx, cy, CW, CH, 10);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Borda
+    ctx.strokeStyle = perk.col;
+    ctx.lineWidth = 2;
+    ctx.shadowColor = perk.col;
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    (ctx as CanvasRenderingContext2D & { roundRect: (...a: unknown[]) => void }).roundRect(cx, cy, CW, CH, 10);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Número do card
+    ctx.textAlign = "center";
+    ctx.font = "bold 11px Courier New";
+    ctx.fillStyle = perk.col;
+    ctx.fillText(`[ ${i + 1} ]`, cx + CW / 2, cy + 20);
+
+    // Ícone
+    ctx.font = "28px sans-serif";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(perk.icon, cx + CW / 2, cy + 53);
+
+    // Nome
+    ctx.font = "bold 12px Courier New";
+    ctx.fillStyle = "#f1f5f9";
+    ctx.shadowColor = perk.col;
+    ctx.shadowBlur = 4;
+    ctx.fillText(perk.name, cx + CW / 2, cy + 76);
+    ctx.shadowBlur = 0;
+
+    // Descrição (duas linhas separadas por \n)
+    ctx.font = "10px Courier New";
+    ctx.fillStyle = "#94a3b8";
+    perk.desc.split("\n").forEach((line, li) => {
+      ctx.fillText(line, cx + CW / 2, cy + 97 + li * 14);
+    });
+  });
+
+  // Dica de tecla
+  ctx.font = "10px Courier New";
+  ctx.fillStyle = "#475569";
+  ctx.textAlign = "center";
+  ctx.fillText("pressione 1 · 2 · 3 ou clique no card", W / 2, startY + CH + 26);
+  ctx.textAlign = "left";
+}
+

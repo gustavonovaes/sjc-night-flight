@@ -10,15 +10,18 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 
 ## Changelog
 
-### v0.0.9 — Balanceamento de Chefes e Câmera Lenta Cinematográfica _(2026-05-16)_
+### v0.0.9 — Level-Up, Perks Permanentes, Graze, Balanceamento e HUD _(2026-05-16)_
 
-- **Cigarra — câmera lenta:** enquanto a Cigarra estiver viva o jogo roda a ~50% de velocidade com vinheta roxa nas bordas e label "⏪ CÂMERA LENTA" no centro inferior; efeito dissolve ao matá-la.
-- **Cigarra — invulnerabilidade no morph:** ao mudar de forma (`morphT`), o jogador fica invulnerável por 180 frames — evita morte instantânea durante a inversão de controles.
-- **Cigarra — inversão só vertical:** a inversão de controles agora afeta apenas o eixo Y (cima/baixo); horizontal permanece normal.
+- **Sistema de level-up:** ao derrotar um chefe o jogo pausa e exibe 3 cards de aprimoramento permanente aleatórios; escolha por tecla 1/2/3 ou clique.
+- **9 perks disponíveis:** Colete Balístico (+30% dodge de projéteis), Chassi Reforçado (+30% dodge de colisões), Munição Perfurante (+1 dano/tiro), Motor Aprimorado (+0.8 velocidade), Veterano (+1 vida), Gatilho Afiado (cadência +15%), Rasante Habilidoso (raio de graze +35%), Foco Total (tempo de combo +30%), Reflexos Aguçados (invulnerabilidade pós-dano +50%).
+- **Graze sempre dispara míssil:** qualquer rasante (projétil ou inimigo) dispara `HomingMissile` para o inimigo mais próximo — sem necessidade de Pulso Avibras ativo.
+- **HUD — sinergias movidas:** indicadores de sinergia de power-ups (`⚡🛡️ FORTALEZA` etc.) foram movidos do lado esquerdo para abaixo da lista de buffs no lado direito, evitando sobreposição com o contador de combo.
+- **Cigarra — câmera lenta:** enquanto a Cigarra estiver viva o jogo roda a ~50% de velocidade com vinheta roxa nas bordas; efeito dissolve ao matá-la.
+- **Cigarra — invulnerabilidade no morph:** ao mudar de forma, jogador fica invulnerável por 180 frames; inversão afeta apenas eixo Y.
 - **Cigarra — HP reduzido:** `90 + wave×15` → `55 + wave×8`.
-- **Protótipo X — nerfs:** aceleração por lap `0.7` → `0.4`; pausa entre dashes aumentada (`max(80,170-lap×10)` → `max(90,190-lap×8)`); `shootT` mínimo `22` → `30`; spread de 5 orbs → 3 orbs por disparo.
-- **Arara Real — nerfs:** velocidade base `3.8+rand×2.0` → `2.8+rand×1.4`; bônus por wave `0.07` → `0.04`; probabilidade de spawn reduzida em todas as fases (wave 2: 55%→45%, wave 3: 30%→18%, waves 4-6+: ~26%→~16%).
-- **design.md:** atualizado para refletir arquitetura TypeScript/Vite, valores corretos de constantes, módulos e sistemas novos.
+- **Protótipo X — nerfs:** aceleração por lap `0.7` → `0.4`; dashT `max(80,170-lap×10)` → `max(90,190-lap×8)`; shootT mín. `22` → `30`; spread 5 orbs → 3 orbs.
+- **Arara Real — nerfs:** velocidade base `3.8+rand×2.0` → `2.8+rand×1.4`; bônus por wave `0.07` → `0.04`; spawn probabilities reduzidas ~20%.
+- **design.md:** atualizado para TypeScript/Vite, sistema de level-up documentado.
 
 ### v0.0.8 — Migração TypeScript + Vite, Balanceamento e CI/CD _(2026-05-16)_
 

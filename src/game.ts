@@ -4,11 +4,12 @@ import {
   PLANES, DIFFICULTIES, TOTAL_KEY, BOSS_TYPES, BOSS_ROTATION, BOSS_LABELS,
   WAVE_DEFS, RADIO_MSGS, MT1, MT2, MT3, STARS, DEV_SCENES,
   SHIELD_DUR, BOOST_DUR, BIS_DUR, AVIBRAS_DUR, INPE_DUR, REVAP_DUR,
-  DELTA_DUR, ERICSSON_DUR, DEV_BTN, _MP_BTN_RECT,
+  DELTA_DUR, ERICSSON_DUR, DEV_BTN, _MP_BTN_RECT, PERKS,
 } from "./constants";
 import { ST } from "./types";
+import type { PerkDef } from "./types";
 import {
-  Player, Bullet, Enemy, Collectible,
+  Player, Bullet, HomingMissile, Enemy, Collectible,
   circ, explode, floatText, spark, dropCollectibles,
 } from "./entities";
 import {
@@ -17,7 +18,7 @@ import {
 } from "./audio";
 import {
   drawBg, drawHUD, drawMenu, drawOver, drawPause, drawSobre,
-  drawDevButton, drawJoystick,
+  drawDevButton, drawJoystick, drawLevelUp,
 } from "./renderer";
 import { drawDevPanel, devHandleKey, setDevCallbacks, DEV_ITEMS } from "./dev";
 import {
@@ -75,6 +76,35 @@ export function spawnBoss(): void {
   }
 }
 
+// ── Level-up system ───────────────────────────────────────────────────────────
+function pickLevelUpCards(n: number): PerkDef[] {
+  const pool = [...PERKS];
+  const result: PerkDef[] = [];
+  while (result.length < n && pool.length > 0) {
+    const idx = Math.floor(Math.random() * pool.length);
+    result.push(pool.splice(idx, 1)[0]);
+  }
+  return result;
+}
+
+function applyPerk(perk: PerkDef): void {
+  const player = state.player!;
+  switch (perk.id) {
+    case "bullet_resist": player.perks.bulletEvasion   = Math.min(0.9, player.perks.bulletEvasion  + 0.30); break;
+    case "impact_resist": player.perks.impactEvasion   = Math.min(0.9, player.perks.impactEvasion  + 0.30); break;
+    case "damage_up":     player.perks.dmgBonus++; break;
+    case "speed_up":      player.topSpd += 0.8; break;
+    case "extra_life":    player.lives++; player.maxLives++; break;
+    case "fire_rate":     player._fireN = Math.max(4, Math.round(player._fireN * 0.85)); break;
+    case "graze_range":   player.perks.grazeRadiusMult += 0.35; break;
+    case "combo_time":    player.perks.comboTimeMult   += 0.30; break;
+    case "inv_extend":    player.perks.invMult         += 0.50; break;
+  }
+  floatText(`✦ ${perk.name}`, W / 2, H / 2, perk.col);
+  state.levelUpCards = null;
+  state.gState = ST.PLAY;
+}
+
 // ── Game lifecycle ─────────────────────────────────────────────────────────────
 export function startGame(): void {
   ensureAC();
@@ -118,6 +148,8 @@ export function startGame(): void {
   state._curGrazeStreak = 0;
   state._waveHits = 0;
   state.ddaStress = 0.5;
+  state.playerLevel = 0;
+  state.levelUpCards = null;
   state.gState = ST.PLAY;
   stopMusic();
   startMusic();
@@ -384,11 +416,11 @@ function update(): void {
         b.dead = true;
         state.playerStats.shotsHit++;
         if (state.gState === ST.MULTI && e.mpId) {
-          const dmg = player.boost > 0 && player.shield > 0 ? 2 : 1;
+          const dmg = (player.boost > 0 && player.shield > 0 ? 2 : 1) + player.perks.dmgBonus;
           mpSend({ type: "hit", enemyId: e.mpId, dmg });
           spark(e.x, e.y);
         } else {
-          const dmg = player.boost > 0 && player.shield > 0 ? 2 : 1;
+          const dmg = (player.boost > 0 && player.shield > 0 ? 2 : 1) + player.perks.dmgBonus;
           const pts = e.hit(dmg);
           if (pts > 0) {
             state.score += pts * state.combo;
@@ -397,7 +429,7 @@ function update(): void {
               e.x, e.y, "#60a5fa",
             );
             state.combo = Math.min(state.combo + 1, state.diffCfg.comboMax);
-            state.comboT = 130;
+            state.comboT = Math.round(130 * player.perks.comboTimeMult);
             state.playerStats.kills++;
             if (state.combo >= 3) state.playerStats.comboKills++;
             if (state.combo > state.playerStats.maxCombo) state.playerStats.maxCombo = state.combo;
@@ -405,6 +437,10 @@ function update(): void {
               state.shakeAmt += 9; state.playerStats.bossKills++;
               state.bossAlive = false;
               if (e.type === "cigarra") state.slowMoT = 40;
+              // Pausar para escolha de perk permanente
+              state.playerLevel++;
+              state.levelUpCards = pickLevelUpCards(3);
+              state.gState = ST.LEVELUP;
             }
             dropCollectibles(e.x, e.y, e.type);
           }
@@ -413,7 +449,19 @@ function update(): void {
     });
   });
 
-  const GRAZE_R = 22;
+  const GRAZE_R = 22 * player.perks.grazeRadiusMult;
+  const ENEMY_GRAZE_R = 48 * player.perks.grazeRadiusMult;
+  const _fireGrazeMissile = () => {
+    if (state.enemies.length === 0) return;
+    const target = state.enemies.reduce((a, b) => {
+      const da = (a.x - player.x) ** 2 + (a.y - player.y) ** 2;
+      const db = (b.x - player.x) ** 2 + (b.y - player.y) ** 2;
+      return da < db ? a : b;
+    });
+    state.bullets.push(new HomingMissile(player.x + 20, player.y, target));
+    state.playerStats.shotsFired++;
+  };
+
   if (player.inv <= 0 && player.bis <= 0) {
     state.eBullets.forEach(b => {
       if (b.dead || b.grazed) return;
@@ -429,7 +477,20 @@ function update(): void {
         if (state._curGrazeStreak > state.playerStats.longestGrazeStreak)
           state.playerStats.longestGrazeStreak = state._curGrazeStreak;
         floatText(`✦ ${pts}`, player.x, player.y - 18, "#fde68a");
-        if (player.avibras > 0) player.missileT = Math.max(0, player.missileT - 14);
+        _fireGrazeMissile();
+      }
+    });
+
+    // Graze de inimigos: dispara míssil ao passar perto de um inimigo (1× por inimigo)
+    state.enemies.forEach(e => {
+      if ((e as Enemy & { _grazed?: boolean })._grazed) return;
+      const dx = e.x - player.x, dy = e.y - player.y;
+      const d2 = dx * dx + dy * dy;
+      const minD = (e.r + 32) ** 2;
+      if (d2 < ENEMY_GRAZE_R * ENEMY_GRAZE_R && d2 > minD) {
+        (e as Enemy & { _grazed?: boolean })._grazed = true;
+        floatText(`✦ RASANTE`, player.x, player.y - 18, "#fde68a");
+        _fireGrazeMissile();
       }
     });
   }
@@ -448,6 +509,8 @@ function update(): void {
     }
     if (circ(b.hb(), { x: player.x, y: player.y, r: 13 })) {
       b.dead = true;
+      // Perk: colete balístico — chance de ignorar o projétil
+      if (player.perks.bulletEvasion > 0 && Math.random() < player.perks.bulletEvasion) return;
       if (state.gState === ST.MULTI && player.inv <= 0 && player.bis <= 0 && player.shield <= 0) {
         const relayPartnerId = mpCheckShieldRelay();
         if (relayPartnerId) {
@@ -476,6 +539,8 @@ function update(): void {
   state.enemies.forEach((e) => {
     if (e.dead) return;
     if (circ(e.hb(), { x: player.x, y: player.y, r: 13 })) {
+      // Perk: chassi reforçado — chance de ignorar colisão
+      if (player.perks.impactEvasion > 0 && Math.random() < player.perks.impactEvasion) return;
       const h = player.tryHit();
       if (h) {
         state.shakeAmt += 8;
@@ -620,6 +685,7 @@ function render(): void {
   if (state.touch.active) drawJoystick();
   if (state.gState === ST.PAUSE) drawPause();
   if (state.gState === ST.OVER) drawOver();
+  if (state.gState === ST.LEVELUP) drawLevelUp();
   if (state.dev.open) drawDevPanel();
   drawDevButton();
 }
@@ -650,6 +716,15 @@ document.addEventListener("keydown", (e) => {
     return;
   }
   if (state.gState === ST.ABOUT) { state.gState = ST.MENU; return; }
+
+  // Level-up: teclas 1/2/3 escolhem o perk
+  if (state.gState === ST.LEVELUP && state.levelUpCards) {
+    const cards = state.levelUpCards;
+    if (e.code === "Digit1" || e.code === "Numpad1") { applyPerk(cards[0]); return; }
+    if (e.code === "Digit2" || e.code === "Numpad2") { applyPerk(cards[1]); return; }
+    if ((e.code === "Digit3" || e.code === "Numpad3") && cards[2]) { applyPerk(cards[2]); return; }
+    return;
+  }
 
   if (state.gState === ST.LOBBY) {
     if (e.code === "Escape") { mpDisconnect(); state.gState = ST.MENU; return; }
@@ -735,6 +810,15 @@ canvas.addEventListener("click", (e) => {
   if ((state.gState === ST.PLAY || state.gState === ST.PAUSE || state.gState === ST.MULTI) && _hitDevBtn(p)) {
     if (!state.dev.open) { state.dev.open = true; state.dev.openCooldown = 20; }
     else if (state.dev.openCooldown <= 0) state.dev.open = false;
+  }
+  if (state.gState === ST.LEVELUP && state.levelUpCards) {
+    const CW = 180, CH = 145, GAP = 20;
+    const startX = (W - (CW * 3 + GAP * 2)) / 2;
+    const startY = 108;
+    state.levelUpCards.forEach((perk, i) => {
+      const cx = startX + i * (CW + GAP);
+      if (p.x >= cx && p.x <= cx + CW && p.y >= startY && p.y <= startY + CH) applyPerk(perk);
+    });
   }
 });
 

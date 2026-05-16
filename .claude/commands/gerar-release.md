@@ -2,13 +2,15 @@ Gere uma nova entrada de release no README.md e em docs/design.md com base nas m
 
 ## Passos
 
-1. **Descubra a versão atual** lendo a primeira entrada `### v` do Changelog em README.md. Incremente o patch (ex: v0.0.7 → v0.0.8).
+1. **Descubra a versão atual** lendo a primeira entrada `### v` do Changelog em README.md. Verifique também a data dessa entrada.
+   - Se a data da última entrada **for hoje** (`YYYY-MM-DD` atual): **não crie uma nova entrada** — atualize a entrada existente adicionando os novos bullets e, se necessário, ajuste o título. A versão permanece a mesma.
+   - Se a data da última entrada **for anterior a hoje**: incremente o patch (ex: v0.0.1 → v0.0.2) e crie uma nova entrada.
 
 2. **Levante as mudanças** combinando:
    - `git diff HEAD` e `git log --oneline -20` para mudanças não commitadas e commits recentes. Pergunte até qual commit vai o range dos commits verificados.
    - O contexto desta conversa (o que foi discutido e implementado)
 
-3. **Escreva a entrada** no formato abaixo e insira logo após a linha `## Changelog` no README.md (antes da entrada anterior):
+3. **Formato da entrada** (nova ou existente):
 
 ```
 ### vX.Y.Z — <título curto que resume o tema da release> _(YYYY-MM-DD)_
@@ -23,7 +25,7 @@ A data `YYYY-MM-DD` é a data atual (hoje). Categorias comuns: Migração, Balan
 
 5. **Atualize a seção `## Estrutura de Arquivos`** no README.md se arquivos foram movidos, criados ou removidos.
 
-6. **Atualize `package.json`** — altere o campo `"version"` para o novo número (ex: `"0.0.8"`), sem o `v` prefixado.
+6. **Atualize `package.json`** — se uma nova versão foi criada, altere o campo `"version"` para o novo número (ex: `"0.0.9"`), sem o `v` prefixado. Se a entrada existente foi atualizada, não altere.
 
 7. **Não commite** — apenas edite os arquivos. O usuário fará o commit.
 

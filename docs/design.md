@@ -40,8 +40,10 @@
 
 ### Grazing
 
-- Voar muito próximo de um projétil inimigo (d < 22px, d > 14px) sem ser atingido marca `b.grazed = true` e concede `6 × combo` pontos.
-- Cada graze reduz o cooldown do Pulso Avibras em 14 frames.
+- Voar muito próximo de um projétil inimigo (d < `GRAZE_R` px, d > 14px) sem ser atingido marca `b.grazed = true` e concede `6 × combo` pontos.
+- Voar próximo de um inimigo (dentro de `ENEMY_GRAZE_R` px, fora de `e.r + 32px`) também conta como rasante — `_grazed` flag por inimigo evita detecções repetidas.
+- Qualquer rasante (projétil **ou** inimigo) dispara imediatamente um `HomingMissile` teleguiado para o inimigo mais próximo — **sem necessidade de power-up ativo**.
+- O raio de rasante é escalado pelo perk `grazeRadiusMult` (`GRAZE_R * mult`, `ENEMY_GRAZE_R * mult`).
 
 ### Rádio SJC
 
@@ -597,6 +599,8 @@ Recursos: god mode, sem projéteis, spawn de inimigos, todos os power-ups, veloc
 
 Cada buff ativo exibe ícone + segundos restantes + barra de progresso à direita da tela. Buffs acumuláveis (shield, boost, avibras, inpe, delta, ericsson) mostram progresso relativo ao máximo acumulável.
 
+Abaixo dos buffs ativos, indicadores de **sinergia** (ex: `⚡🛡️ FORTALEZA`) são exibidos no mesmo lado direito, agrupados visualmente com os buffs que os originam. Renderizados com `textAlign: "right"` e fonte 9px.
+
 ### Indicador de escudo no HUD de vidas
 
 Quando `player.shield > 0`, ícones 🛡 em ciano são exibidos à esquerda dos ícones ✈ de vida, um por stack ativo (`Math.ceil(player.shield / SHIELD_DUR)`, máx. 3). Pulsam via `shadowBlur` animado. Comunicam visualmente a camada de proteção extra sem alterar o contador de HP.
@@ -604,6 +608,48 @@ Quando `player.shield > 0`, ícones 🛡 em ciano são exibidos à esquerda dos 
 ### Contador de FPS
 
 Exibido no canto inferior esquerdo com cor dinâmica: verde ≥ 55 fps, amarelo ≥ 40 fps, vermelho < 40 fps. Calculado a cada segundo via timestamp do `requestAnimationFrame`.
+
+---
+
+## Sistema de Level-Up
+
+A cada chefe derrotado, o jogo pausa automaticamente (`ST.LEVELUP`) e apresenta **3 cards aleatórios** de aprimoramento permanente.
+
+### Fluxo
+
+1. Boss morre → `state.playerLevel++`, `state.levelUpCards = pickLevelUpCards(3)`, `gState = ST.LEVELUP`
+2. Tela de seleção exibida por `drawLevelUp()` (renderer.ts) — overlay escuro + 3 cards
+3. Player escolhe com tecla **1/2/3** ou **clique no card** → `applyPerk(perk)` → `gState = ST.PLAY`
+
+### Perks disponíveis (`PERKS` em constants.ts)
+
+| id              | Nome               | Efeito                                                              |
+| --------------- | ------------------ | ------------------------------------------------------------------- |
+| `bullet_resist` | Colete Balístico   | +30% chance de ignorar projéteis (acumulável, máx 90%)              |
+| `impact_resist` | Chassi Reforçado   | +30% chance de ignorar colisões com inimigos                        |
+| `damage_up`     | Munição Perfurante | +1 dano por tiro (inteiro, somado ao base)                          |
+| `speed_up`      | Motor Aprimorado   | +0.8 de `topSpd` permanente                                         |
+| `extra_life`    | Veterano           | +1 vida e +1 `maxLives`                                             |
+| `fire_rate`     | Gatilho Afiado     | `_fireN × 0.85` (15% mais rápido, mín. 4 frames)                    |
+| `graze_range`   | Rasante Habilidoso | `grazeRadiusMult += 0.35` (raio de graze ×1.35 na primeira escolha) |
+| `combo_time`    | Foco Total         | `comboTimeMult += 0.30` (comboT = `130 × mult`)                     |
+| `inv_extend`    | Reflexos Aguçados  | `invMult += 0.50` (invulnerabilidade pós-dano = `INV × mult`)       |
+
+### Armazenamento em `Player.perks` (`PlayerPerks`)
+
+```ts
+perks: {
+  bulletEvasion: number; // prob. de ignorar projétil (0–1)
+  impactEvasion: number; // prob. de ignorar colisão (0–1)
+  dmgBonus: number; // dano extra por tiro
+  grazeRadiusMult: number; // multiplicador do raio de rasante (1.0 base)
+  comboTimeMult: number; // multiplicador da duração de combo (1.0 base)
+  invMult: number; // multiplicador da invulnerabilidade pós-dano (1.0 base)
+}
+```
+
+Os campos `topSpd` e `_fireN` são mutados diretamente no Player (sem campo separado no objeto `perks`).  
+`perks` é reinicializado ao valor padrão na criação do `Player` em `startGame()`.
 
 ---
 
