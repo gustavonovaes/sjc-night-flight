@@ -89,6 +89,33 @@ export function startMusic(): void {
   next();
 }
 
+export function sfxLevelUp(): void {
+  // Fanfarra ascendente + chord final
+  const seq = [523.25, 659.25, 783.99, 1046.50];
+  seq.forEach((f, i) => setTimeout(() => tone(f, 0.14, "triangle", 0.10), i * 80));
+  setTimeout(() => {
+    tone(1046.50, 0.40, "triangle", 0.10);
+    tone(1318.51, 0.40, "sine",     0.06);
+    tone(783.99,  0.40, "triangle", 0.05);
+  }, seq.length * 80);
+}
+
+export function startLevelUpMusic(): void {
+  stopMusic();
+  state.playlistIdx = 12; // índice da playlist de level-up
+  state.mIdx = 0;
+  state.mActive = true;
+  const next = () => {
+    if (!state.mActive) return;
+    if (state.gState !== ST.LEVELUP) { state.mActive = false; return; }
+    const pl = PLAYLISTS[state.playlistIdx];
+    const freq = pl[state.mIdx++ % pl.length];
+    if (freq) tone(freq, 0.20, "sine", 0.055);
+    state.mTimer = setTimeout(next, 260);
+  };
+  next();
+}
+
 export function stopMusic(): void {
   state.mActive = false;
   if (state.mTimer) { clearTimeout(state.mTimer); state.mTimer = null; }

@@ -40,10 +40,11 @@
 
 ### Grazing
 
-- Voar muito próximo de um projétil inimigo (d < `GRAZE_R` px, d > 14px) sem ser atingido marca `b.grazed = true` e concede `6 × combo` pontos.
-- Voar próximo de um inimigo (dentro de `ENEMY_GRAZE_R` px, fora de `e.r + 32px`) também conta como rasante — `_grazed` flag por inimigo evita detecções repetidas.
-- Qualquer rasante (projétil **ou** inimigo) dispara imediatamente um `HomingMissile` teleguiado para o inimigo mais próximo — **sem necessidade de power-up ativo**.
+- **Rasante de projétil:** detectado quando `collDist + 2 < d < collDist + GRAZE_R`, onde `collDist = 13 + b.hb().r`. Isso garante que a zona de rasante fica _fora_ do raio de colisão real — só conta ao desviar, nunca ao tomar dano. Marca `b.grazed = true`, concede `6 × combo` pontos.
+- **Rasante de inimigo:** detectado quando `collisionR + 4 < d < ENEMY_GRAZE_R`, onde `collisionR = e.r * 0.78 + 13`. Flag `_grazed` por instância evita detecção repetida.
+- Ambos incrementam `playerStats.grazes`, `grazeCount`, `_curGrazeStreak` e disparam um `HomingMissile` — **sem necessidade de power-up ativo**.
 - O raio de rasante é escalado pelo perk `grazeRadiusMult` (`GRAZE_R * mult`, `ENEMY_GRAZE_R * mult`).
+- Valores base: `GRAZE_R = 18px`, `ENEMY_GRAZE_R = 52px`.
 
 ### Rádio SJC
 
@@ -589,17 +590,50 @@ Acessada pressionando `I` no menu (toque na tela em mobile volta ao menu). Exibe
 
 ### Painel DEV
 
-Ativado ao manter ESC pressionado por 4 segundos (240 frames). Uma barra de progresso aparece na borda inferior durante a contagem.
+Ativado pelo botão `⚙ DEV` no canto inferior direito do canvas (ou tocando nele no mobile). Um `openCooldown` de 60 frames impede fechamento acidental. Navegação: `↑/↓` + `Enter/Space`. Fecha com `ESC`.
 
-Após abrir, um `openCooldown` de 60 frames impede fechamento acidental por key-repeat. Navegação: `↑/↓` + `Enter/Space`. Fecha com `ESC` (após cooldown).
+**Coluna 0 — Jogador:**
 
-Recursos: god mode, sem projéteis, spawn de inimigos, todos os power-ups, velocidade do ciclo dia/noite, fixar cenário, trocar playlist.
+- Toggles: God Mode, Sem Projéteis, Hitboxes, Debug Overlay
+- Buffs: ativa cada power-up instantaneamente (Escudo, Boost, 14-BIS, Avibras, INPE, Revap, Delta, Wingman)
+- Vidas: +1 vida, Full invuln (9999 frames)
+- **Aprimoramentos:** aplica individualmente cada um dos 9 perks (`PERKS`), acumulando o efeito e registrando em `state.chosenPerks` / `state.playerLevel`
+
+**Coluna 1 — Spawn / Ondas:**
+
+- Spawn individual de cada tipo de inimigo
+- Spawn de cada chefe pelo tipo exato
+- Forçar boss, avançar onda, limpar inimigos
+
+**Coluna 2 — Mundo / Áudio / Score:**
+
+- Velocidade do ciclo dia/noite (±0.5)
+- Fixar cenário (7 cenas pré-definidas)
+- Trocar playlist (navega pelos 13 índices)
+- +10 000 pts, zerar score
+- Fechar painel
+
+**Telemetria em tempo real** (topo do painel):
+
+- frame, wave, score, spawnT, phase, lvl
+- enemies, eBullets, bullets, particles, floaters
+- Countdown até próximo boss + barra de progresso (suspenso quando pausado)
+- DDA stress (%), pos/vel/inv do player, lives, perks ativos
 
 ### HUD de buffs
 
 Cada buff ativo exibe ícone + segundos restantes + barra de progresso à direita da tela. Buffs acumuláveis (shield, boost, avibras, inpe, delta, ericsson) mostram progresso relativo ao máximo acumulável.
 
-Abaixo dos buffs ativos, indicadores de **sinergia** (ex: `⚡🛡️ FORTALEZA`) são exibidos no mesmo lado direito, agrupados visualmente com os buffs que os originam. Renderizados com `textAlign: "right"` e fonte 9px.
+Abaixo dos buffs ativos, indicadores de **sinergia** (ex: `⚡🛡️ FORTALEZA`) são exibidos no mesmo lado direito.
+
+### Aprimoramentos permanentes no HUD
+
+Quando `playerLevel > 0`, exibidos na coluna esquerda abaixo do score:
+
+- `⭐ NV.N` — nível atual
+- Um item por perk escolhido: ícone (sans-serif) + nome (Courier New, cor do perk, semitransparente)
+
+Na tela de Game Over, uma caixa extra abaixo das estatísticas lista todos os aprimoramentos conquistados na partida (ícone + nome, distribuídos horizontalmente).
 
 ### Indicador de escudo no HUD de vidas
 
@@ -617,9 +651,11 @@ A cada chefe derrotado, o jogo pausa automaticamente (`ST.LEVELUP`) e apresenta 
 
 ### Fluxo
 
-1. Boss morre → `state.playerLevel++`, `state.levelUpCards = pickLevelUpCards(3)`, `gState = ST.LEVELUP`
-2. Tela de seleção exibida por `drawLevelUp()` (renderer.ts) — overlay escuro + 3 cards
-3. Player escolhe com tecla **1/2/3** ou **clique no card** → `applyPerk(perk)` → `gState = ST.PLAY`
+1. Boss morre → `state.shakeAmt = 0`, `sfxLevelUp()`, `startLevelUpMusic()`, `state.playerLevel++`, `state.levelUpCards = pickLevelUpCards(3)`, `gState = ST.LEVELUP`
+2. Tela de seleção exibida por `drawLevelUp()` (renderer.ts) — overlay escuro + 3 cards com clip interno
+3. Player escolhe com tecla **1/2/3** ou **clique no card** → `applyPerk(perk)` → perk adicionado a `state.chosenPerks`, `gState = ST.PLAY`, música retoma
+
+**Sem screen shake durante `ST.LEVELUP`** — guard `noShake` em `render()` zera sx/sy quando `gState === ST.LEVELUP`.
 
 ### Perks disponíveis (`PERKS` em constants.ts)
 
@@ -663,15 +699,15 @@ state.playerStats = { pw: {}, kills: 0, hits: 0, grazes: 0, maxCombo: 1,
   shotsFired: 0, shotsHit: 0, bossKills: 0, shieldBlocks: 0, ... };
 ```
 
-| Campo        | Incrementado em                                                                    |
-| ------------ | ---------------------------------------------------------------------------------- |
-| `kills`      | `dropCollectibles()` — quando inimigo morre (`pts > 0`)                            |
-| `hits`       | `player.tryHit()` retorna `true` (dano real recebido)                              |
-| `grazes`     | Graze detectado (projétil a 14–22px sem hit)                                       |
-| `maxCombo`   | Quando `combo > playerStats.maxCombo`                                              |
-| `shotsFired` | `nb.length` após `player.update()` (balas principais + mísseis) + balas Wingman 5G |
-| `shotsHit`   | Toda colisão bullet→inimigo em `bullets.forEach`                                   |
-| `pw[id]`     | Ao coletar qualquer power-up (`c.type.pw` truthy)                                  |
+| Campo        | Incrementado em                                                                      |
+| ------------ | ------------------------------------------------------------------------------------ |
+| `kills`      | `dropCollectibles()` — quando inimigo morre (`pts > 0`)                              |
+| `hits`       | `player.tryHit()` retorna `true` (dano real recebido)                                |
+| `grazes`     | Rasante de **projétil** (zona externa ao collDist) **ou** de **inimigo** (`_grazed`) |
+| `maxCombo`   | Quando `combo > playerStats.maxCombo`                                                |
+| `shotsFired` | `nb.length` após `player.update()` (balas principais + mísseis) + balas Wingman 5G   |
+| `shotsHit`   | Toda colisão bullet→inimigo em `bullets.forEach`                                     |
+| `pw[id]`     | Ao coletar qualquer power-up (`c.type.pw` truthy)                                    |
 
 **Precisão:** `shotsHit / shotsFired × 100`. Ambos os contadores cobrem o mesmo conjunto de projéteis, portanto o resultado é sempre 0–100%.
 

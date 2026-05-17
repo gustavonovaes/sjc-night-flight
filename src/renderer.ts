@@ -121,45 +121,6 @@ function drawNebula(starVis: number): void {
   });
 }
 
-function drawParqueDaCidade(off: number): void {
-  const tile = W * 4.0;
-  const FADE = 200;
-  const base = H - 58;
-  for (let rep = 0; rep <= 1; rep++) {
-    const px = W * 0.5 - (off % tile) + rep * tile;
-    if (px > W + 240 || px < -240) continue;
-    const fade = px > W - FADE ? Math.max(0, (W - px + 155) / FADE) : 1;
-    if (fade < 0.01) continue;
-    ctx.save();
-    ctx.globalAlpha = fade;
-    ctx.fillStyle = "#060e07";
-    ctx.beginPath();
-    ctx.moveTo(px - 155, base);
-    ctx.bezierCurveTo(px - 110, base - 82, px - 32, base - 115, px, base - 122);
-    ctx.bezierCurveTo(px + 32, base - 115, px + 110, base - 82, px + 155, base);
-    ctx.closePath();
-    ctx.fill();
-    PARQUE_TREES.forEach(({ ox, h }: TreeData) => {
-      const u = ox / 155;
-      const hillY = (base - 122) + 122 * u * u;
-      drawTree(px + ox, hillY + 6, h);
-    });
-    ctx.fillStyle = "#0d1c10";
-    ctx.fillRect(px - 5, base - 162, 10, 52);
-    ctx.fillStyle = "#152618";
-    ctx.fillRect(px - 9, base - 166, 18, 7);
-    const blink = Math.floor(state.frame / 22) % 2;
-    ctx.fillStyle = blink ? "#ff4444" : "rgba(160,16,16,.4)";
-    ctx.shadowColor = "#ff2222";
-    ctx.shadowBlur = blink ? 9 : 2;
-    ctx.beginPath();
-    ctx.arc(px, base - 172, 3.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-    ctx.restore();
-  }
-}
-
 function drawAnelViario(off: number): void {
   const ry = H - 62;
   ctx.fillStyle = "#040a14";
@@ -536,6 +497,28 @@ export function drawHUD(): void {
   ctx.fillText(`${fps} fps`, W - 4, H - 28);
   ctx.globalAlpha = 1;
   ctx.restore();
+
+  // Aprimoramentos permanentes — lado esquerdo, abaixo do HUD base
+  if (state.playerLevel > 0 && state.chosenPerks.length > 0) {
+    ctx.save();
+    ctx.textAlign = "left";
+    let ppy = 68;
+    ctx.font = "bold 8px Courier New";
+    ctx.fillStyle = "#fde68a88";
+    ctx.fillText(`⭐ NV.${state.playerLevel}`, 12, ppy);
+    ppy += 12;
+    state.chosenPerks.forEach(p => {
+      ctx.font = "9px sans-serif";
+      ctx.fillStyle = "#ffffff";
+      ctx.fillText(p.icon, 12, ppy);
+      ctx.font = "8px Courier New";
+      ctx.fillStyle = p.col + "cc";
+      ctx.fillText(p.name, 28, ppy);
+      ppy += 13;
+    });
+    ctx.restore();
+  }
+
   drawRadio();
 }
 
@@ -811,12 +794,46 @@ export function drawOver(): void {
     ctx.fillText(`FAVORITO: ${pwLabel} ×${topN}`, W / 2, py + ph - 8);
   }
 
-  const msg = score > 6000 ? "Excelente! SJC está orgulhosa!"
-    : score > 2500 ? "Bom trabalho, Guardião do Vale!"
-    : "SJC precisa de você... Tente de novo!";
-  ctx.fillStyle = "#64748b";
-  ctx.font = "11px Courier New";
-  ctx.fillText(msg, W / 2, py + ph + 20);
+  // Aprimoramentos permanentes conquistados
+  const perksBox = state.chosenPerks;
+  if (perksBox.length > 0) {
+    const pbY = py + ph + 6;
+    const pbH = 38;
+    ctx.fillStyle = "#0c0c1e";
+    ctx.fillRect(px, pbY, pw, pbH);
+    ctx.strokeStyle = "#fde68a33";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(px, pbY, pw, pbH);
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#fde68a66";
+    ctx.font = "bold 8px Courier New";
+    ctx.fillText(`─── APRIMORAMENTOS (NV.${state.playerLevel}) ───`, W / 2, pbY + 11);
+    const step = pw / (perksBox.length + 1);
+    perksBox.forEach((p, i) => {
+      const bx = px + step * (i + 1);
+      ctx.font = "14px sans-serif";
+      ctx.fillStyle = "#fff";
+      ctx.fillText(p.icon, bx, pbY + 26);
+      ctx.font = "7px Courier New";
+      ctx.fillStyle = p.col;
+      ctx.fillText(p.name, bx, pbY + 36);
+    });
+    // shift message down
+    ctx.textAlign = "center";
+    const msg = score > 6000 ? "Excelente! SJC está orgulhosa!"
+      : score > 2500 ? "Bom trabalho, Guardião do Vale!"
+      : "SJC precisa de você... Tente de novo!";
+    ctx.fillStyle = "#64748b";
+    ctx.font = "11px Courier New";
+    ctx.fillText(msg, W / 2, py + ph + pbH + 22);
+  } else {
+    const msg = score > 6000 ? "Excelente! SJC está orgulhosa!"
+      : score > 2500 ? "Bom trabalho, Guardião do Vale!"
+      : "SJC precisa de você... Tente de novo!";
+    ctx.fillStyle = "#64748b";
+    ctx.font = "11px Courier New";
+    ctx.fillText(msg, W / 2, py + ph + 20);
+  }
 
   ctx.fillStyle = Math.floor(frame / 18) % 2 ? "#60a5fa" : "#3b82f6";
   ctx.shadowColor = "#3b82f6";
@@ -846,27 +863,158 @@ export function drawPause(): void {
   ctx.textAlign = "left";
 }
 
+// ── Debug hitbox & overlay ────────────────────────────────────────────────────
+export function drawDebugOverlay(): void {
+  const { dev, player, enemies, eBullets, bullets, spawnT, frame, diffCfg, bossAlive } = state;
+  if (!dev.showHitboxes && !dev.showDebugOverlay) return;
+  ctx.save();
+
+  if (dev.showHitboxes) {
+    // Player hitbox (white)
+    if (player) {
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1;
+      ctx.globalAlpha = 0.7;
+      ctx.beginPath();
+      ctx.arc(player.x, player.y, 13, 0, Math.PI * 2);
+      ctx.stroke();
+      // Graze radius (yellow)
+      const gr = 18 * player.perks.grazeRadiusMult;
+      ctx.strokeStyle = "#fde68a";
+      ctx.lineWidth = 0.5;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.arc(player.x, player.y, gr, 0, Math.PI * 2);
+      ctx.stroke();
+      // Enemy graze radius
+      const egr = 52 * player.perks.grazeRadiusMult;
+      ctx.strokeStyle = "#fb923c";
+      ctx.beginPath();
+      ctx.arc(player.x, player.y, egr, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    // Enemy hitboxes (red)
+    ctx.strokeStyle = "#ef4444";
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = 0.6;
+    enemies.forEach(e => {
+      if (e.dead) return;
+      const hb = e.hb();
+      ctx.beginPath();
+      ctx.arc(hb.x, hb.y, hb.r, 0, Math.PI * 2);
+      ctx.stroke();
+      // Velocity vector
+      ctx.strokeStyle = "#f87171";
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(e.x, e.y);
+      ctx.lineTo(e.x + (e as {vx?: number}).vx! * 10 || e.x, e.y + (e as {vy?: number}).vy! * 10 || e.y);
+      ctx.stroke();
+      ctx.strokeStyle = "#ef4444";
+      ctx.lineWidth = 1;
+    });
+    // eBullet hitboxes (orange)
+    ctx.strokeStyle = "#f97316";
+    ctx.lineWidth = 0.5;
+    eBullets.forEach(b => {
+      if (b.dead) return;
+      const hb = b.hb();
+      ctx.beginPath();
+      ctx.arc(hb.x, hb.y, hb.r, 0, Math.PI * 2);
+      ctx.stroke();
+    });
+    // Player bullets (cyan)
+    ctx.strokeStyle = "#22d3ee";
+    bullets.forEach(b => {
+      if (b.dead) return;
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.stroke();
+    });
+  }
+
+  if (dev.showDebugOverlay && player) {
+    ctx.globalAlpha = 0.92;
+    ctx.textAlign = "left";
+    // Boss countdown ring on screen
+    if (!bossAlive && diffCfg) {
+      const remaining = diffCfg.bossInterval - (frame % diffCfg.bossInterval);
+      const secs = Math.ceil(remaining / 60);
+      const angle = (1 - remaining / diffCfg.bossInterval) * Math.PI * 2 - Math.PI / 2;
+      // Arc in top center
+      const cx = W / 2, cy = 16, r = 11;
+      ctx.strokeStyle = "rgba(239,68,68,0.3)";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, -Math.PI / 2, Math.PI * 3 / 2);
+      ctx.stroke();
+      ctx.strokeStyle = "#ef4444";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, -Math.PI / 2, angle);
+      ctx.stroke();
+      ctx.fillStyle = "#fca5a5";
+      ctx.font = "bold 7px monospace";
+      ctx.textAlign = "center";
+      ctx.fillText(`${secs}s`, cx, cy + 3);
+      ctx.textAlign = "left";
+    }
+    // Enemy count badge
+    const ec = enemies.filter(e => !e.dead).length;
+    const eb = eBullets.filter(b => !b.dead).length;
+    ctx.fillStyle = "rgba(0,0,0,0.6)";
+    ctx.fillRect(4, H - 38, 115, 32);
+    ctx.fillStyle = "#f87171";
+    ctx.font = "8px monospace";
+    ctx.fillText(`inimigos: ${ec}  projs: ${eb}`, 8, H - 26);
+    ctx.fillStyle = "#fbbf24";
+    ctx.fillText(`spawnT: ${spawnT}  frame: ${frame}`, 8, H - 16);
+  }
+
+  ctx.restore();
+}
+
 export function drawRadio(): void {
   const { radioT, radioText } = state;
   if (radioT <= 0) return;
   const alpha = Math.min(1, radioT / 30);
+  const BOX_W = 340, BOX_H = 44, BX = 8, BY = H - BOX_H - 6;
+  const MAX_TEXT_W = BOX_W - 24; // margem 12px cada lado
+
   ctx.save();
   ctx.globalAlpha = alpha;
   ctx.fillStyle = "rgba(0,12,4,0.88)";
   ctx.strokeStyle = "#00ff88";
   ctx.lineWidth = 1;
   ctx.beginPath();
-  if (ctx.roundRect) ctx.roundRect(8, H - 52, 320, 42, 4);
-  else ctx.rect(8, H - 52, 320, 42);
+  if (ctx.roundRect) ctx.roundRect(BX, BY, BOX_W, BOX_H, 4);
+  else ctx.rect(BX, BY, BOX_W, BOX_H);
   ctx.fill(); ctx.stroke();
+
   ctx.fillStyle = "#00ff88";
   ctx.font = "bold 9px monospace";
   ctx.textAlign = "left";
-  ctx.fillText("📻 RÁDIO", 16, H - 38);
-  ctx.fillStyle = "#a3e635";
+  ctx.fillText("📻 RÁDIO", BX + 8, BY + 13);
+
+  // Word-wrap the message to fit within MAX_TEXT_W
   ctx.font = "8.5px monospace";
-  ctx.fillText(radioText.slice(0, 52), 16, H - 25);
-  if (radioText.length > 52) ctx.fillText(radioText.slice(52, 104), 16, H - 14);
+  ctx.fillStyle = "#a3e635";
+  const words = radioText.split(" ");
+  const lines: string[] = [];
+  let cur = "";
+  for (const w of words) {
+    const test = cur ? cur + " " + w : w;
+    if (ctx.measureText(test).width > MAX_TEXT_W && cur) {
+      lines.push(cur);
+      cur = w;
+    } else {
+      cur = test;
+    }
+  }
+  if (cur) lines.push(cur);
+  if (lines[0]) ctx.fillText(lines[0], BX + 8, BY + 26);
+  if (lines[1]) ctx.fillText(lines[1], BX + 8, BY + 38);
   ctx.restore();
 }
 
@@ -1040,8 +1188,8 @@ export function drawLevelUp(): void {
   if (!cards) return;
 
   // Overlay escuro
-  ctx.globalAlpha = 0.78;
-  ctx.fillStyle = "#0a0a1a";
+  ctx.globalAlpha = 0.82;
+  ctx.fillStyle = "#05050f";
   ctx.fillRect(0, 0, W, H);
   ctx.globalAlpha = 1;
 
@@ -1051,71 +1199,93 @@ export function drawLevelUp(): void {
   ctx.fillStyle = "#fde68a";
   ctx.shadowColor = "#fde68a";
   ctx.shadowBlur = 18;
-  ctx.fillText(`⭐ NÍVEL ${state.playerLevel} ⭐`, W / 2, 62);
+  ctx.fillText(`⭐ NÍVEL ${state.playerLevel} ⭐`, W / 2, 58);
   ctx.shadowBlur = 0;
-  ctx.font = "12px Courier New";
+  ctx.font = "11px Courier New";
   ctx.fillStyle = "#94a3b8";
-  ctx.fillText("escolha um aprimoramento permanente", W / 2, 84);
+  ctx.fillText("escolha um aprimoramento permanente", W / 2, 76);
 
   // Cards
-  const CW = 180, CH = 145, GAP = 20;
+  const CW = 180, CH = 150, GAP = 20;
+  const IPAD = 12; // padding interno horizontal
   const startX = (W - (CW * 3 + GAP * 2)) / 2;
-  const startY = 108;
+  const startY = 94;
 
   cards.forEach((perk, i) => {
     const cx = startX + i * (CW + GAP);
     const cy = startY;
+    const mx = cx + CW / 2; // centro X do card
+    const maxW = CW - IPAD * 2; // largura máxima de texto
+
+    ctx.save();
+    // clip ao card para que nada vaze
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(cx, cy, CW, CH, 10);
+    else ctx.rect(cx, cy, CW, CH);
+    ctx.clip();
 
     // Fundo
-    ctx.globalAlpha = 0.92;
-    ctx.fillStyle = "#1e1e2e";
-    ctx.beginPath();
-    (ctx as CanvasRenderingContext2D & { roundRect: (...a: unknown[]) => void }).roundRect(cx, cy, CW, CH, 10);
-    ctx.fill();
+    ctx.globalAlpha = 0.94;
+    ctx.fillStyle = "#0f0f1e";
+    ctx.fillRect(cx, cy, CW, CH);
     ctx.globalAlpha = 1;
 
+    ctx.restore(); // remove clip antes de desenhar borda (para o glow não ser cortado)
+
     // Borda
+    ctx.save();
     ctx.strokeStyle = perk.col;
     ctx.lineWidth = 2;
     ctx.shadowColor = perk.col;
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 12;
     ctx.beginPath();
-    (ctx as CanvasRenderingContext2D & { roundRect: (...a: unknown[]) => void }).roundRect(cx, cy, CW, CH, 10);
+    if (ctx.roundRect) ctx.roundRect(cx, cy, CW, CH, 10);
+    else ctx.rect(cx, cy, CW, CH);
     ctx.stroke();
     ctx.shadowBlur = 0;
+    ctx.restore();
+
+    // conteúdo dentro do clip
+    ctx.save();
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(cx, cy, CW, CH, 10);
+    else ctx.rect(cx, cy, CW, CH);
+    ctx.clip();
+    ctx.textAlign = "center";
 
     // Número do card
-    ctx.textAlign = "center";
-    ctx.font = "bold 11px Courier New";
+    ctx.font = "bold 10px Courier New";
     ctx.fillStyle = perk.col;
-    ctx.fillText(`[ ${i + 1} ]`, cx + CW / 2, cy + 20);
+    ctx.fillText(`[ ${i + 1} ]`, mx, cy + 18);
 
     // Ícone
-    ctx.font = "28px sans-serif";
+    ctx.font = "26px sans-serif";
     ctx.fillStyle = "#ffffff";
-    ctx.fillText(perk.icon, cx + CW / 2, cy + 53);
+    ctx.fillText(perk.icon, mx, cy + 50);
 
-    // Nome
-    ctx.font = "bold 12px Courier New";
+    // Nome — com maxWidth para não vazar
+    ctx.font = "bold 11px Courier New";
     ctx.fillStyle = "#f1f5f9";
     ctx.shadowColor = perk.col;
     ctx.shadowBlur = 4;
-    ctx.fillText(perk.name, cx + CW / 2, cy + 76);
+    ctx.fillText(perk.name, mx, cy + 72, maxW);
     ctx.shadowBlur = 0;
 
-    // Descrição (duas linhas separadas por \n)
-    ctx.font = "10px Courier New";
+    // Descrição (duas linhas separadas por \n) — com maxWidth
+    ctx.font = "9.5px Courier New";
     ctx.fillStyle = "#94a3b8";
     perk.desc.split("\n").forEach((line, li) => {
-      ctx.fillText(line, cx + CW / 2, cy + 97 + li * 14);
+      ctx.fillText(line, mx, cy + 92 + li * 14, maxW);
     });
+
+    ctx.restore();
   });
 
   // Dica de tecla
   ctx.font = "10px Courier New";
   ctx.fillStyle = "#475569";
   ctx.textAlign = "center";
-  ctx.fillText("pressione 1 · 2 · 3 ou clique no card", W / 2, startY + CH + 26);
+  ctx.fillText("pressione 1 · 2 · 3 ou clique no card", W / 2, startY + CH + 22);
   ctx.textAlign = "left";
 }
 

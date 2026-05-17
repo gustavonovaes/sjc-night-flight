@@ -13,12 +13,12 @@ import {
   circ, explode, floatText, spark, dropCollectibles,
 } from "./entities";
 import {
-  ensureAC, sfxCollect, sfxPowerup, sfxBossIn, sfxDestroy,
-  startMusic, stopMusic, startMenuMusic, switchMusicForPhase,
+  ensureAC, sfxCollect, sfxPowerup, sfxBossIn, sfxDestroy, sfxLevelUp,
+  startMusic, stopMusic, startMenuMusic, switchMusicForPhase, startLevelUpMusic,
 } from "./audio";
 import {
   drawBg, drawHUD, drawMenu, drawOver, drawPause, drawSobre,
-  drawDevButton, drawJoystick, drawLevelUp,
+  drawDevButton, drawJoystick, drawLevelUp, drawDebugOverlay,
 } from "./renderer";
 import { drawDevPanel, devHandleKey, setDevCallbacks, DEV_ITEMS } from "./dev";
 import {
@@ -100,9 +100,13 @@ function applyPerk(perk: PerkDef): void {
     case "combo_time":    player.perks.comboTimeMult   += 0.30; break;
     case "inv_extend":    player.perks.invMult         += 0.50; break;
   }
+  state.chosenPerks.push(perk);
+  if (state.player) state.player.inv = Math.max(state.player.inv, 180);
   floatText(`✦ ${perk.name}`, W / 2, H / 2, perk.col);
   state.levelUpCards = null;
   state.gState = ST.PLAY;
+  stopMusic();
+  switchMusicForPhase(state.waveNum);
 }
 
 // ── Game lifecycle ─────────────────────────────────────────────────────────────
@@ -150,6 +154,7 @@ export function startGame(): void {
   state.ddaStress = 0.5;
   state.playerLevel = 0;
   state.levelUpCards = null;
+  state.chosenPerks = [];
   state.gState = ST.PLAY;
   stopMusic();
   startMusic();
@@ -262,12 +267,6 @@ function spawnOvniEvent(): void {
 function update(): void {
   state.frame++;
   if (state.dev.openCooldown > 0) state.dev.openCooldown--;
-  if (state.keys["Escape"] && !state.dev.open) {
-    state.dev.escHold++;
-    if (state.dev.escHold === 240) {
-      state.dev.open = true; state.dev.escHold = 0; state.dev.openCooldown = 60;
-    }
-  }
   const activeScene = DEV_SCENES[state.dev.selectedScene];
   if (!activeScene || activeScene.phase < 0) {
     state.dayPhase = (state.dayPhase + 0.000034 * state.dev.daySpeed) % 1;
@@ -440,6 +439,9 @@ function update(): void {
               // Pausar para escolha de perk permanente
               state.playerLevel++;
               state.levelUpCards = pickLevelUpCards(3);
+              state.shakeAmt = 0;
+              sfxLevelUp();
+              startLevelUpMusic();
               state.gState = ST.LEVELUP;
             }
             dropCollectibles(e.x, e.y, e.type);
@@ -449,8 +451,8 @@ function update(): void {
     });
   });
 
-  const GRAZE_R = 22 * player.perks.grazeRadiusMult;
-  const ENEMY_GRAZE_R = 48 * player.perks.grazeRadiusMult;
+  const GRAZE_R = 18 * player.perks.grazeRadiusMult;
+  const ENEMY_GRAZE_R = 52 * player.perks.grazeRadiusMult;
   const _fireGrazeMissile = () => {
     if (state.enemies.length === 0) return;
     const target = state.enemies.reduce((a, b) => {
@@ -467,7 +469,9 @@ function update(): void {
       if (b.dead || b.grazed) return;
       const dx = b.x - player.x, dy = b.y - player.y;
       const d2 = dx * dx + dy * dy;
-      if (d2 < GRAZE_R * GRAZE_R && d2 > 14 * 14) {
+      const bR = b.hb().r;
+      const collDist = 13 + bR; // distância exata de colisão
+      if (d2 < (collDist + GRAZE_R) * (collDist + GRAZE_R) && d2 > (collDist + 2) * (collDist + 2)) {
         b.grazed = true;
         const pts = 6 * state.combo;
         state.score += pts;
@@ -486,9 +490,16 @@ function update(): void {
       if ((e as Enemy & { _grazed?: boolean })._grazed) return;
       const dx = e.x - player.x, dy = e.y - player.y;
       const d2 = dx * dx + dy * dy;
-      const minD = (e.r + 32) ** 2;
+      // inner bound = real collision radius + small buffer
+      const collisionR = e.r * 0.78 + 13;
+      const minD = (collisionR + 4) ** 2;
       if (d2 < ENEMY_GRAZE_R * ENEMY_GRAZE_R && d2 > minD) {
         (e as Enemy & { _grazed?: boolean })._grazed = true;
+        state.grazeCount++;
+        state.playerStats.grazes++;
+        state._curGrazeStreak++;
+        if (state._curGrazeStreak > state.playerStats.longestGrazeStreak)
+          state.playerStats.longestGrazeStreak = state._curGrazeStreak;
         floatText(`✦ RASANTE`, player.x, player.y - 18, "#fde68a");
         _fireGrazeMissile();
       }
@@ -606,8 +617,9 @@ function update(): void {
 }
 
 function render(): void {
-  const sx = state.shakeAmt > 0.5 ? (Math.random() - 0.5) * state.shakeAmt * 2 : 0;
-  const sy = state.shakeAmt > 0.5 ? (Math.random() - 0.5) * state.shakeAmt * 2 : 0;
+  const noShake = state.gState === ST.LEVELUP || state.gState === ST.PAUSE || state.gState === ST.OVER;
+  const sx = !noShake && state.shakeAmt > 0.5 ? (Math.random() - 0.5) * state.shakeAmt * 2 : 0;
+  const sy = !noShake && state.shakeAmt > 0.5 ? (Math.random() - 0.5) * state.shakeAmt * 2 : 0;
   ctx.clearRect(0, 0, W, H);
   if (state.gState === ST.MENU)  { drawMenu();  return; }
   if (state.gState === ST.ABOUT) { drawSobre(); return; }
@@ -615,7 +627,7 @@ function render(): void {
   ctx.save();
   if (state.gState === ST.OVER) {
     ctx.filter = "grayscale(1)";
-  } else if (state.shakeAmt > 0.5) {
+  } else if (!noShake && state.shakeAmt > 0.5) {
     ctx.translate(sx, sy);
   }
   drawBg();
@@ -681,6 +693,7 @@ function render(): void {
   }
 
   drawHUD();
+  drawDebugOverlay();
   mpDrawHUD();
   if (state.touch.active) drawJoystick();
   if (state.gState === ST.PAUSE) drawPause();
@@ -785,7 +798,6 @@ document.addEventListener("keydown", (e) => {
 
 document.addEventListener("keyup", (e) => {
   delete state.keys[e.code];
-  if (e.code === "Escape") state.dev.escHold = 0;
 });
 
 canvas.addEventListener("click", (e) => {
@@ -812,9 +824,9 @@ canvas.addEventListener("click", (e) => {
     else if (state.dev.openCooldown <= 0) state.dev.open = false;
   }
   if (state.gState === ST.LEVELUP && state.levelUpCards) {
-    const CW = 180, CH = 145, GAP = 20;
+    const CW = 180, CH = 150, GAP = 20;
     const startX = (W - (CW * 3 + GAP * 2)) / 2;
-    const startY = 108;
+    const startY = 94;
     state.levelUpCards.forEach((perk, i) => {
       const cx = startX + i * (CW + GAP);
       if (p.x >= cx && p.x <= cx + CW && p.y >= startY && p.y <= startY + CH) applyPerk(perk);
@@ -842,7 +854,7 @@ canvas.addEventListener("touchstart", (e) => {
     startGame(); return;
   }
   const p = toCanvas(e.changedTouches[0]);
-  if ((state.gState === ST.PLAY || state.gState === ST.PAUSE) && _hitDevBtn(p)) {
+  if ((state.gState === ST.PLAY || state.gState === ST.PAUSE || state.gState === ST.MULTI) && _hitDevBtn(p)) {
     if (!state.dev.open) { state.dev.open = true; state.dev.openCooldown = 20; }
     else if (state.dev.openCooldown <= 0) state.dev.open = false;
     return;
@@ -862,6 +874,17 @@ canvas.addEventListener("touchstart", (e) => {
     return;
   }
   if (state.gState === ST.PAUSE) { state.gState = ST.PLAY; return; }
+  // Level-up: tap num card seleciona o perk
+  if (state.gState === ST.LEVELUP && state.levelUpCards) {
+    const CW = 180, CH = 150, GAP = 20;
+    const startX = (W - (CW * 3 + GAP * 2)) / 2;
+    const startY = 94;
+    state.levelUpCards.forEach((perk, i) => {
+      const cx = startX + i * (CW + GAP);
+      if (p.x >= cx && p.x <= cx + CW && p.y >= startY && p.y <= startY + CH) applyPerk(perk);
+    });
+    return;
+  }
   state.touch.active = true;
   state.touch.cx = p.x; state.touch.cy = p.y;
   state.touch.kx = p.x; state.touch.ky = p.y;

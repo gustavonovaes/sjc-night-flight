@@ -74,11 +74,32 @@
         z-index: 999;
         line-height: 1;
       }
+      #btn-fullscreen {
+        display: none;
+        position: fixed;
+        bottom: max(14px, env(safe-area-inset-bottom, 14px));
+        right: max(14px, env(safe-area-inset-right, 14px));
+        background: rgba(10, 10, 40, 0.82);
+        border: 1px solid rgba(99, 102, 241, 0.5);
+        color: #818cf8;
+        font-size: 18px;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        cursor: pointer;
+        z-index: 999;
+        line-height: 1;
+        align-items: center;
+        justify-content: center;
+      }
       @media (pointer: coarse) {
         #btn-pause-mobile {
           display: flex;
           align-items: center;
           justify-content: center;
+        }
+        #btn-fullscreen {
+          display: flex;
         }
       }
       :fullscreen body,
@@ -91,6 +112,43 @@
     <div id="wrap">
       <canvas id="c"></canvas>
       <button id="btn-pause-mobile">⏸</button>
+      <button id="btn-fullscreen" title="Tela cheia">⛶</button>
     </div>
+    <script>
+      // Fullscreen: hide button when already fullscreen
+      const btnFs = document.getElementById('btn-fullscreen');
+      function _updateFsBtn() {
+        if (!btnFs) return;
+        const fs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+        btnFs.textContent = fs ? '✕' : '⛶';
+        btnFs.style.display = fs ? 'none' : '';
+      }
+      document.addEventListener('fullscreenchange', _updateFsBtn);
+      document.addEventListener('webkitfullscreenchange', _updateFsBtn);
+      if (btnFs) {
+        btnFs.addEventListener('click', () => {
+          const el = document.documentElement;
+          if (document.fullscreenElement || document.webkitFullscreenElement) {
+            (document.exitFullscreen || document.webkitExitFullscreen)?.call(document);
+          } else {
+            const req = el.requestFullscreen || el.webkitRequestFullscreen;
+            if (req) req.call(el, { navigationUI: 'hide' }).catch(() => {});
+          }
+        });
+      }
+      // On first touch/click, request fullscreen automatically (mobile)
+      function _autoFullscreen() {
+        if (document.fullscreenElement || document.webkitFullscreenElement) return;
+        if (window.matchMedia('(pointer: coarse)').matches) {
+          const el = document.documentElement;
+          const req = el.requestFullscreen || el.webkitRequestFullscreen;
+          if (req) req.call(el, { navigationUI: 'hide' }).catch(() => {});
+        }
+        document.removeEventListener('touchstart', _autoFullscreen);
+        document.removeEventListener('click', _autoFullscreen);
+      }
+      document.addEventListener('touchstart', _autoFullscreen, { once: true });
+      document.addEventListener('click', _autoFullscreen, { once: true });
+    </script>
   </body>
 </html>

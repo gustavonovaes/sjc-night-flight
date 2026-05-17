@@ -128,6 +128,8 @@ export interface DevState {
   daySpeed: number;
   selectedScene: number;
   cursor: number;
+  showHitboxes: boolean;
+  showDebugOverlay: boolean;
 }
 
 export interface DevItemRect {
@@ -201,12 +203,6 @@ export interface CarData {
   lane: number;
   offset: number;
   spd: number;
-}
-
-export interface Blob {
-  ox: number;
-  oy: number;
-  r: number;
 }
 
 export interface CollectibleType {

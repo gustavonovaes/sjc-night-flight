@@ -10,6 +10,18 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 
 ## Changelog
 
+### v0.0.10 — Tela Cheia Mobile, Dev Console Completo, Debug Visual e Graze Refinado _(2026-05-17)_
+
+- **Interface mobile:** botão `⛶` flutuante em `index.html` aparece apenas em dispositivos touch; auto-fullscreen no primeiro toque; oculta ao entrar em tela cheia.
+- **Música de level-up:** `sfxLevelUp()` toca fanfarra ascendente ao matar boss; `startLevelUpMusic()` inicia tema triunfal em lá maior (playlist 12) durante `ST.LEVELUP`; música retorna à fase ao confirmar perk (`src/audio.ts`).
+- **Playlists expandidas:** 13 trilhas agora (era 12); melodias de Arcade (Ode à Alegria), Tetris (Korobeiniki), Galáxia e Rock I/II reescritas com mais notas e variação; tempos ajustados por trilha (`src/constants.ts`).
+- **Painel DEV — 3 colunas:** spawn individual de todos os 7 inimigos e 5 chefes por tipo; toggles Hitboxes e Debug Overlay; +10 000 pts / zerar score; aplicação direta de qualquer perk; telemetria em tempo real (frame, enemies, eBullets, DDA stress, countdown de boss, pos/vel/inv do player) com barras de progresso (`src/dev.ts`).
+- **Debug overlay visual:** hitboxes de player (branco), projéteis inimigos (laranja) e inimigos (vermelho) com vetor de velocidade; raios de graze de projétil (amarelo tracejado) e de inimigo (laranja tracejado) — ativado pelo toggle no painel DEV (`src/renderer.ts`).
+- **Graze refinado:** raio de detecção calculado sobre hitbox real do projétil (`collDist = 13 + b.hb().r`), eliminando falsos rasantes dentro do raio de colisão; rasante de inimigo agora incrementa corretamente `grazeCount`, `playerStats.grazes` e `_curGrazeStreak` (`src/game.ts`).
+- **HUD de aprimoramentos:** perks ativos listados no canto esquerdo durante o jogo (`⭐ NV.N` + ícone + nome); tela Game Over exibe caixa extra com todos os perks conquistados na partida (`src/renderer.ts`).
+- **Correção:** `chosenPerks` resetado ao iniciar nova partida; `applyPerk` adiciona perk à lista e restaura música da fase; `mp.bossTargetId` limpo ao confirmar morte de boss em multiplayer.
+- **Limpeza:** `drawParqueDaCidade` removida do renderer; interface `Blob` removida de `src/types.ts`; `CTYPES_SCORE` e `CTYPES_PW` deixaram de ser exportados externamente; string `VERSION` em `src/world.ts` usa `substring(0,14)` para formato mais curto.
+
 ### v0.0.9 — Level-Up, Perks Permanentes, Graze, Balanceamento e HUD _(2026-05-16)_
 
 - **Sistema de level-up:** ao derrotar um chefe o jogo pausa e exibe 3 cards de aprimoramento permanente aleatórios; escolha por tecla 1/2/3 ou clique.

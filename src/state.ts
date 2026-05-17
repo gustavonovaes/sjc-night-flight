@@ -94,12 +94,15 @@ export const state = {
     daySpeed: 1,
     selectedScene: 0,
     cursor: 0,
+    showHitboxes: false,
+    showDebugOverlay: false,
   } as DevState,
   devItemRects: [] as DevItemRect[],
 
   // Level-up system
   playerLevel: 0,
   levelUpCards: null as PerkDef[] | null,
+  chosenPerks: [] as PerkDef[],
 
   // Slow-motion effect (cigarra morph)
   slowMoT: 0,

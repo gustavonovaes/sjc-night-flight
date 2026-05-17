@@ -3,7 +3,10 @@ Gere uma nova entrada de release no README.md e em docs/design.md com base nas m
 ## Passos
 
 1. **Descubra a versão atual** lendo a primeira entrada `### v` do Changelog em README.md. Verifique também a data dessa entrada.
-   - Se a data da última entrada **for hoje** (`YYYY-MM-DD` atual): **não crie uma nova entrada** — atualize a entrada existente adicionando os novos bullets e, se necessário, ajuste o título. A versão permanece a mesma.
+   - Se a data da última entrada **for hoje** (`YYYY-MM-DD` atual): **não crie uma nova entrada** — edite a entrada existente:
+     - **Título:** reescreva para resumir o conjunto completo de mudanças (antigas + novas). Não descarte o conteúdo anterior — amplie-o.
+     - **Bullets:** mantenha todos os bullets existentes e acrescente os novos ao final.
+     - A versão permanece a mesma. Não altere `package.json`.
    - Se a data da última entrada **for anterior a hoje**: incremente o patch (ex: v0.0.1 → v0.0.2) e crie uma nova entrada.
 
 2. **Levante as mudanças** combinando:

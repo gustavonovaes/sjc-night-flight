@@ -294,7 +294,10 @@ function mpHandleMessage(msg: Record<string, unknown>): void {
       if (idx !== -1) {
         const e = state.enemies[idx];
         explode(e.x, e.y, "#ef4444", 8);
-        if ((BOSS_TYPES as readonly string[]).includes(e.type)) { state.bossAlive = false; state.shakeAmt += 9; }
+        if ((BOSS_TYPES as readonly string[]).includes(e.type)) {
+          state.bossAlive = false; state.shakeAmt += 9;
+          mp.bossTargetId = null;
+        }
         state.enemies.splice(idx, 1);
       }
       if (msg.killedBy === mp.playerId && (msg.pts as number) > 0) {
