@@ -24,6 +24,7 @@ export interface PlayerPerks {
   grazeRadiusMult: number; // multiplicador do raio de rasante (padrão 1.0)
   comboTimeMult:   number; // multiplicador da duração do combo (padrão 1.0)
   invMult:         number; // multiplicador da invulnerabilidade pós-dano (padrão 1.0)
+  spreadShots:     number; // faixas extras de disparo em leque (acumula)
 }
 
 export interface PlaneConfig {
@@ -35,6 +36,11 @@ export interface PlaneConfig {
   fireN: number;
   lives: number;
   unlock: number;
+  specialIcon: string;
+  specialName: string;
+  specialMaxCD: number;
+  specialGrazeCDR: number;
+  specialKillCDR: number;
 }
 
 export interface DifficultyConfig {
@@ -52,6 +58,8 @@ export interface DifficultyConfig {
   doubleBossWave: number;
   hpMult: number;
   dropMult: number;
+  specialCDMult: number;
+  specialWaveCDMult: number;
   hsKey: string;
 }
 
@@ -116,7 +124,13 @@ export interface CbersMission {
   x: number;
   y: number;
   hp: number;
+  maxHp: number;
   bonus: number;
+  variant: string;
+  name: string;
+  age: number;
+  baseY: number;
+  vx: number;
 }
 
 export interface DevState {

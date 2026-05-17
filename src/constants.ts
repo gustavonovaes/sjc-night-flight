@@ -49,12 +49,25 @@ export const PERKS: PerkDef[] = [
   { id: "graze_range",   icon: "✦",  col: "#fde68a", name: "Rasante Habilidoso",   desc: "Área de rasante +35%\n(projéteis e inimigos)" },
   { id: "combo_time",    icon: "🎯", col: "#c084fc", name: "Foco Total",           desc: "Combo dura 30%\nmais tempo" },
   { id: "inv_extend",    icon: "⏱",  col: "#818cf8", name: "Reflexos Aguçados",    desc: "Invulnerabilidade pós-dano\n+50%" },
+  { id: "spread_shot",   icon: "🔱", col: "#f0abfc", name: "Canhão em Leque",      desc: "+1 faixa de disparo em ângulo\n(acumula a cada nível)" },
 ];
 
 export const PLANES: PlaneConfig[] = [
-  { id: "tucano", name: "EMB-314 Super Tucano", icon: "✈",  accel: 0.30, maxSpd: 4.0, fireN: FIRE_N, lives: 3, unlock: 0 },
-  { id: "e2",     name: "Embraer E2",           icon: "🛫", accel: 0.25, maxSpd: 5.0, fireN: 20,     lives: 2, unlock: 3000 },
-  { id: "c390",   name: "C-390 Millennium",     icon: "🚀", accel: 0.20, maxSpd: 3.2, fireN: 30,     lives: 4, unlock: 8000 },
+  {
+    id: "tucano", name: "EMB-314 Super Tucano", icon: "✈",  accel: 0.30, maxSpd: 4.0, fireN: FIRE_N, lives: 3, unlock: 0,
+    specialIcon: "🔥", specialName: "Rajada de Canhão",
+    specialMaxCD: 1080, specialGrazeCDR: 45, specialKillCDR: 90,
+  },
+  {
+    id: "e2",     name: "Embraer E2",           icon: "🛫", accel: 0.25, maxSpd: 5.0, fireN: 20,     lives: 2, unlock: 3000,
+    specialIcon: "💨", specialName: "Manobra Evasiva",
+    specialMaxCD: 720,  specialGrazeCDR: 60, specialKillCDR: 70,
+  },
+  {
+    id: "c390",   name: "C-390 Millennium",     icon: "🚀", accel: 0.20, maxSpd: 3.2, fireN: 30,     lives: 4, unlock: 8000,
+    specialIcon: "💣", specialName: "Bombardeio em Área",
+    specialMaxCD: 1680, specialGrazeCDR: 30, specialKillCDR: 150,
+  },
 ];
 
 export const DIFFICULTIES: DifficultyConfig[] = [
@@ -65,14 +78,16 @@ export const DIFFICULTIES: DifficultyConfig[] = [
     spawnMin: 44, spawnBase: 170, spawnWaveMult: 5, spawnTimeMult: 300,
     bossInterval: 4800, doubleBossWave: 18,
     hpMult: 0.65, dropMult: 1.5, hsKey: "sjc_hi_aventura",
+    specialCDMult: 1.3, specialWaveCDMult: 0.04,
   },
   {
     id: "radical", name: "RADICAL", icon: "🔥", col: "#ef4444",
     desc: "Caos total — combo até 50×",
     comboMax: 50,
-    spawnMin: 22, spawnBase: 145, spawnWaveMult: 15, spawnTimeMult: 270,
+    spawnMin: 20, spawnBase: 120, spawnWaveMult: 6, spawnTimeMult: 300,
     bossInterval: 2400, doubleBossWave: 9,
-    hpMult: 1.1, dropMult: 0.85, hsKey: "sjc_hi_radical",
+    hpMult: 1.2, dropMult: 0.90, hsKey: "sjc_hi_radical",
+    specialCDMult: 2.0, specialWaveCDMult: 0.05,
   },
 ];
 
@@ -328,9 +343,9 @@ export const DROP_TABLE: Record<string, Record<string, number>> = {
   tanajura:    { shield: 0.04, boost: 0.03, "14bis": 0.002, embraer: 0.04, inpe: 0.03, dcta: 0.03, tech: 0.03 },
   helicoptero: { shield: 0.10, boost: 0.07, "14bis": 0.009, avibras_pw: 0.035, inpe_sat: 0.035, revap_pw: 0.03, delta_pw: 0.03, ericsson_pw: 0.035, embraer: 0.07, inpe: 0.06, dcta: 0.07, ita: 0.05, tech: 0.04, ericsson: 0.04, fccr: 0.03, parque: 0.02 },
   balao:  { shield: 0.08, boost: 0.06, "14bis": 0.006, avibras_pw: 0.025, inpe_sat: 0.04, revap_pw: 0.025, delta_pw: 0.025, ericsson_pw: 0.025, embraer: 0.05, inpe: 0.07, dcta: 0.05, ita: 0.04, tech: 0.04, sesc: 0.03, parque: 0.03, vicentina: 0.03 },
-  boss:   { shield: 0.85, boost: 0.85, "14bis": 0.55, avibras_pw: 0.65, inpe_sat: 0.65, revap_pw: 0.65, delta_pw: 0.60, ericsson_pw: 0.65, hp_up: 0.05, embraer: 0.55, inpe: 0.55, dcta: 0.55, ita: 0.45, tech: 0.45, jj: 0.25, gm: 0.25, ericsson: 0.25, fccr: 0.28, sesc: 0.28, parque: 0.22, vicentina: 0.22 },
-  prototipo_x: { shield: 0.80, boost: 0.80, "14bis": 0.50, avibras_pw: 0.60, inpe_sat: 0.60, revap_pw: 0.60, delta_pw: 0.65, ericsson_pw: 0.60, hp_up: 0.05, embraer: 0.50, inpe: 0.46, dcta: 0.55, ita: 0.46, tech: 0.40, fccr: 0.25, parque: 0.20 },
-  cemaden_eye: { shield: 0.82, boost: 0.82, "14bis": 0.52, avibras_pw: 0.62, inpe_sat: 0.66, revap_pw: 0.62, delta_pw: 0.57, ericsson_pw: 0.62, hp_up: 0.05, embraer: 0.50, inpe: 0.60, dcta: 0.50, ita: 0.44, tech: 0.40, ericsson: 0.24, fccr: 0.25, parque: 0.20 },
-  engrenagem:  { shield: 0.86, boost: 0.86, "14bis": 0.56, avibras_pw: 0.66, inpe_sat: 0.62, revap_pw: 0.66, delta_pw: 0.60, ericsson_pw: 0.66, hp_up: 0.05, embraer: 0.52, inpe: 0.50, dcta: 0.56, ita: 0.47, tech: 0.42, gm: 0.26, ericsson: 0.26, fccr: 0.27, parque: 0.22 },
-  cigarra:     { shield: 0.95, boost: 0.95, "14bis": 0.75, avibras_pw: 0.80, inpe_sat: 0.80, revap_pw: 0.80, delta_pw: 0.75, ericsson_pw: 0.80, hp_up: 0.08, embraer: 0.65, inpe: 0.65, dcta: 0.65, ita: 0.55, tech: 0.55, jj: 0.35, gm: 0.35, ericsson: 0.35, fccr: 0.38, sesc: 0.38, parque: 0.32, vicentina: 0.32 },
+  boss:   { shield: 0.85, boost: 0.85, "14bis": 0.25, avibras_pw: 0.65, inpe_sat: 0.65, revap_pw: 0.65, delta_pw: 0.60, ericsson_pw: 0.65, hp_up: 0.05, embraer: 0.55, inpe: 0.55, dcta: 0.55, ita: 0.45, tech: 0.45, jj: 0.25, gm: 0.25, ericsson: 0.25, fccr: 0.28, sesc: 0.28, parque: 0.22, vicentina: 0.22 },
+  prototipo_x: { shield: 0.80, boost: 0.80, "14bis": 0.22, avibras_pw: 0.60, inpe_sat: 0.60, revap_pw: 0.60, delta_pw: 0.65, ericsson_pw: 0.60, hp_up: 0.05, embraer: 0.50, inpe: 0.46, dcta: 0.55, ita: 0.46, tech: 0.40, fccr: 0.25, parque: 0.20 },
+  cemaden_eye: { shield: 0.82, boost: 0.82, "14bis": 0.24, avibras_pw: 0.62, inpe_sat: 0.66, revap_pw: 0.62, delta_pw: 0.57, ericsson_pw: 0.62, hp_up: 0.05, embraer: 0.50, inpe: 0.60, dcta: 0.50, ita: 0.44, tech: 0.40, ericsson: 0.24, fccr: 0.25, parque: 0.20 },
+  engrenagem:  { shield: 0.86, boost: 0.86, "14bis": 0.26, avibras_pw: 0.66, inpe_sat: 0.62, revap_pw: 0.66, delta_pw: 0.60, ericsson_pw: 0.66, hp_up: 0.05, embraer: 0.52, inpe: 0.50, dcta: 0.56, ita: 0.47, tech: 0.42, gm: 0.26, ericsson: 0.26, fccr: 0.27, parque: 0.22 },
+  cigarra:     { shield: 0.95, boost: 0.95, "14bis": 0.35, avibras_pw: 0.80, inpe_sat: 0.80, revap_pw: 0.80, delta_pw: 0.75, ericsson_pw: 0.80, hp_up: 0.08, embraer: 0.65, inpe: 0.65, dcta: 0.65, ita: 0.55, tech: 0.55, jj: 0.35, gm: 0.35, ericsson: 0.35, fccr: 0.38, sesc: 0.38, parque: 0.32, vicentina: 0.32 },
 };

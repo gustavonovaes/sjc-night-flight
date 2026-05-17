@@ -32,6 +32,8 @@ src/
   server.ts       — servidor Bun
 docs/
   design.md       — documento de design completo
+public/
+  assets/         — sprites PNG (cloud.png, cloud_gelo.png…) servidos como URL estática
 ```
 
 ## Convenções

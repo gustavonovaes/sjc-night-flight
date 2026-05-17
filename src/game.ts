@@ -66,6 +66,7 @@ export function spawnBoss(): void {
   sfxBossIn();
   state.shakeAmt = 14;
   state.waveNum++;
+  console.log(`[BOSS] wave=${state.waveNum} tipo=${bossType}`);
   radioSay(RADIO_MSGS.boss);
   if (state.waveNum > state.diffCfg.doubleBossWave) {
     const second = BOSS_ROTATION[(Math.floor(state.waveNum) + 2) % BOSS_ROTATION.length];
@@ -87,8 +88,75 @@ function pickLevelUpCards(n: number): PerkDef[] {
   return result;
 }
 
+function activateSpecial(): void {
+  const player = state.player;
+  if (!player || player.specialCD > 0) return;
+  if (state.gState !== ST.PLAY && state.gState !== ST.MULTI) return;
+  const planeCfg = PLANES.find(p => p.id === player.planeId)!;
+  console.log(`[ESPECIAL] plano=${player.planeId} nome=${planeCfg.specialName} wave=${state.waveNum}`);
+  const cdScale = state.diffCfg.specialCDMult * (1 + state.waveNum * state.diffCfg.specialWaveCDMult);
+  const scaledCD = (cd: number) => Math.round(cd * cdScale);
+  switch (player.planeId) {
+    case "tucano":
+      player.specialActive = 240;
+      player.specialMaxCD = scaledCD(planeCfg.specialMaxCD);
+      player.specialCD = player.specialMaxCD;
+      sfxPowerup();
+      floatText("🔥 RAJADA!", W / 2, H / 2 - 30, "#fb923c");
+      break;
+    case "e2":
+      player.specialActive = 150;
+      player.inv = Math.max(player.inv, 150);
+      player.vx = player.topSpd * 1.8;
+      player.specialMaxCD = scaledCD(planeCfg.specialMaxCD);
+      player.specialCD = player.specialMaxCD;
+      sfxPowerup();
+      floatText("💨 EVASÃO!", W / 2, H / 2 - 30, "#34d399");
+      break;
+    case "c390": {
+      if (state.enemies.filter(e => !e.dead).length === 0) return;
+      // Mísseis: 1 por inimigo, sem cap
+      const liveEnemies = state.enemies.filter(e => !e.dead);
+      liveEnemies.forEach(t => {
+        state.bullets.push(new HomingMissile(player.x + 20, player.y - 8, t));
+        state.bullets.push(new HomingMissile(player.x + 20, player.y + 8, t));
+      });
+      state.playerStats.shotsFired += liveEnemies.length * 2;
+      // Dano em área a todos os inimigos + apaga projéteis
+      state.enemies.forEach(e => {
+        if (e.dead) return;
+        const pts = e.hit(2);
+        if (pts > 0) {
+          state.score += pts * state.combo;
+          state.playerStats.kills++;
+          player.specialCD = Math.max(0, player.specialCD - planeCfg.specialKillCDR);
+          dropCollectibles(e.x, e.y, e.type);
+        }
+        explode(e.x, e.y, "#f97316", 6);
+      });
+      state.eBullets.forEach(b => { b.dead = true; });
+      // Explosões visuais espalhadas pela tela
+      for (let i = 0; i < 12; i++) {
+        setTimeout(() => {
+          explode(80 + Math.random() * 640, 40 + Math.random() * 370, "#f87171", 9);
+          explode(80 + Math.random() * 640, 40 + Math.random() * 370, "#fbbf24", 5);
+        }, i * 90);
+      }
+      state.shakeAmt = 20;
+      player.specialMaxCD = scaledCD(planeCfg.specialMaxCD);
+      player.specialCD = player.specialMaxCD;
+      player.specialActive = 120;
+      sfxBossIn();
+      setTimeout(() => sfxBossIn(), 200);
+      floatText("💣 BOMBARDEIO EM ÁREA!", W / 2, H / 2 - 40, "#f87171");
+      break;
+    }
+  }
+}
+
 function applyPerk(perk: PerkDef): void {
   const player = state.player!;
+  console.log(`[PERK] escolhido=${perk.id} (${perk.name}) nível=${state.playerLevel}`);
   switch (perk.id) {
     case "bullet_resist": player.perks.bulletEvasion   = Math.min(0.9, player.perks.bulletEvasion  + 0.30); break;
     case "impact_resist": player.perks.impactEvasion   = Math.min(0.9, player.perks.impactEvasion  + 0.30); break;
@@ -99,6 +167,7 @@ function applyPerk(perk: PerkDef): void {
     case "graze_range":   player.perks.grazeRadiusMult += 0.35; break;
     case "combo_time":    player.perks.comboTimeMult   += 0.30; break;
     case "inv_extend":    player.perks.invMult         += 0.50; break;
+    case "spread_shot":   player.perks.spreadShots++; break;
   }
   state.chosenPerks.push(perk);
   if (state.player) state.player.inv = Math.max(state.player.inv, 180);
@@ -116,6 +185,7 @@ export function startGame(): void {
   state.diffCfg = DIFFICULTIES[state.selectedDifficulty];
   state.hsKey = state.diffCfg.hsKey;
   const pl = PLANES[state.selectedPlane];
+  console.log(`[START] plano=${pl.id} dificuldade=${state.diffCfg.id} hi=${localStorage.getItem(state.diffCfg.hsKey) ?? 0}`);
   const totalPts = parseInt(localStorage.getItem(TOTAL_KEY) || "0");
   state.player = new Player(totalPts >= pl.unlock ? pl : PLANES[0]);
   state.bullets = [];
@@ -293,8 +363,12 @@ function update(): void {
   state.shakeAmt *= 0.84;
   if (state.comboT > 0 && --state.comboT === 0) state.combo = 1;
   if (state.waveT > 0) state.waveT--;
+  const _prevStress = state.ddaStress;
   state.ddaStress = Math.max(0, state.ddaStress - 0.0007);
   if (state.combo >= 5) state.ddaStress = Math.max(0, state.ddaStress - 0.0004);
+  // log quando cruza thresholds de 0.25
+  if (Math.floor(_prevStress * 4) !== Math.floor(state.ddaStress * 4))
+    console.log(`[DDA] stress=${state.ddaStress.toFixed(2)} spawnT≈${state.spawnT.toFixed(0)} wave=${state.waveNum}`);
 
   const player = state.player!;
   const nb = player.update(state.keys);
@@ -323,16 +397,24 @@ function update(): void {
     });
   }
 
-  if (player.ericsson > 0 && player.fireT === 1) {
-    const offY = 38;
-    if (player.boost > 0) {
-      state.bullets.push(new Bullet(player.x + 30, player.y + offY, -0.18));
-      state.bullets.push(new Bullet(player.x + 30, player.y + offY,  0.18));
-      state.playerStats.shotsFired += 2;
-    } else {
-      state.bullets.push(new Bullet(player.x + 30, player.y + offY, 0));
-      state.playerStats.shotsFired++;
+  if (player.ericsson > 0 && state.frame % 22 === 0) {
+    const angle = (state.frame * 0.09) % (Math.PI * 2);
+    const ox = player.x + Math.cos(angle) * 44;
+    const oy = player.y + Math.sin(angle) * 28;
+    let vy = 0;
+    let nearestDist = Infinity;
+    let nearestEnemy: Enemy | null = null;
+    for (const e of state.enemies) {
+      if (e.dead) continue;
+      const dist = Math.hypot(e.x - ox, e.y - oy);
+      if (dist < nearestDist) { nearestDist = dist; nearestEnemy = e; }
     }
+    if (nearestEnemy !== null) {
+      vy = (nearestEnemy.y - oy) / Math.max(1, nearestEnemy.x - ox);
+      vy = Math.max(-0.6, Math.min(0.6, vy));
+    }
+    state.bullets.push(new Bullet(ox, oy, vy));
+    state.playerStats.shotsFired++;
   }
 
   state.eBullets.forEach((b) => b.update());
@@ -362,7 +444,7 @@ function update(): void {
       spawnEnemy();
       const baseSpawnT = state.diffCfg.spawnBase - state.waveNum * state.diffCfg.spawnWaveMult
         - state.frame / state.diffCfg.spawnTimeMult;
-      const ddaAdjust = state.diffCfg.id === "aventura" ? 1 + (state.ddaStress - 0.5) * 0.40 : 1;
+      const ddaAdjust = state.diffCfg.id === "aventura" ? 1 + (state.ddaStress - 0.5) * 0.80 : 1;
       state.spawnT = Math.max(state.diffCfg.spawnMin, baseSpawnT * ddaAdjust);
     }
     if (--state.collectT <= 0) {
@@ -383,27 +465,58 @@ function update(): void {
   }
 
   if (--state.cbersMissionT <= 0 && !state.cbersMission) {
-    state.cbersMission = { x: W + 40, y: 55 + Math.random() * (H * 0.4), hp: 3, bonus: 800 };
-    state.waveText = "🛰️ MISSÃO: Escorte o Satélite CBERS-4!";
-    state.waveT = 160;
-    radioSay("INPE: Satélite CBERS em rota. Proteja a missão!");
+    const VARIANTS = [
+      { variant: "cbers4",    name: "CBERS-4",    hp: 5, bonus: 1000, vx: 0.7, msg: "INPE: CBERS-4 em órbita de transferência. Escorte!" },
+      { variant: "cbers4a",   name: "CBERS-4A",   hp: 6, bonus: 1400, vx: 0.6, msg: "INPE: CBERS-4A detectado. Missão de observação — proteja!" },
+      { variant: "amazonia1", name: "Amazônia-1",  hp: 8, bonus: 2000, vx: 0.5, msg: "INPE: Amazônia-1 em rota crítica! Escolta máxima requerida!" },
+    ];
+    const cv = VARIANTS[Math.floor(Math.random() * VARIANTS.length)];
+    const baseY = 80 + Math.random() * (H - 180);
+    state.cbersMission = {
+      x: W + 60, y: baseY, baseY, age: 0,
+      hp: cv.hp, maxHp: cv.hp, bonus: cv.bonus,
+      variant: cv.variant, name: cv.name, vx: cv.vx,
+    };
+    state.waveText = `🛰️ MISSÃO: Escorte ${cv.name}!`;
+    state.waveT = 200;
+    radioSay(cv.msg);
   }
   if (state.cbersMission) {
-    state.cbersMission.x -= 1.4;
-    let cbersHit = false;
+    const cm = state.cbersMission;
+    cm.age++;
+    cm.x -= cm.vx;
+    // movimento senoidal em Y — duas frequências para trajetória orgânica
+    cm.y = cm.baseY + Math.sin(cm.age * 0.022) * 38 + Math.sin(cm.age * 0.008) * 18;
+    let cbersDestroyed = false;
+    const cbersHB = { x: cm.x, y: cm.y, r: 14 };
     state.enemies.forEach(e => {
-      if (!e.dead && state.cbersMission && circ(e.hb(), { x: state.cbersMission.x, y: state.cbersMission.y, r: 14 })) {
-        if (--state.cbersMission.hp <= 0) cbersHit = true;
+      if (!e.dead && circ(e.hb(), cbersHB)) {
+        cm.hp = Math.max(0, cm.hp - 1);
+        explode(cm.x, cm.y, "#ef4444", 4);
+        if (cm.hp <= 0) cbersDestroyed = true;
       }
     });
-    if (cbersHit) {
-      explode(state.cbersMission.x, state.cbersMission.y, "#ef4444", 10);
-      floatText("🛰️ MISSÃO FALHOU", W / 2, H / 2 - 30, "#ef4444");
+    state.eBullets.forEach(b => {
+      if (!b.dead && circ(b.hb(), cbersHB)) {
+        b.dead = true;
+        cm.hp = Math.max(0, cm.hp - 1);
+        if (cm.hp <= 0) cbersDestroyed = true;
+      }
+    });
+    if (cbersDestroyed) {
+      explode(cm.x, cm.y, "#ef4444", 14);
+      floatText(`🛰️ ${cm.name} DESTRUÍDO`, W / 2, H / 2 - 30, "#ef4444");
+      radioSay(`INPE: Perdemos ${cm.name}. Missão fracassou.`);
       state.cbersMission = null; state.cbersMissionT = 5400;
-    } else if (state.cbersMission && state.cbersMission.x < -30) {
-      state.score += state.cbersMission.bonus;
-      floatText(`🛰️ CBERS SEGURO! +${state.cbersMission.bonus}`, W / 2, H / 2 - 30, "#34d399");
+    } else if (cm.x < -50) {
+      const bonus = cm.bonus * Math.max(1, state.combo);
+      state.score += bonus;
+      const player = state.player!;
+      player.inpe = Math.min(player.inpe + INPE_DUR, INPE_DUR * 2);
       sfxPowerup();
+      floatText(`🛰️ ${cm.name} SEGURO! +${bonus}`, W / 2, H / 2 - 30, "#34d399");
+      floatText("📡 SATÉLITE INPE ATIVADO!", player.x, player.y - 28, "#60a5fa");
+      radioSay(`INPE: ${cm.name} saiu do alcance inimigo. Dados transmitidos! Suporte INPE ativado.`);
       state.cbersMission = null; state.cbersMissionT = 5400;
     }
   }
@@ -430,12 +543,14 @@ function update(): void {
             state.combo = Math.min(state.combo + 1, state.diffCfg.comboMax);
             state.comboT = Math.round(130 * player.perks.comboTimeMult);
             state.playerStats.kills++;
+            player.specialCD = Math.max(0, player.specialCD - PLANES.find(p => p.id === player.planeId)!.specialKillCDR);
             if (state.combo >= 3) state.playerStats.comboKills++;
             if (state.combo > state.playerStats.maxCombo) state.playerStats.maxCombo = state.combo;
             if ((BOSS_TYPES as readonly string[]).includes(e.type)) {
               state.shakeAmt += 9; state.playerStats.bossKills++;
               state.bossAlive = false;
               if (e.type === "cigarra") state.slowMoT = 40;
+              console.log(`[BOSS KILL] tipo=${e.type} wave=${state.waveNum} score=${state.score} kills=${state.playerStats.kills}`);
               // Pausar para escolha de perk permanente
               state.playerLevel++;
               state.levelUpCards = pickLevelUpCards(3);
@@ -482,6 +597,7 @@ function update(): void {
           state.playerStats.longestGrazeStreak = state._curGrazeStreak;
         floatText(`✦ ${pts}`, player.x, player.y - 18, "#fde68a");
         _fireGrazeMissile();
+        player.specialCD = Math.max(0, player.specialCD - PLANES.find(p => p.id === player.planeId)!.specialGrazeCDR);
       }
     });
 
@@ -502,6 +618,7 @@ function update(): void {
           state.playerStats.longestGrazeStreak = state._curGrazeStreak;
         floatText(`✦ RASANTE`, player.x, player.y - 18, "#fde68a");
         _fireGrazeMissile();
+        player.specialCD = Math.max(0, player.specialCD - PLANES.find(p => p.id === player.planeId)!.specialGrazeCDR);
       }
     });
   }
@@ -539,6 +656,7 @@ function update(): void {
         state.ddaStress = Math.min(1, state.ddaStress + 0.20);
         state.shakeAmt += 10;
         state.combo = 1; state.comboT = 0;
+        console.log(`[HIT] vidas=${player.lives} ddaStress=${state.ddaStress.toFixed(2)} wave=${state.waveNum}`);
         if (player.lives <= 0) {
           if (state.gState === ST.MULTI) { mpSend({ type: "dead" }); mp.localDead = true; }
           else endGame();
@@ -577,6 +695,7 @@ function update(): void {
       sfxCollect();
       if (c.type.pw) state.playerStats.pw[c.type.id] = (state.playerStats.pw[c.type.id] ?? 0) + 1;
       const pw = c.type.pw;
+      if (pw) console.log(`[POWERUP] ${c.type.id} (${c.type.lbl}) wave=${state.waveNum}`);
       if (pw === "shield") {
         player.shield = Math.min(player.shield + SHIELD_DUR, SHIELD_DUR * 3);
         sfxPowerup(); floatText("🛡️ ESCUDO!", player.x, player.y, "#34d399");
@@ -634,14 +753,95 @@ function render(): void {
   state.collectibles.forEach((c) => c.draw());
   if (state.cbersMission) {
     const cm = state.cbersMission;
+    const pulse = Math.sin(state.frame * 0.14) * 0.5 + 0.5;
     ctx.save();
     ctx.translate(cm.x, cm.y);
-    ctx.fillStyle = "#60a5fa"; ctx.shadowColor = "#60a5fa"; ctx.shadowBlur = 12;
-    ctx.fillRect(-8, -5, 16, 10);
-    ctx.fillStyle = "#bfdbfe";
-    ctx.fillRect(-22, -3, 12, 6);
-    ctx.fillRect(10, -3, 12, 6);
-    ctx.shadowBlur = 0;
+
+    // Barra de HP + nome
+    const barW = 56, barH = 5;
+    const hpFrac = cm.hp / cm.maxHp;
+    const barY = cm.variant === "amazonia1" ? -30 : -24;
+    ctx.fillStyle = "rgba(0,0,0,0.55)"; ctx.fillRect(-barW / 2, barY, barW, barH);
+    ctx.fillStyle = hpFrac > 0.5 ? "#4ade80" : hpFrac > 0.25 ? "#fbbf24" : "#ef4444";
+    ctx.fillRect(-barW / 2, barY, barW * hpFrac, barH);
+    ctx.strokeStyle = "#ffffff33"; ctx.lineWidth = 0.5; ctx.strokeRect(-barW / 2, barY, barW, barH);
+    ctx.font = "bold 8px monospace"; ctx.textAlign = "center"; ctx.fillStyle = "#94a3b8";
+    ctx.fillText(cm.name, 0, barY - 3); ctx.textAlign = "left";
+
+    if (cm.variant === "cbers4") {
+      // CBERS-4: corpo retangular, painéis azuis, antena simples
+      ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, -6); ctx.lineTo(0, -14); ctx.stroke();
+      ctx.fillStyle = `rgba(96,165,250,${0.55 + pulse * 0.45})`;
+      ctx.beginPath(); ctx.arc(0, -15, 2.2, 0, Math.PI * 2); ctx.fill();
+      const bg = ctx.createLinearGradient(-10, -7, 10, 7);
+      bg.addColorStop(0, "#cbd5e1"); bg.addColorStop(1, "#475569");
+      ctx.fillStyle = bg; ctx.shadowColor = "#60a5fa"; ctx.shadowBlur = 7 + pulse * 5;
+      ctx.fillRect(-10, -7, 20, 14); ctx.shadowBlur = 0;
+      ctx.fillStyle = "#1e3a5f"; ctx.fillRect(-7, -5, 14, 4);
+      ctx.fillStyle = "#60a5fa55"; ctx.fillRect(-7, 1, 14, 4);
+      // painéis
+      const pCol = `rgba(30,64,175,1)`, pGlow = `rgba(96,165,250,${0.14 + pulse * 0.14})`;
+      [[-30, 18], [12, 18]].forEach(([px, pw]) => {
+        ctx.fillStyle = pCol; ctx.fillRect(px, -5, pw, 10);
+        for (let i = 1; i < 4; i++) { ctx.strokeStyle = "#3b82f699"; ctx.lineWidth = 0.7; ctx.beginPath(); ctx.moveTo(px + i*(pw/4), -5); ctx.lineTo(px + i*(pw/4), 5); ctx.stroke(); }
+        ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px+pw, 0); ctx.stroke();
+        ctx.fillStyle = pGlow; ctx.fillRect(px, -5, pw, 10);
+      });
+      ctx.fillStyle = "#334155"; ctx.fillRect(-3, 7, 6, 4);
+      ctx.fillStyle = `rgba(251,146,60,${0.35 + pulse * 0.35})`; ctx.beginPath(); ctx.arc(0, 12, 2.5, 0, Math.PI*2); ctx.fill();
+
+    } else if (cm.variant === "cbers4a") {
+      // CBERS-4A: corpo hexagonal, painéis amarelo-dourado, 2 antenas
+      ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(-5, -7); ctx.lineTo(-5, -15); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(5, -7); ctx.lineTo(5, -13); ctx.stroke();
+      ctx.fillStyle = `rgba(251,191,36,${0.6 + pulse * 0.4})`;
+      ctx.beginPath(); ctx.arc(-5, -16, 2, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(5, -14, 1.5, 0, Math.PI*2); ctx.fill();
+      // hexágono corpo
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) { const a = (i/6)*Math.PI*2 - Math.PI/6; const r = 10; i === 0 ? ctx.moveTo(Math.cos(a)*r, Math.sin(a)*r) : ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r); }
+      ctx.closePath();
+      const hg = ctx.createRadialGradient(0,0,2,0,0,10);
+      hg.addColorStop(0, "#e2e8f0"); hg.addColorStop(1, "#64748b");
+      ctx.fillStyle = hg; ctx.shadowColor = "#fbbf24"; ctx.shadowBlur = 8 + pulse * 6; ctx.fill(); ctx.shadowBlur = 0;
+      ctx.fillStyle = "#78350f88"; ctx.beginPath(); ctx.arc(0, 0, 4, 0, Math.PI*2); ctx.fill();
+      // painéis dourados
+      const gCol = `rgba(120,80,10,1)`, gGlow = `rgba(251,191,36,${0.2+pulse*0.2})`;
+      [[-34, 20], [14, 20]].forEach(([px, pw]) => {
+        ctx.fillStyle = gCol; ctx.fillRect(px, -5, pw, 10);
+        for (let i = 1; i < 5; i++) { ctx.strokeStyle = "#d9770655"; ctx.lineWidth = 0.7; ctx.beginPath(); ctx.moveTo(px + i*(pw/5), -5); ctx.lineTo(px + i*(pw/5), 5); ctx.stroke(); }
+        ctx.fillStyle = gGlow; ctx.fillRect(px, -5, pw, 10);
+      });
+
+    } else {
+      // Amazônia-1: maior, painéis largos verdes, corpo octogonal, câmera OSIM
+      const sides = 8, R = 13;
+      ctx.beginPath();
+      for (let i = 0; i < sides; i++) { const a = (i/sides)*Math.PI*2 - Math.PI/8; i === 0 ? ctx.moveTo(Math.cos(a)*R, Math.sin(a)*R) : ctx.lineTo(Math.cos(a)*R, Math.sin(a)*R); }
+      ctx.closePath();
+      const og = ctx.createRadialGradient(0,0,3,0,0,R);
+      og.addColorStop(0, "#e2e8f0"); og.addColorStop(1, "#374151");
+      ctx.fillStyle = og; ctx.shadowColor = "#34d399"; ctx.shadowBlur = 10 + pulse * 8; ctx.fill(); ctx.shadowBlur = 0;
+      // lente câmera OSIM
+      ctx.fillStyle = "#0f172a"; ctx.beginPath(); ctx.arc(0, 3, 5, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = `rgba(52,211,153,${0.4+pulse*0.5})`; ctx.beginPath(); ctx.arc(0, 3, 3, 0, Math.PI*2); ctx.fill();
+      // antena dish
+      ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0,-R); ctx.lineTo(0,-R-10); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0,-R-10,5,Math.PI,0); ctx.stroke();
+      ctx.fillStyle = `rgba(96,165,250,${0.5+pulse*0.5})`; ctx.beginPath(); ctx.arc(0,-R-10,2,0,Math.PI*2); ctx.fill();
+      // painéis verdes largos
+      const vCol = `rgba(5,71,38,1)`, vGlow = `rgba(52,211,153,${0.15+pulse*0.2})`;
+      [[-44, 26], [18, 26]].forEach(([px, pw]) => {
+        ctx.fillStyle = vCol; ctx.fillRect(px, -6, pw, 12);
+        for (let i = 1; i < 6; i++) { ctx.strokeStyle = "#059669aa"; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(px+i*(pw/6),-6); ctx.lineTo(px+i*(pw/6),6); ctx.stroke(); }
+        ctx.beginPath(); ctx.moveTo(px,0); ctx.lineTo(px+pw,0); ctx.stroke();
+        ctx.fillStyle = vGlow; ctx.fillRect(px,-6,pw,12);
+      });
+    }
+
     ctx.restore();
   }
   state.enemies.forEach((e) => e.draw());
@@ -686,7 +886,7 @@ function render(): void {
     ctx.textAlign = "center";
     ctx.shadowColor = "#e879f9";
     ctx.shadowBlur = 10;
-    ctx.fillText("⏪ CÂMERA LENTA", W / 2, H - 12);
+    ctx.fillText("⏪ CÂMERA LENTA", W / 2, 18);
     ctx.shadowBlur = 0;
     ctx.globalAlpha = 1;
     ctx.textAlign = "left";
@@ -790,6 +990,11 @@ document.addEventListener("keydown", (e) => {
       startMenuMusic(state.selectedDifficulty);
     }
     if (e.code === "KeyM") { ensureAC(); mpConnect(); return; }
+  }
+  if (e.code === "Space" && (state.gState === ST.PLAY || state.gState === ST.MULTI)) {
+    activateSpecial();
+    e.preventDefault();
+    return;
   }
   if ((e.code === "Enter" || e.code === "Space") &&
       (state.gState === ST.MENU || state.gState === ST.OVER))
@@ -913,6 +1118,10 @@ canvas.addEventListener("touchend", (e) => {
 document.getElementById("btn-pause-mobile")?.addEventListener("click", () => {
   if (state.gState === ST.PLAY) state.gState = ST.PAUSE;
   else if (state.gState === ST.PAUSE) state.gState = ST.PLAY;
+});
+
+document.getElementById("btn-special-mobile")?.addEventListener("click", () => {
+  activateSpecial();
 });
 
 // ── RAF loop ───────────────────────────────────────────────────────────────────

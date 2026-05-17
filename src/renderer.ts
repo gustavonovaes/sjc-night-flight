@@ -342,6 +342,20 @@ export function drawHUD(): void {
   const { score, hiScore, combo, frame, player, waveT, waveText, dev, diffCfg, audioFailed, fps } = state;
   if (!player) return;
 
+  // Modo de jogo — topo central
+  if (diffCfg) {
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.font = "bold 9px monospace";
+    ctx.fillStyle = diffCfg.col;
+    ctx.shadowColor = diffCfg.col;
+    ctx.shadowBlur = 5;
+    ctx.globalAlpha = 0.72;
+    ctx.fillText(`${diffCfg.icon} ${diffCfg.name.toUpperCase()}`, W / 2, 14);
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  }
+
   ctx.fillStyle = "#fff";
   ctx.font = "bold 15px Courier New";
   ctx.textAlign = "left";
@@ -458,18 +472,7 @@ export function drawHUD(): void {
     ctx.fillText("⚙ DEV", W / 2, H - 22);
     ctx.restore();
   }
-  if (diffCfg && diffCfg.id === "radical") {
-    ctx.save();
-    ctx.fillStyle = "#ef4444";
-    ctx.font = "bold 10px monospace";
-    ctx.textAlign = "left";
-    ctx.shadowColor = "#ef4444";
-    ctx.shadowBlur = 6;
-    ctx.fillText("🔥 RADICAL", 12, H - 8);
-    ctx.shadowBlur = 0;
-    ctx.restore();
-  }
-  if (dev.godMode) {
+if (dev.godMode) {
     ctx.save();
     ctx.fillStyle = "#00ff88";
     ctx.font = "bold 10px monospace";
@@ -517,6 +520,103 @@ export function drawHUD(): void {
       ppy += 13;
     });
     ctx.restore();
+  }
+
+  // Especial — canto inferior esquerdo
+  if (player.specialMaxCD > 0) {
+    const planeCfg = PLANES.find(p => p.id === player.planeId);
+    if (planeCfg) {
+      const ready  = player.specialCD === 0;
+      const active = player.specialActive > 0;
+      const prog   = ready ? 1 : 1 - player.specialCD / player.specialMaxCD;
+      const pulse  = 0.5 + Math.sin(frame * 0.12) * 0.5; // 0–1
+
+      // Layout: ícone circular à esquerda + barra à direita
+      const IX = 22, IY = H - 22; // centro do ícone
+      const IR = 16;               // raio do ícone
+      const BX = IX + IR + 6, BY = H - 28, BW = 72, BH = 8;
+
+      ctx.save();
+
+      // --- arco de cooldown ao redor do ícone ---
+      const arcCol = active ? "#34d399" : ready ? "#60a5fa" : "#6366f1";
+      // fundo do arco
+      ctx.beginPath();
+      ctx.arc(IX, IY, IR + 2, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(0,0,0,0.6)";
+      ctx.lineWidth = 4;
+      ctx.stroke();
+      // arco de progresso
+      const arcEnd = -Math.PI / 2 + (active ? (player.specialActive / 240) : prog) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.arc(IX, IY, IR + 2, -Math.PI / 2, arcEnd);
+      ctx.strokeStyle = arcCol;
+      ctx.lineWidth = 4;
+      ctx.shadowColor = arcCol;
+      ctx.shadowBlur = ready ? 10 + pulse * 8 : active ? 14 : 4;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // --- disco do ícone ---
+      ctx.beginPath();
+      ctx.arc(IX, IY, IR, 0, Math.PI * 2);
+      ctx.fillStyle = active
+        ? `rgba(5,30,20,${0.82 + pulse * 0.12})`
+        : ready
+        ? `rgba(5,15,35,${0.78 + pulse * 0.14})`
+        : "rgba(5,5,20,0.78)";
+      ctx.fill();
+      if (ready) {
+        ctx.strokeStyle = `rgba(147,197,253,${0.5 + pulse * 0.5})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+      // --- ícone emoji centralizado ---
+      ctx.font = `${active ? 15 : 13}px sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.globalAlpha = active ? 1 : ready ? 0.7 + pulse * 0.3 : 0.55;
+      ctx.fillText(planeCfg.specialIcon, IX, IY + 1);
+      ctx.globalAlpha = 1;
+      ctx.textBaseline = "alphabetic";
+
+      // --- barra de carregamento ---
+      // bg
+      ctx.fillStyle = "rgba(0,0,0,0.55)";
+      ctx.fillRect(BX, BY, BW, BH);
+      // fill
+      const fillW = active ? BW * (player.specialActive / 240) : BW * prog;
+      const grad = ctx.createLinearGradient(BX, 0, BX + BW, 0);
+      if (active) {
+        grad.addColorStop(0, "#059669"); grad.addColorStop(1, "#34d399");
+      } else if (ready) {
+        grad.addColorStop(0, "#2563eb"); grad.addColorStop(1, "#93c5fd");
+      } else {
+        grad.addColorStop(0, "#3730a3"); grad.addColorStop(1, "#6366f1");
+      }
+      ctx.fillStyle = grad;
+      ctx.fillRect(BX, BY, fillW, BH);
+      // borda
+      ctx.strokeStyle = ready ? `rgba(147,197,253,${0.4 + pulse * 0.4})` : "rgba(99,102,241,0.4)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(BX, BY, BW, BH);
+
+      // --- label abaixo da barra ---
+      ctx.font = "bold 8px Courier New";
+      ctx.textAlign = "left";
+      ctx.fillStyle = active ? "#6ee7b7" : ready ? `rgba(191,219,254,${0.7 + pulse * 0.3})` : "#818cf8";
+      ctx.shadowColor = arcCol;
+      ctx.shadowBlur = ready ? 4 : 0;
+      const secs = Math.ceil(player.specialCD / 60);
+      ctx.fillText(
+        active ? "ATIVO" : ready ? planeCfg.specialName.toUpperCase() : `${secs}s`,
+        BX, BY + BH + 10,
+      );
+      ctx.shadowBlur = 0;
+
+      ctx.restore();
+    }
   }
 
   drawRadio();
@@ -978,43 +1078,23 @@ export function drawDebugOverlay(): void {
 export function drawRadio(): void {
   const { radioT, radioText } = state;
   if (radioT <= 0) return;
-  const alpha = Math.min(1, radioT / 30);
-  const BOX_W = 340, BOX_H = 44, BX = 8, BY = H - BOX_H - 6;
-  const MAX_TEXT_W = BOX_W - 24; // margem 12px cada lado
+  const elapsed = 200 - radioT;
+  const fadeIn  = Math.min(1, elapsed / 20);
+  const fadeOut = Math.min(1, radioT / 30);
+  const alpha   = Math.min(fadeIn, fadeOut);
+  const slide   = Math.max(0, 1 - elapsed / 18); // 0=na posição, slide de baixo
+  const TARGET_Y = H - 48;
+  const y = TARGET_Y + slide * 22;
 
   ctx.save();
   ctx.globalAlpha = alpha;
-  ctx.fillStyle = "rgba(0,12,4,0.88)";
-  ctx.strokeStyle = "#00ff88";
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  if (ctx.roundRect) ctx.roundRect(BX, BY, BOX_W, BOX_H, 4);
-  else ctx.rect(BX, BY, BOX_W, BOX_H);
-  ctx.fill(); ctx.stroke();
-
+  ctx.textAlign = "center";
+  ctx.font = "bold 10px monospace";
   ctx.fillStyle = "#00ff88";
-  ctx.font = "bold 9px monospace";
-  ctx.textAlign = "left";
-  ctx.fillText("📻 RÁDIO", BX + 8, BY + 13);
-
-  // Word-wrap the message to fit within MAX_TEXT_W
-  ctx.font = "8.5px monospace";
-  ctx.fillStyle = "#a3e635";
-  const words = radioText.split(" ");
-  const lines: string[] = [];
-  let cur = "";
-  for (const w of words) {
-    const test = cur ? cur + " " + w : w;
-    if (ctx.measureText(test).width > MAX_TEXT_W && cur) {
-      lines.push(cur);
-      cur = w;
-    } else {
-      cur = test;
-    }
-  }
-  if (cur) lines.push(cur);
-  if (lines[0]) ctx.fillText(lines[0], BX + 8, BY + 26);
-  if (lines[1]) ctx.fillText(lines[1], BX + 8, BY + 38);
+  ctx.shadowColor = "#00ff88";
+  ctx.shadowBlur = 10;
+  ctx.fillText(`📻 ${radioText}`, W / 2, y);
+  ctx.shadowBlur = 0;
   ctx.restore();
 }
 
@@ -1052,39 +1132,39 @@ export function drawSobre(): void {
 
   const sections = [
     { title: "🎮 MECÂNICAS", col: "#60a5fa", lines: [
-      "WASD / Setas: mover em qualquer direção",
-      "Tiro automático — foque em desviar",
-      "Combo: destruir seguidos = multiplicador",
-      "Rasante: passe perto de bala sem levar dano",
-      "Missão CBERS: escorte o satélite até sair",
-      "🌅 AVENTURA: diversão garantida, combo 10×, mais powerups",
-      "🔥 RADICAL: spawns agressivos, chefes duros, combo 50×",
+      "WASD / Setas — mova em qualquer direção",
+      "Tiro automático — concentre-se em desviar e raspar",
+      "Combo — abata inimigos em sequência para multiplicar pontos",
+      "Rasante — passe rente a uma bala e dispara míssil automático",
+      "🛰️ Missão CBERS — escorte o satélite INPE até o outro lado",
+      "Cada chefe derrotado — escolha uma melhoria permanente",
+      "🌅 AVENTURA: tranquilo, combo ×10  ·  🔥 RADICAL: brutal, combo ×50",
     ]},
     { title: "🚀 POWER-UPS", col: "#fb923c", lines: [
-      "🛡️ Escudo — absorve 1 acerto (acumula ×3)",
-      "⚡ Boost — tiro triplo + cadência máx",
-      "🛩️ 14-BIS — invencível, biplano Santos-Dumont",
-      "🚀 Avibras — mísseis teleguiados a cada 90f",
-      "📡 INPE — ímã de coletáveis + barras de HP",
-      "❄️ Revap Shock — ondachoque 300px de raio",
-      "🪂 Asa Delta — aceleração instantânea",
-      "📶 Wingman 5G — drone aliado + escudo orbital",
+      "🛡️ Escudo — absorve 1 acerto sem perder vida (acumula ×3)",
+      "⚡ Boost — tiro triplo com cadência máxima",
+      "🛩️ 14-BIS — invencibilidade total no biplano de Santos-Dumont",
+      "🚀 Avibras — mísseis teleguiados disparados a cada 90 frames",
+      "📡 INPE — ímã de coletáveis e barras de HP reveladas",
+      "❄️ Revap Shock — onda de choque que limpa projéteis em 300px",
+      "🪂 Asa Delta — aceleração e frenagem quase instantâneas",
+      "📶 Wingman 5G — drone aliado que replica exatamente seu tiro",
     ]},
     { title: "👾 INIMIGOS", col: "#f472b6", lines: [
-      "☁️ Frente Fria — lenta, atira raios",
-      "🔺 Drone DCTA — rápido, movim. oscilatório",
-      "🦜 Arara Real — persegue o jogador",
-      "🐜 Tanajura — enxame, zigzag",
-      "🚁 Helicóptero — spread 3 tiros",
-      "🎈 Balão — lento, libera drones ao morrer",
-      "🛸 OVNI — raio trator, só à noite",
+      "☁️ Frente Fria — lenta, atira raios elétricos periódicos",
+      "🔺 Drone DCTA — veloz, trajetória oscilatória",
+      "🦜 Arara Real — persegue o jogador continuamente",
+      "🐜 Tanajura — enxame caótico em zigzag",
+      "🚁 Helicóptero — dispara leque de 3 tiros",
+      "🎈 Balão — lento, explode em drones ao morrer",
+      "🛸 OVNI — raio trator; aparece apenas durante a noite",
     ]},
     { title: "💀 CHEFES", col: "#f87171", lines: [
-      "⚠️ Monstro Climático — orbes em spread",
-      "🚀 Protótipo X — passes rasantes + aceleração",
-      "👁️ Olho do CEMADEN — escudo giratório, 3 fases",
-      "⚙️ Grande Engrenagem — prensa + orbes ricochete",
-      "🦗 A Cigarra — morfa forma, inverte controles",
+      "⚠️ Monstro Climático — orbes em leque crescente",
+      "🚀 Protótipo X — rasantes em alta velocidade, acelera por lap",
+      "👁️ Olho do CEMADEN — escudo giratório, 3 fases distintas",
+      "⚙️ Grande Engrenagem — prensa descendente + orbes ricochete",
+      "🦗 A Cigarra — muda de forma, câmera lenta, inverte controles",
     ]},
   ];
 
@@ -1287,5 +1367,216 @@ export function drawLevelUp(): void {
   ctx.textAlign = "center";
   ctx.fillText("pressione 1 · 2 · 3 ou clique no card", W / 2, startY + CH + 22);
   ctx.textAlign = "left";
+}
+
+export function drawPlayer(pctx: CanvasRenderingContext2D, player: any): void {
+  if (player._drawSprite && player._drawSprite(player.planeId)) return;
+
+  if (player.bis > 0) {
+    const pa = state.frame * 0.38;
+    const glow = 0.55 + Math.sin(state.frame * 0.12) * 0.35;
+    const pulse = Math.sin(state.frame * 0.18);
+    pctx.shadowColor = "#ffd700"; pctx.shadowBlur = 18 + glow * 14;
+
+    pctx.globalAlpha = 0.22 + Math.abs(Math.sin(pa * 2)) * 0.18;
+    pctx.fillStyle = "#ffe080";
+    pctx.beginPath(); pctx.arc(-44, 0, 18, 0, Math.PI * 2); pctx.fill();
+    pctx.globalAlpha = 1;
+    for (let b = 0; b < 2; b++) {
+      pctx.save(); pctx.translate(-44, 0); pctx.rotate(pa + b * Math.PI);
+      pctx.fillStyle = "#7a3e06";
+      pctx.beginPath(); pctx.ellipse(0, 0, 17, 3, 0, 0, Math.PI * 2); pctx.fill();
+      pctx.restore();
+    }
+    pctx.shadowBlur = 6; pctx.fillStyle = "#5a3004";
+    pctx.beginPath(); pctx.ellipse(-36, 0, 12, 9, 0, 0, Math.PI * 2); pctx.fill();
+
+    const wc = ["#b87010","#d49020","#c07818","#e0a828"];
+    [[-46,-34,50,10],[-44,-22,48,10],[-44,14,48,10],[-46,26,50,10]].forEach(([x,y,w,h],i) => {
+      pctx.fillStyle = wc[i]; pctx.shadowBlur = 4;
+      pctx.beginPath(); if ((pctx as any).roundRect) (pctx as any).roundRect(x,y,w,h,2); else pctx.rect(x,y,w,h); pctx.fill();
+    });
+    pctx.shadowBlur = 0; pctx.strokeStyle = "#8a5010"; pctx.lineWidth = 1.2;
+    [-34,-22,-10,2].forEach(x => {
+      pctx.beginPath(); pctx.moveTo(x,-34); pctx.lineTo(x,-22); pctx.stroke();
+      pctx.beginPath(); pctx.moveTo(x,14); pctx.lineTo(x,26); pctx.stroke();
+    });
+    pctx.strokeStyle = "#5a3004"; pctx.lineWidth = 2.5;
+    [-40,-24,-8,4].forEach(x => {
+      pctx.beginPath(); pctx.moveTo(x,-22); pctx.lineTo(x,14); pctx.stroke();
+    });
+    pctx.strokeStyle = "#6b3808"; pctx.lineWidth = 1.2;
+    [[-40,-22],[-24,-22],[-8,-22],[4,-22]].forEach(([x]) => {
+      pctx.beginPath(); pctx.moveTo(x,-22); pctx.lineTo(x+16,14); pctx.stroke();
+      pctx.beginPath(); pctx.moveTo(x+16,-22); pctx.lineTo(x,14); pctx.stroke();
+    });
+
+    pctx.shadowBlur = 10 + glow * 8;
+    const fgrad = pctx.createLinearGradient(-8,-11,-8,11);
+    fgrad.addColorStop(0,"#f0c040"); fgrad.addColorStop(0.4,"#d08010"); fgrad.addColorStop(1,"#8a4a04");
+    pctx.fillStyle = fgrad;
+    pctx.beginPath();
+    pctx.moveTo(30,-8); pctx.bezierCurveTo(20,-12,-4,-12,-34,-9);
+    pctx.lineTo(-34,9); pctx.bezierCurveTo(-4,12,20,12,30,8); pctx.closePath(); pctx.fill();
+    pctx.strokeStyle = "#7a4e08"; pctx.lineWidth = 1.2; pctx.stroke();
+    pctx.fillStyle = "#c87010";
+    pctx.beginPath(); pctx.moveTo(30,0); pctx.lineTo(42,-4); pctx.lineTo(46,0); pctx.lineTo(42,4); pctx.closePath(); pctx.fill();
+
+    pctx.shadowBlur = 0; pctx.fillStyle = "#2a1a04";
+    pctx.beginPath(); if ((pctx as any).roundRect) (pctx as any).roundRect(6,-14,18,10,2); else pctx.rect(6,-14,18,10); pctx.fill();
+    pctx.fillStyle = `rgba(150,220,255,${0.5+pulse*0.2})`;
+    pctx.beginPath(); pctx.ellipse(14,-10,6,4,0,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle = "#1a1a2e"; pctx.beginPath(); pctx.arc(11,-14,4,0,Math.PI*2); pctx.fill();
+
+    pctx.fillStyle = "#e0a820";
+    pctx.beginPath(); pctx.moveTo(28,-8); pctx.lineTo(36,-22); pctx.lineTo(42,-20); pctx.lineTo(34,-8); pctx.closePath(); pctx.fill();
+    pctx.beginPath(); pctx.moveTo(28,8); pctx.lineTo(36,22); pctx.lineTo(42,20); pctx.lineTo(34,8); pctx.closePath(); pctx.fill();
+    pctx.strokeStyle = "#8a5010"; pctx.lineWidth = 1;
+    pctx.beginPath(); pctx.moveTo(30,-8); pctx.lineTo(40,-20); pctx.stroke();
+    pctx.beginPath(); pctx.moveTo(30,8); pctx.lineTo(40,20); pctx.stroke();
+
+    pctx.strokeStyle = "#5a3004"; pctx.lineWidth = 2;
+    [-18,0].forEach(x => {
+      pctx.beginPath(); pctx.moveTo(x,10); pctx.lineTo(x,22); pctx.stroke();
+      pctx.fillStyle = "#3a2004"; pctx.beginPath(); pctx.arc(x,23,4,0,Math.PI*2); pctx.fill();
+    });
+
+    pctx.globalAlpha = 0.18 + pulse * 0.14;
+    pctx.strokeStyle = `hsl(${45+pulse*15},100%,65%)`; pctx.lineWidth = 2.5;
+    pctx.beginPath(); pctx.ellipse(-2,0,72,42,0,0,Math.PI*2); pctx.stroke();
+    pctx.globalAlpha = 0.08 + Math.abs(pulse) * 0.10;
+    pctx.fillStyle = "#ffe566";
+    pctx.beginPath(); pctx.ellipse(-2,0,72,42,0,0,Math.PI*2); pctx.fill();
+    pctx.globalAlpha = 1;
+  } else if (player.planeId === "e2") {
+    pctx.save(); pctx.scale(0.82, 0.82);
+    const e2fg = pctx.createLinearGradient(0,-12,0,12);
+    e2fg.addColorStop(0,"#f1f5f9"); e2fg.addColorStop(0.5,"#cbd5e1"); e2fg.addColorStop(1,"#94a3b8");
+    pctx.fillStyle = e2fg;
+    pctx.beginPath(); pctx.moveTo(64,0);
+    pctx.bezierCurveTo(56,-8,18,-12,-4,-12); pctx.bezierCurveTo(-26,-12,-50,-8,-56,-5);
+    pctx.bezierCurveTo(-62,-2,-62,2,-56,5); pctx.bezierCurveTo(-50,8,-26,12,-4,12);
+    pctx.bezierCurveTo(18,12,56,8,64,0); pctx.closePath(); pctx.fill();
+    pctx.strokeStyle="#94a3b8"; pctx.lineWidth=1; pctx.stroke();
+    pctx.fillStyle="#334155";
+    pctx.beginPath(); pctx.moveTo(34,-12); pctx.bezierCurveTo(24,-22,4,-24,-4,-20);
+    pctx.bezierCurveTo(-12,-16,-14,-12,-10,-12); pctx.lineTo(34,-12); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="rgba(148,163,184,0.6)";
+    pctx.beginPath(); pctx.moveTo(26,-12); pctx.bezierCurveTo(16,-20,2,-22,-2,-18);
+    pctx.bezierCurveTo(-8,-15,-10,-12,-6,-12); pctx.lineTo(26,-12); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="rgba(226,232,240,0.55)";
+    pctx.beginPath(); pctx.moveTo(18,-13); pctx.bezierCurveTo(12,-19,4,-20,2,-17); pctx.lineTo(19,-13); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="#94a3b8";
+    pctx.beginPath(); pctx.moveTo(6,-12); pctx.lineTo(-12,-40); pctx.lineTo(-36,-36); pctx.lineTo(-18,-12); pctx.closePath(); pctx.fill();
+    pctx.beginPath(); pctx.moveTo(6,12); pctx.lineTo(-12,40); pctx.lineTo(-36,36); pctx.lineTo(-18,12); pctx.closePath(); pctx.fill();
+    pctx.strokeStyle="#64748b"; pctx.lineWidth=1;
+    pctx.beginPath(); pctx.moveTo(-2,-13); pctx.lineTo(-30,-34); pctx.stroke();
+    pctx.beginPath(); pctx.moveTo(-2,13); pctx.lineTo(-30,34); pctx.stroke();
+    [-25,25].forEach(sy => {
+      const sign = sy < 0 ? 1 : -1;
+      pctx.fillStyle="#475569"; pctx.beginPath(); pctx.ellipse(-8,sy,18,6,0,0,Math.PI*2); pctx.fill();
+      pctx.fillStyle="#1e293b"; pctx.beginPath(); pctx.arc(10,sy,5,0,Math.PI*2); pctx.fill();
+      pctx.globalAlpha=0.2; pctx.fillStyle="#e2e8f0"; pctx.beginPath(); pctx.arc(14,sy,11,0,Math.PI*2); pctx.fill(); pctx.globalAlpha=1;
+      const pa2 = state.frame*0.28*sign; pctx.strokeStyle="#334155"; pctx.lineWidth=2.5;
+      for (let b=0;b<4;b++) { const ba=pa2+b*Math.PI/2; pctx.beginPath(); pctx.moveTo(14+Math.cos(ba)*2,sy+Math.sin(ba)*2); pctx.lineTo(14+Math.cos(ba)*10,sy+Math.sin(ba)*10); pctx.stroke(); }
+    });
+    pctx.fillStyle="#64748b";
+    pctx.beginPath(); pctx.moveTo(-44,-5); pctx.lineTo(-58,-26); pctx.lineTo(-64,-22); pctx.lineTo(-52,-5); pctx.closePath(); pctx.fill();
+    pctx.beginPath(); pctx.moveTo(-44,5); pctx.lineTo(-58,26); pctx.lineTo(-64,22); pctx.lineTo(-52,5); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="#94a3b8";
+    pctx.beginPath(); pctx.moveTo(-46,-5); pctx.lineTo(-60,-20); pctx.lineTo(-64,-17); pctx.lineTo(-52,-5); pctx.closePath(); pctx.fill();
+    pctx.beginPath(); pctx.moveTo(-46,5); pctx.lineTo(-60,20); pctx.lineTo(-64,17); pctx.lineTo(-52,5); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="#334155"; pctx.fillRect(-2,-24,4,12);
+    const rdg=pctx.createLinearGradient(-22,-32,22,-18);
+    rdg.addColorStop(0,"#64748b"); rdg.addColorStop(0.45,"#cbd5e1"); rdg.addColorStop(1,"#475569");
+    pctx.fillStyle=rdg; pctx.beginPath(); pctx.ellipse(0,-28,22,7,0,0,Math.PI*2); pctx.fill();
+    pctx.strokeStyle="#334155"; pctx.lineWidth=1.5; pctx.stroke();
+    pctx.strokeStyle="rgba(241,245,249,0.35)"; pctx.lineWidth=1;
+    pctx.beginPath(); pctx.ellipse(0,-30,19,5,0,0,Math.PI*2); pctx.stroke();
+    pctx.fillStyle="#1e3a8a"; pctx.globalAlpha=0.65;
+    pctx.fillRect(-20,-12,28,3); pctx.fillRect(-20,9,28,3); pctx.globalAlpha=1;
+    pctx.shadowBlur=0; pctx.restore();
+  } else if (player.planeId === "c390") {
+    pctx.save(); pctx.scale(0.82, 0.82);
+    const c390fg=pctx.createLinearGradient(0,-14,0,14);
+    c390fg.addColorStop(0,"#d1fae5"); c390fg.addColorStop(0.4,"#6ee7b7"); c390fg.addColorStop(1,"#10b981");
+    pctx.fillStyle = c390fg;
+    pctx.beginPath(); pctx.moveTo(56,0);
+    pctx.bezierCurveTo(48,-13,8,-14,-6,-14); pctx.bezierCurveTo(-28,-14,-50,-10,-56,-6);
+    pctx.bezierCurveTo(-62,-2,-62,2,-56,6); pctx.bezierCurveTo(-50,10,-28,14,-6,14);
+    pctx.bezierCurveTo(8,14,48,13,56,0); pctx.closePath(); pctx.fill();
+    pctx.strokeStyle="#059669"; pctx.lineWidth=1; pctx.stroke();
+    pctx.fillStyle="#065f46";
+    pctx.beginPath(); pctx.moveTo(30,-14); pctx.bezierCurveTo(20,-26,2,-27,-6,-23);
+    pctx.bezierCurveTo(-14,-19,-16,-14,-12,-14); pctx.lineTo(30,-14); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="rgba(110,231,183,0.55)";
+    pctx.beginPath(); pctx.moveTo(22,-14); pctx.bezierCurveTo(12,-23,0,-24,-4,-21);
+    pctx.bezierCurveTo(-10,-18,-12,-14,-7,-14); pctx.lineTo(22,-14); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="rgba(209,250,229,0.5)";
+    pctx.beginPath(); pctx.moveTo(14,-16); pctx.bezierCurveTo(8,-22,2,-23,0,-20); pctx.lineTo(15,-16); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="#34d399";
+    pctx.beginPath(); pctx.moveTo(4,-14); pctx.lineTo(-14,-40); pctx.lineTo(-40,-33); pctx.lineTo(-18,-14); pctx.closePath(); pctx.fill();
+    pctx.beginPath(); pctx.moveTo(4,14); pctx.lineTo(-14,40); pctx.lineTo(-40,33); pctx.lineTo(-18,14); pctx.closePath(); pctx.fill();
+    pctx.strokeStyle="#059669"; pctx.lineWidth=1.2;
+    pctx.beginPath(); pctx.moveTo(-4,-15); pctx.lineTo(-36,-31); pctx.stroke();
+    pctx.beginPath(); pctx.moveTo(-4,15); pctx.lineTo(-36,31); pctx.stroke();
+    [-27,27].forEach(sy => {
+      pctx.fillStyle="#047857"; pctx.beginPath(); pctx.ellipse(-18,sy,17,6,0,0,Math.PI*2); pctx.fill();
+      pctx.strokeStyle="#065f46"; pctx.lineWidth=1; pctx.stroke();
+      pctx.fillStyle="#022c22"; pctx.beginPath(); pctx.arc(-1,sy,5,0,Math.PI*2); pctx.fill();
+      pctx.fillStyle="#111827"; pctx.beginPath(); pctx.arc(-1,sy,3,0,Math.PI*2); pctx.fill();
+      pctx.shadowColor="#f97316"; pctx.shadowBlur=10;
+      pctx.fillStyle="#fb923c"; pctx.beginPath(); pctx.ellipse(-35,sy,5,3.5,0,0,Math.PI*2); pctx.fill();
+      pctx.fillStyle="rgba(253,186,116,0.4)"; pctx.beginPath(); pctx.ellipse(-40,sy,4,2.5,0,0,Math.PI*2); pctx.fill();
+      pctx.shadowBlur=0;
+    });
+    pctx.fillStyle="#059669";
+    pctx.beginPath(); pctx.moveTo(-42,-6); pctx.lineTo(-50,-32); pctx.lineTo(-56,-28); pctx.lineTo(-50,-6); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="#6ee7b7";
+    pctx.beginPath(); pctx.moveTo(-44,-6); pctx.lineTo(-58,-22); pctx.lineTo(-62,-18); pctx.lineTo(-52,-6); pctx.closePath(); pctx.fill();
+    pctx.beginPath(); pctx.moveTo(-44,6); pctx.lineTo(-58,22); pctx.lineTo(-62,18); pctx.lineTo(-52,6); pctx.closePath(); pctx.fill();
+    pctx.shadowBlur=0; pctx.restore();
+  } else {
+    pctx.save(); pctx.scale(0.82, 0.82);
+    const tfg=pctx.createLinearGradient(0,-10,0,10);
+    tfg.addColorStop(0,"#dbeafe"); tfg.addColorStop(0.5,"#93c5fd"); tfg.addColorStop(1,"#3b82f6");
+    pctx.fillStyle=tfg;
+    pctx.beginPath(); pctx.moveTo(62,0);
+    pctx.bezierCurveTo(54,-9,16,-10,-4,-10); pctx.bezierCurveTo(-26,-10,-48,-6,-54,-3);
+    pctx.bezierCurveTo(-58,-1,-58,1,-54,3); pctx.bezierCurveTo(-48,6,-26,10,-4,10);
+    pctx.bezierCurveTo(16,10,54,9,62,0); pctx.closePath(); pctx.fill();
+    pctx.strokeStyle="#60a5fa"; pctx.lineWidth=1; pctx.stroke();
+    pctx.fillStyle="#1e3a8a";
+    pctx.beginPath(); pctx.moveTo(28,-10); pctx.bezierCurveTo(20,-22,2,-23,-8,-19);
+    pctx.bezierCurveTo(-16,-15,-18,-10,-14,-10); pctx.lineTo(28,-10); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="rgba(147,197,253,0.65)";
+    pctx.beginPath(); pctx.moveTo(22,-10); pctx.bezierCurveTo(14,-20,2,-21,-4,-17);
+    pctx.bezierCurveTo(-9,-14,-11,-10,-8,-10); pctx.lineTo(22,-10); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="rgba(219,234,254,0.55)";
+    pctx.beginPath(); pctx.moveTo(14,-12); pctx.bezierCurveTo(10,-18,4,-19,2,-16); pctx.lineTo(15,-12); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="#60a5fa";
+    pctx.beginPath(); pctx.moveTo(8,-10); pctx.lineTo(-10,-34); pctx.lineTo(-36,-28); pctx.lineTo(-22,-10); pctx.closePath(); pctx.fill();
+    pctx.beginPath(); pctx.moveTo(8,10); pctx.lineTo(-10,34); pctx.lineTo(-36,28); pctx.lineTo(-22,10); pctx.closePath(); pctx.fill();
+    pctx.strokeStyle="#2563eb"; pctx.lineWidth=1;
+    pctx.beginPath(); pctx.moveTo(0,-11); pctx.lineTo(-32,-27); pctx.stroke();
+    pctx.beginPath(); pctx.moveTo(0,11); pctx.lineTo(-32,27); pctx.stroke();
+    pctx.fillStyle="#2563eb";
+    pctx.beginPath(); pctx.moveTo(-40,-3); pctx.lineTo(-54,-24); pctx.lineTo(-60,-20); pctx.lineTo(-48,-3); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="#93c5fd";
+    pctx.beginPath(); pctx.moveTo(-42,-3); pctx.lineTo(-54,-18); pctx.lineTo(-60,-15); pctx.lineTo(-50,-3); pctx.closePath(); pctx.fill();
+    pctx.beginPath(); pctx.moveTo(-42,3); pctx.lineTo(-54,18); pctx.lineTo(-60,15); pctx.lineTo(-50,3); pctx.closePath(); pctx.fill();
+    pctx.fillStyle="#1e40af"; pctx.beginPath(); pctx.arc(48,0,8,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle="#bfdbfe"; pctx.beginPath(); pctx.arc(48,0,5,0,Math.PI*2); pctx.fill();
+    pctx.shadowColor="#fb923c"; pctx.shadowBlur=8; pctx.fillStyle="#fdba74";
+    pctx.beginPath(); pctx.ellipse(-56,0,5,3,0,0,Math.PI*2); pctx.fill(); pctx.shadowBlur=0;
+    const pA=state.frame*0.35; pctx.strokeStyle="#1e3a8a"; pctx.lineWidth=4;
+    for (let b=0;b<2;b++) { const ba=pA+b*Math.PI; pctx.beginPath(); pctx.moveTo(54+Math.cos(ba)*2,Math.sin(ba)*2); pctx.lineTo(54+Math.cos(ba)*15,Math.sin(ba)*15); pctx.stroke(); }
+    pctx.fillStyle="#1e40af"; pctx.beginPath(); pctx.arc(54,0,3,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle="#16a34a"; pctx.beginPath(); pctx.arc(8,0,7,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle="#fbbf24"; pctx.beginPath(); pctx.arc(8,0,5,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle="#1d4ed8"; pctx.beginPath(); pctx.arc(8,0,3,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle="#f0fdf4"; pctx.beginPath(); pctx.arc(8,0,1.5,0,Math.PI*2); pctx.fill();
+    pctx.shadowBlur=0; pctx.restore();
+  }
 }
 

@@ -74,6 +74,25 @@
         z-index: 999;
         line-height: 1;
       }
+      #btn-special-mobile {
+        display: none;
+        position: fixed;
+        bottom: max(14px, env(safe-area-inset-bottom, 14px));
+        left: max(14px, env(safe-area-inset-left, 14px));
+        background: rgba(10, 10, 40, 0.82);
+        border: 1px solid rgba(52, 211, 153, 0.5);
+        color: #fff;
+        font-size: 24px;
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        cursor: pointer;
+        z-index: 999;
+        line-height: 1;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.15s, border-color 0.15s;
+      }
       #btn-fullscreen {
         display: none;
         position: fixed;
@@ -98,6 +117,9 @@
           align-items: center;
           justify-content: center;
         }
+        #btn-special-mobile {
+          display: flex;
+        }
         #btn-fullscreen {
           display: flex;
         }
@@ -112,6 +134,7 @@
     <div id="wrap">
       <canvas id="c"></canvas>
       <button id="btn-pause-mobile">⏸</button>
+      <button id="btn-special-mobile" title="Especial">⚡</button>
       <button id="btn-fullscreen" title="Tela cheia">⛶</button>
     </div>
     <script>

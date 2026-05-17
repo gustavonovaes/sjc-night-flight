@@ -59,7 +59,8 @@ function noise(dur: number, vol: number): void {
 }
 
 export function sfxShoot(): void   { if (_ok("shoot",   0.05)) tone(880, 0.06, "square",   0.022); }
-export function sfxHit(): void     { if (_ok("hit",     0.08)) { tone(160, 0.22, "sawtooth", 0.09); noise(0.15, 0.05); } }
+export function sfxHit(): void        { if (_ok("hit",       0.08)) { tone(160, 0.22, "sawtooth", 0.09); noise(0.15, 0.05); } }
+export function sfxShieldHit(): void  { if (_ok("shieldhit", 0.06)) { tone(1100, 0.08, "triangle", 0.06); tone(800, 0.12, "sine", 0.04); } }
 export function sfxBang(): void    { if (_ok("bang",    0.06)) { tone(320, 0.07, "sine",     0.045); noise(0.05, 0.025); } }
 export function sfxBossIn(): void  { if (_ok("bossIn",  0.25)) { tone(55, 0.6, "sawtooth", 0.11); tone(75, 0.6, "square", 0.07); } }
 export function sfxDestroy(): void { if (_ok("destroy", 0.25)) { tone(80, 0.9, "sawtooth", 0.13); tone(50, 1.1, "square", 0.09); noise(1.0, 0.08); [120, 90, 60].forEach((f, i) => setTimeout(() => tone(f, 0.3, "sawtooth", 0.06), i * 120)); } }

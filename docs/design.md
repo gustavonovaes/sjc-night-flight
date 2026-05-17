@@ -48,9 +48,10 @@
 
 ### Rádio SJC
 
-- `radioText` + `radioT` exibem mensagens de Torre SJC/FAB/CEMADEN por 200 frames no canto inferior esquerdo.
-- Mensagens são enfileiradas em `radioQueue` com delay opcional.
-- Disparado em: início de cada wave, spawn de boss, evento OVNI, coleta de Avibras/14-BIS, HP crítico (1 vida).
+- Mensagens exibidas no **centro da tela** por 200 frames: fade-in em 20 frames, slide-up do +22px inicial, fade-out nos últimos 30 frames.
+- Texto com glow verde (`#00ff88`), fonte `bold 10px monospace`, prefixado com `📻`.
+- Mensagens são enfileiradas em `radioQueue` com delay opcional (`RadioQueueItem`).
+- Disparado em: início de cada wave, spawn de boss, missão CBERS (spawn + resultado), evento OVNI, coleta de Avibras/14-BIS, HP crítico (1 vida).
 
 ### Eventos atmosféricos
 
@@ -100,8 +101,18 @@ Stress ≈ 1 → spawns 20% mais lentos (janela de recuperação). Stress ≈ 0 
 
 ### Missão CBERS
 
-- Satélite entra pela direita a cada ~3800 frames; se escoltado off-screen esquerda concede +800 pontos.
-- Inimigos que colidem com ele reduzem `cbersMission.hp`; ao chegar a 0 a missão falha.
+Satélite INPE entra pela direita a cada ~3800 frames. O jogo sorteia aleatoriamente um de 3 variantes:
+
+| Variante     | Nome         | HP | Velocidade | Bônus base |
+| ------------ | ------------ | -- | ---------- | ---------- |
+| `cbers4`     | CBERS-4      | 5  | 0.7 px/f   | 1 000      |
+| `cbers4a`    | CBERS-4A     | 6  | 0.6 px/f   | 1 400      |
+| `amazonia1`  | Amazônia-1   | 8  | 0.5 px/f   | 2 000      |
+
+Cada variante tem arte própria (retangular azul / hexagonal dourado / octogonal verde com dish antenna). Movimento: `y = baseY + sin(age×0.022)×38 + sin(age×0.008)×18` — trajetória orgânica por superposição de senos.
+
+- Inimigos e projéteis inimigos que colidem com o satélite reduzem `cm.hp`. Ao chegar a 0 a missão falha.
+- **Sucesso** (satélite sai pela esquerda): `score += bonus × combo`, `player.inpe += INPE_DUR` (ativa Satélite INPE diretamente, acumula até `INPE_DUR × 2`). Rádio anuncia sucesso.
 
 ### Aviões desbloqueáveis
 
@@ -151,6 +162,8 @@ Os IDs dos power-ups de Avibras, INPE, Revap, Delta e Ericsson usam sufixo `_pw`
 
 - Movimento horizontal lento com oscilação vertical senoidal.
 - HP: 4. Atira raios (`bolt`) periodicamente.
+- Visual: sprite `public/assets/cloud.png` (escalonado por `r×2.4/width`), ou arte procedural como fallback. Sem transformação de arte ao carregar raio — aparência sempre calma.
+- Barra de HP posicionada acima do topo do sprite (`overrideTopY = y - sh/2 - 14`).
 - Blobs pré-gerados no construtor (sem `Math.random` no draw).
 
 ### Drone DCTA (`drone`)
@@ -583,8 +596,8 @@ export function getSky(dayPhase: number): SkyValues {
 
 Acessada pressionando `I` no menu (toque na tela em mobile volta ao menu). Exibe:
 
-- Título com glow animado
-- 4 blocos com fundo semi-transparente: O Jogo, Mecânicas, Power-ups, Inimigos
+- Título com glow animado + estrelas pulsantes no fundo
+- 4 cards em 2 colunas (2 linhas): Mecânicas, Power-ups, Inimigos, Chefes
 - Nota histórica sobre o incidente de 19/05/1986
 - Instrução de retorno piscante
 
@@ -619,6 +632,22 @@ Ativado pelo botão `⚙ DEV` no canto inferior direito do canvas (ou tocando ne
 - enemies, eBullets, bullets, particles, floaters
 - Countdown até próximo boss + barra de progresso (suspenso quando pausado)
 - DDA stress (%), pos/vel/inv do player, lives, perks ativos
+
+### HUD layout
+
+| Elemento | Posição | Detalhes |
+| --- | --- | --- |
+| Modo de jogo | Topo centro | Ícone + nome da dificuldade, cor da dificuldade, `globalAlpha 0.72` |
+| Score / vidas / wave | Topo esquerdo | Fonte Courier New |
+| Buffs ativos | Direita | Ícone + segundos + barra de progresso; sinergias abaixo |
+| Perks permanentes | Esquerda (abaixo score) | `⭐ NV.N` + ícone + nome, cor do perk |
+| Barra de especial | Canto inferior esquerdo | Ícone circular (r=16) + arco de progresso + barra gradiente (72×8px) |
+| Rádio SJC | Centro | Fade-in/slide-up, glow verde |
+| FPS | Canto inferior esquerdo (sobre especial) | Verde ≥55, amarelo ≥40, vermelho <40 |
+
+### Barra de habilidade especial
+
+Centro: `x=22, y=H-22`, raio do ícone 16px. Arco de progresso ao redor do ícone (azul → verde conforme CD). Barra linear à direita (72×8px) com gradiente `#3b82f6 → #22c55e` (recarregando) ou sólida `#22c55e` (pronta). Pulsa via `Math.sin(frame×0.12)` quando pronta. Label: nome do especial quando pronto, `"ATIVO"` durante uso, `"Ns"` durante cooldown.
 
 ### HUD de buffs
 

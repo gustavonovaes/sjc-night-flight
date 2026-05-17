@@ -10,7 +10,7 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 
 ## Changelog
 
-### v0.0.10 — Tela Cheia Mobile, Dev Console Completo, Debug Visual e Graze Refinado _(2026-05-17)_
+### v0.0.10 — Tela Cheia Mobile, HUD Redesenhado, Missão CBERS com Satélites INPE, Assets e Correções _(2026-05-17)_
 
 - **Interface mobile:** botão `⛶` flutuante em `index.html` aparece apenas em dispositivos touch; auto-fullscreen no primeiro toque; oculta ao entrar em tela cheia.
 - **Música de level-up:** `sfxLevelUp()` toca fanfarra ascendente ao matar boss; `startLevelUpMusic()` inicia tema triunfal em lá maior (playlist 12) durante `ST.LEVELUP`; música retorna à fase ao confirmar perk (`src/audio.ts`).
@@ -21,6 +21,13 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 - **HUD de aprimoramentos:** perks ativos listados no canto esquerdo durante o jogo (`⭐ NV.N` + ícone + nome); tela Game Over exibe caixa extra com todos os perks conquistados na partida (`src/renderer.ts`).
 - **Correção:** `chosenPerks` resetado ao iniciar nova partida; `applyPerk` adiciona perk à lista e restaura música da fase; `mp.bossTargetId` limpo ao confirmar morte de boss em multiplayer.
 - **Limpeza:** `drawParqueDaCidade` removida do renderer; interface `Blob` removida de `src/types.ts`; `CTYPES_SCORE` e `CTYPES_PW` deixaram de ser exportados externamente; string `VERSION` em `src/world.ts` usa `substring(0,14)` para formato mais curto.
+- **HUD redesenhado:** modo de dificuldade exibido no topo central (ícone + nome com glow na cor da dificuldade); rádio SJC reposicionado para o centro da tela com fade-in de 20f e slide-up de 22px; barra de especial no canto inferior esquerdo com ícone circular, arco de progresso e barra gradiente azul→verde com pulso quando pronta (`src/renderer.ts`).
+- **Missão CBERS — 3 variantes:** sorteia CBERS-4 (HP 5, bônus 1 000), CBERS-4A (HP 6, bônus 1 400) ou Amazônia-1 (HP 8, bônus 2 000); cada variante tem arte própria (retangular/hexagonal/octogonal); movimento senoidal duplo `baseY + sin(age×0.022)×38 + sin(age×0.008)×18`; sucesso ativa `inpe_sat` diretamente no jogador + bônus multiplicado pelo combo (`src/game.ts`).
+- **Sistema de assets:** `src/assets.ts` com `preloadImages()` e `getOrBake()` para sprites carregados/baked via OffscreenCanvas; `public/assets/cloud.png` e `cloud_freeze.png` servidos como estáticos.
+- **Frente Fria:** usa sprite `cloud.png` escalonado (`r×2.4/width`); arte de carregamento de raio removida — aparência sempre calma; barra de HP corrigida (posição `overrideTopY`, sem duplicata para tipo `cloud`).
+- **Barras de HP padronizadas:** largura `Math.round(r×2.2)`, altura 5px em todos os inimigos; drone reposicionado para `y - r×2 - 4` evitando sobreposição com sprite (`src/entities.ts`).
+- **Correção de renderização:** efeitos do player (Wingman 5G, Avibras, INPE, REVAP, Ericsson body) agora renderizados dentro do contexto `translate(x, y)` — remoção do `ctx.restore()` prematuro que os jogava para (0,0) (`src/entities.ts`).
+- **Console logs de depuração:** logs `[START]`, `[BOSS]`, `[BOSS KILL]`, `[ESPECIAL]`, `[PERK]`, `[HIT]`, `[POWERUP]` e `[DDA]` (a cada 25% de stress) adicionados ao loop principal (`src/game.ts`).
 
 ### v0.0.9 — Level-Up, Perks Permanentes, Graze, Balanceamento e HUD _(2026-05-16)_
 

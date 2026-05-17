@@ -1,3 +1,8 @@
 import { startLoop } from "./game";
+import { preloadImages } from "./assets";
 
-startLoop();
+const BASE = import.meta.env.BASE_URL;
+
+preloadImages({
+  cloud: `${BASE}assets/cloud.png`,
+}).then(() => startLoop());
