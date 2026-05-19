@@ -37,7 +37,6 @@ export const DEV_ITEMS: DevItem[] = [
   { lbl: "Asa Delta",      type: "action", col: 0, run: () => { if (state.player) state.player.delta    = DELTA_DUR    * 2; } },
   { lbl: "Wingman 5G",     type: "action", col: 0, run: () => { if (state.player) state.player.ericsson = ERICSSON_DUR * 2; } },
   { lbl: "── VIDAS/INV ──", type: "header", col: 0 },
-  { lbl: "+1 vida",        type: "action", col: 0, run: () => { if (state.player) { state.player.lives++; state.player.maxLives++; } } },
   { lbl: "Full invuln",    type: "action", col: 0, run: () => { if (state.player) state.player.inv = 9999; } },
   // col 1 — spawn + chefes
   { lbl: "── SPAWN INIMIGOS ──", type: "header", col: 1 },
@@ -62,15 +61,14 @@ export const DEV_ITEMS: DevItem[] = [
   { lbl: "── DIA / CENA ──", type: "header", col: 2 },
   { lbl: "Vel. dia −",     type: "action", col: 2, run: () => { state.dev.daySpeed = Math.max(0, state.dev.daySpeed - 0.5); } },
   { lbl: "Vel. dia +",     type: "action", col: 2, run: () => { state.dev.daySpeed += 0.5; } },
-  { lbl: "Cenário ◀",      type: "action", col: 2, run: () => { state.dev.selectedScene = (state.dev.selectedScene - 1 + DEV_SCENES.length) % DEV_SCENES.length; applyDevScene(); } },
-  { lbl: "Cenário ▶",      type: "action", col: 2, run: () => { state.dev.selectedScene = (state.dev.selectedScene + 1) % DEV_SCENES.length; applyDevScene(); } },
+  { lbl: "◀ Cenário",      type: "action", col: 2, run: () => { state.dev.selectedScene = (state.dev.selectedScene - 1 + DEV_SCENES.length) % DEV_SCENES.length; applyDevScene(); } },
+  { lbl: "  Cenário ▶",      type: "action", col: 2, run: () => { state.dev.selectedScene = (state.dev.selectedScene + 1) % DEV_SCENES.length; applyDevScene(); } },
   { lbl: "── ÁUDIO ──",    type: "header", col: 2 },
-  { lbl: "Música ◀",       type: "action", col: 2, run: () => { state.playlistIdx = (state.playlistIdx - 1 + PLAYLISTS.length) % PLAYLISTS.length; state.mIdx = 0; } },
-  { lbl: "Música ▶",       type: "action", col: 2, run: () => { state.playlistIdx = (state.playlistIdx + 1) % PLAYLISTS.length; state.mIdx = 0; } },
+  { lbl: "◀ Música",       type: "action", col: 2, run: () => { state.playlistIdx = (state.playlistIdx - 1 + PLAYLISTS.length) % PLAYLISTS.length; state.mIdx = 0; } },
+  { lbl: "  Música ▶",       type: "action", col: 2, run: () => { state.playlistIdx = (state.playlistIdx + 1) % PLAYLISTS.length; state.mIdx = 0; } },
   { lbl: "── SCORE ──",    type: "header", col: 2 },
-  { lbl: "+10 000 pts",    type: "action", col: 2, run: () => { state.score += 10000; } },
+  { lbl: "+1 000 000 pts", type: "action", col: 2, run: () => { state.score += 1_000_000; } },
   { lbl: "Zerar score",    type: "action", col: 2, run: () => { state.score = 0; } },
-  { lbl: "── MISC ──",     type: "header", col: 2 },
   { lbl: "── APRIMORAMENTOS ──", type: "header", col: 2 },
   ...PERKS.map(p => ({
     lbl: `${p.icon} ${p.name}`,
@@ -94,6 +92,7 @@ export const DEV_ITEMS: DevItem[] = [
       state.playerLevel++;
     },
   })),
+  { lbl: "── FECHAR ──",     type: "header", col: 2 },
   { lbl: "Fechar DEV",     type: "action", col: 2, run: () => { state.dev.open = false; } },
 ];
 

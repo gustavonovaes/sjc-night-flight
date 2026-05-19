@@ -10,6 +10,18 @@ Pilote um avião Embraer defendendo o Vale do Paraíba contra frentes frias, dro
 
 ## Changelog
 
+### v0.0.11 — Wingman FAB Jet, Escudo Fresnel, 14-BIS Redesenhado, Rádio DDA e Debug _(2026-05-19)_
+
+- **Wingman FAB Jet:** novo buff ativado ao completar a Missão CBERS com sucesso; mini-caça FAB voa acima do jogador por 40s e atira automaticamente rastreando o inimigo mais próximo a cada 18 frames (`src/entities.ts`, `src/game.ts`, `src/constants.ts`).
+- **Escudo visual redesenhado:** substituído por efeito Fresnel com gradiente radial escuro-no-centro, grid hexagonal animado clipado na elipse, anel externo rotativo com nós de energia no perímetro e anel interno counter-rotativo; intensidade escala com número de stacks (`src/entities.ts`).
+- **14-BIS redesenhado:** biplane Santos-Dumont canard pusher com arte completa — fuselagem, asa box-kite com grade de tecido linho + diagonais de rigging, trem de pouso com pernas em V e rodas, cockpit, roundel FAB, hélice pusher traseira animada (`src/renderer.ts`).
+- **Rádio DDA:** mensagens de rádio contextuais ao cruzar thresholds de stress a cada 25% — 4 falas de alerta crescente (`dda_hard_*`) e 3 de alívio (`dda_easy_*`); rádio fica em silêncio por 80 frames entre mensagens DDA para não saturar (`src/constants.ts`, `src/game.ts`).
+- **Sinergias de buff — mensagens de rádio:** 4 sinergias agora anunciam via Rádio SJC: Escudo+Boost (FORTALEZA), Avibras+INPE (Radar Caça), Delta+Boost (Hipersônico), REVAP+Escudo (Escudo Glacial) (`src/constants.ts`).
+- **Debug overlay expandido (F1):** F1 ativa/desativa overlay sem abrir painel DEV; painel exibe pos/vel, lives/inv/fps, combo/dayPhase, DDA%/kills/grazes/acc, perks ativos (evasão, dano, invMult) e buffs com tempo restante em segundos (`src/game.ts`, `src/renderer.ts`).
+- **Indicador MISS:** floater amarelo `"MISS"` aparece na posição do projétil quando o perk Colete Balístico (`bulletEvasion`) ignora o dano (`src/game.ts`).
+- **Painel DEV — ajustes:** bônus de score elevado de +10 000 para +1 000 000 pts; remoção do botão "+1 vida" avulso (coberto pelo perk Veterano); cabeçalho "── FECHAR ──" adicionado antes do botão Fechar DEV (`src/dev.ts`).
+- **VERSION compacto:** sufixo da string de versão em `src/world.ts` trocado para `Date.now().toString(36).slice(-4)` — 4 caracteres base-36 em vez de timestamp ISO.
+
 ### v0.0.10 — Tela Cheia Mobile, HUD Redesenhado, Missão CBERS com Satélites INPE, Assets e Correções _(2026-05-17)_
 
 - **Interface mobile:** botão `⛶` flutuante em `index.html` aparece apenas em dispositivos touch; auto-fullscreen no primeiro toque; oculta ao entrar em tela cheia.

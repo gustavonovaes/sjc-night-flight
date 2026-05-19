@@ -57,7 +57,7 @@ export class Player {
   accel: number; topSpd: number;
   _fireN: number;
   shield = 0; boost = 0; bis = 0; avibras = 0;
-  inpe = 0; revap = 0; delta = 0; ericsson = 0;
+  inpe = 0; revap = 0; delta = 0; ericsson = 0; fabJet = 0;
   inv = 0; inverted = 0;
   specialCD = 0; specialActive = 0; specialMaxCD = 0;
   fireT = 0; missileT = 0;
@@ -141,6 +141,7 @@ export class Player {
     if (this.revap    > 0) this.revap--;
     if (this.delta    > 0) this.delta--;
     if (this.ericsson > 0) this.ericsson--;
+    if (this.fabJet   > 0) this.fabJet--;
     if (this.inv          > 0) this.inv--;
     if (this.inverted     > 0) this.inverted--;
     if (this.specialCD    > 0) this.specialCD--;
@@ -222,12 +223,61 @@ export class Player {
     ctx.globalAlpha = 1;
 
     if (this.shield > 0) {
-      const pulse = 0.22 + Math.sin(state.frame * 0.15) * 0.1;
-      ctx.globalAlpha = pulse;
-      ctx.strokeStyle = "#00eeff"; ctx.lineWidth = 3;
-      ctx.shadowColor = "#00eeff"; ctx.shadowBlur = 14;
-      ctx.beginPath(); ctx.ellipse(this.x - 2, this.y, 62, 28, this.tilt, 0, Math.PI * 2); ctx.stroke();
-      ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+      const f     = state.frame;
+      const stacks = Math.min(3, Math.ceil(this.shield / SHIELD_DUR));
+      const pulse  = Math.sin(f * 0.12);
+      const rot    = f * 0.007;
+
+      ctx.save();
+      ctx.translate(this.x - 2, this.y);
+      ctx.rotate(this.tilt + rot);
+
+      // Fresnel glow (brilho nas bordas, escuro no centro)
+      const radG = ctx.createRadialGradient(0, 0, 14, 0, 0, 64);
+      radG.addColorStop(0,    "rgba(0,238,255,0)");
+      radG.addColorStop(0.78, "rgba(0,238,255,0.03)");
+      radG.addColorStop(0.92, `rgba(0,238,255,${0.10 + pulse * 0.05})`);
+      radG.addColorStop(1,    `rgba(0,238,255,${0.22 + pulse * 0.08})`);
+      ctx.fillStyle = radG;
+      ctx.beginPath(); ctx.ellipse(0, 0, 64, 29, 0, 0, Math.PI * 2); ctx.fill();
+
+      // Grid hexagonal (clippado na ellipse)
+      ctx.save();
+      ctx.beginPath(); ctx.ellipse(0, 0, 61, 26, 0, 0, Math.PI * 2); ctx.clip();
+      ctx.strokeStyle = `rgba(0,238,255,${0.13 + Math.abs(pulse) * 0.05})`;
+      ctx.lineWidth = 0.5;
+      const S = 13;
+      for (let i = -7; i <= 7; i++) {
+        ctx.beginPath(); ctx.moveTo(-75, i * S);              ctx.lineTo(75, i * S);              ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(i * S * 0.87 - 50, -35); ctx.lineTo(i * S * 0.87 + 50, 35); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-(i * S * 0.87) + 50,-35); ctx.lineTo(-(i * S * 0.87) - 50, 35); ctx.stroke();
+      }
+      ctx.restore();
+
+      // Anel externo principal
+      ctx.shadowColor = "#00eeff"; ctx.shadowBlur = 14 + Math.abs(pulse) * 10;
+      ctx.strokeStyle = `rgba(0,238,255,${0.65 + pulse * 0.25})`;
+      ctx.lineWidth = 1.2 + stacks * 0.5;
+      ctx.beginPath(); ctx.ellipse(0, 0, 63, 28, 0, 0, Math.PI * 2); ctx.stroke();
+
+      // Anel interno (counter-rotate)
+      ctx.rotate(-rot * 2.8);
+      ctx.strokeStyle = `rgba(120,240,255,${0.25 + Math.abs(pulse) * 0.15})`;
+      ctx.lineWidth = 0.7; ctx.shadowBlur = 4;
+      ctx.beginPath(); ctx.ellipse(0, 0, 55, 22, 0, 0, Math.PI * 2); ctx.stroke();
+
+      // Nós de energia ao longo do perímetro
+      ctx.shadowBlur = 10; ctx.fillStyle = "#00ffff";
+      const nNodes = 6 + stacks * 2;
+      for (let i = 0; i < nNodes; i++) {
+        const na = (i / nNodes) * Math.PI * 2 + rot * 3;
+        const nx = Math.cos(na) * 63, ny = Math.sin(na) * 28;
+        const nr = 0.7 + Math.abs(Math.sin(f * 0.18 + i * 1.3)) * 1.8;
+        ctx.globalAlpha = 0.5 + Math.sin(f * 0.18 + i * 1.3) * 0.35;
+        ctx.beginPath(); ctx.arc(nx, ny, nr, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+      ctx.restore();
     }
 
     if (this.inv > 0 && Math.floor(this.inv / 8) % 2) return;
@@ -281,6 +331,48 @@ export class Player {
       ctx.strokeStyle = "#818cf8"; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.6;
       ctx.beginPath(); ctx.arc(0, 0, 13, 0, Math.PI * 2); ctx.stroke();
       ctx.shadowBlur = 0; ctx.restore();
+    }
+
+    if (this.fabJet > 0) {
+      const jx = this.x + 10 + Math.cos(state.frame * 0.04) * 8;
+      const jy = this.y - 36 + Math.sin(state.frame * 0.07) * 6;
+      const fade = Math.min(1, this.fabJet / 90);
+      ctx.save();
+      ctx.globalAlpha = fade;
+      ctx.translate(jx, jy);
+      // fuselagem
+      const fg = ctx.createLinearGradient(-22, 0, 22, 0);
+      fg.addColorStop(0, "#374151"); fg.addColorStop(0.5, "#9ca3af"); fg.addColorStop(1, "#374151");
+      ctx.fillStyle = fg;
+      ctx.shadowColor = "#60a5fa"; ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.moveTo(26, 0); ctx.bezierCurveTo(14, -4, -8, -3, -22, -2);
+      ctx.lineTo(-22, 2); ctx.bezierCurveTo(-8, 3, 14, 4, 26, 0);
+      ctx.closePath(); ctx.fill();
+      // asas delta
+      ctx.fillStyle = "#4b5563";
+      ctx.beginPath(); ctx.moveTo(4, -2); ctx.lineTo(-16, -14); ctx.lineTo(-18, -2); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(4, 2); ctx.lineTo(-16, 14); ctx.lineTo(-18, 2); ctx.closePath(); ctx.fill();
+      // cauda
+      ctx.beginPath(); ctx.moveTo(-18, -2); ctx.lineTo(-24, -8); ctx.lineTo(-22, -2); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(-18, 2); ctx.lineTo(-24, 8); ctx.lineTo(-22, 2); ctx.closePath(); ctx.fill();
+      // cockpit
+      ctx.fillStyle = "#bfdbfe"; ctx.globalAlpha = fade * 0.85;
+      ctx.beginPath(); ctx.ellipse(14, -1, 5, 3, 0, 0, Math.PI * 2); ctx.fill();
+      // roundel FAB
+      ctx.globalAlpha = fade;
+      ctx.fillStyle = "#1d4ed8"; ctx.beginPath(); ctx.arc(2, 0, 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#f8fafc"; ctx.beginPath(); ctx.arc(2, 0, 2.5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#15803d"; ctx.beginPath(); ctx.arc(2, 0, 1.2, 0, Math.PI * 2); ctx.fill();
+      // rastro de motor
+      ctx.shadowBlur = 0;
+      const ex = -22, trail = 0.5 + Math.sin(state.frame * 0.18) * 0.3;
+      ctx.globalAlpha = fade * trail;
+      ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(ex, -1); ctx.lineTo(ex - 10, -1); ctx.stroke();
+      ctx.strokeStyle = "#f97316";
+      ctx.beginPath(); ctx.moveTo(ex, 1); ctx.lineTo(ex - 7, 1); ctx.stroke();
+      ctx.restore();
     }
   }
 }

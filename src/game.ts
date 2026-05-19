@@ -4,7 +4,7 @@ import {
   PLANES, DIFFICULTIES, TOTAL_KEY, BOSS_TYPES, BOSS_ROTATION, BOSS_LABELS,
   WAVE_DEFS, RADIO_MSGS, MT1, MT2, MT3, STARS, DEV_SCENES,
   SHIELD_DUR, BOOST_DUR, BIS_DUR, AVIBRAS_DUR, INPE_DUR, REVAP_DUR,
-  DELTA_DUR, ERICSSON_DUR, DEV_BTN, _MP_BTN_RECT, PERKS,
+  DELTA_DUR, ERICSSON_DUR, FAB_JET_DUR, DEV_BTN, _MP_BTN_RECT, PERKS,
 } from "./constants";
 import { ST } from "./types";
 import type { PerkDef } from "./types";
@@ -366,9 +366,19 @@ function update(): void {
   const _prevStress = state.ddaStress;
   state.ddaStress = Math.max(0, state.ddaStress - 0.0007);
   if (state.combo >= 5) state.ddaStress = Math.max(0, state.ddaStress - 0.0004);
-  // log quando cruza thresholds de 0.25
-  if (Math.floor(_prevStress * 4) !== Math.floor(state.ddaStress * 4))
+  // log + rádio quando cruza thresholds de 0.25
+  const prevQ = Math.floor(_prevStress * 4);
+  const curQ  = Math.floor(state.ddaStress * 4);
+  if (prevQ !== curQ) {
     console.log(`[DDA] stress=${state.ddaStress.toFixed(2)} spawnT≈${state.spawnT.toFixed(0)} wave=${state.waveNum}`);
+    if (curQ > prevQ) {
+      const msgs = [RADIO_MSGS.dda_hard_1, RADIO_MSGS.dda_hard_2, RADIO_MSGS.dda_hard_3, RADIO_MSGS.dda_hard_4];
+      radioSay(msgs[Math.min(curQ, 3)], 80);
+    } else {
+      const msgs = [RADIO_MSGS.dda_easy_1, RADIO_MSGS.dda_easy_2, RADIO_MSGS.dda_easy_3];
+      radioSay(msgs[Math.min(prevQ - 1, 2)], 80);
+    }
+  }
 
   const player = state.player!;
   const nb = player.update(state.keys);
@@ -414,6 +424,25 @@ function update(): void {
       vy = Math.max(-0.6, Math.min(0.6, vy));
     }
     state.bullets.push(new Bullet(ox, oy, vy));
+    state.playerStats.shotsFired++;
+  }
+
+  if (player.fabJet > 0 && state.frame % 18 === 0) {
+    const jx = player.x + 10 + Math.cos(state.frame * 0.04) * 8;
+    const jy = player.y - 36 + Math.sin(state.frame * 0.07) * 6;
+    let vy = 0;
+    let nearestDist2 = Infinity;
+    let nearestEnemy2: Enemy | null = null;
+    for (const e of state.enemies) {
+      if (e.dead) continue;
+      const dist = Math.hypot(e.x - jx, e.y - jy);
+      if (dist < nearestDist2) { nearestDist2 = dist; nearestEnemy2 = e; }
+    }
+    if (nearestEnemy2 !== null) {
+      vy = (nearestEnemy2.y - jy) / Math.max(1, nearestEnemy2.x - jx);
+      vy = Math.max(-0.6, Math.min(0.6, vy));
+    }
+    state.bullets.push(new Bullet(jx, jy, vy));
     state.playerStats.shotsFired++;
   }
 
@@ -513,10 +542,11 @@ function update(): void {
       state.score += bonus;
       const player = state.player!;
       player.inpe = Math.min(player.inpe + INPE_DUR, INPE_DUR * 2);
+      player.fabJet = Math.min(player.fabJet + FAB_JET_DUR, FAB_JET_DUR * 2);
       sfxPowerup();
       floatText(`🛰️ ${cm.name} SEGURO! +${bonus}`, W / 2, H / 2 - 30, "#34d399");
-      floatText("📡 SATÉLITE INPE ATIVADO!", player.x, player.y - 28, "#60a5fa");
-      radioSay(`INPE: ${cm.name} saiu do alcance inimigo. Dados transmitidos! Suporte INPE ativado.`);
+      floatText("✈ APOIO DA FAB ATIVADO!", player.x, player.y - 44, "#93c5fd");
+      radioSay(`FAB: Satélite seguro. Enviando apoio aéreo imediato — proteja os céus do Vale!`);
       state.cbersMission = null; state.cbersMissionT = 5400;
     }
   }
@@ -638,7 +668,10 @@ function update(): void {
     if (circ(b.hb(), { x: player.x, y: player.y, r: 13 })) {
       b.dead = true;
       // Perk: colete balístico — chance de ignorar o projétil
-      if (player.perks.bulletEvasion > 0 && Math.random() < player.perks.bulletEvasion) return;
+      if (player.perks.bulletEvasion > 0 && Math.random() < player.perks.bulletEvasion) {
+        state.floaters.push({ txt: "MISS", x: b.x, y: b.y - 10, vy: -1.2, lifetime: 1, col: "#fbbf24" });
+        return;
+      }
       if (state.gState === ST.MULTI && player.inv <= 0 && player.bis <= 0 && player.shield <= 0) {
         const relayPartnerId = mpCheckShieldRelay();
         if (relayPartnerId) {
@@ -696,6 +729,11 @@ function update(): void {
       if (c.type.pw) state.playerStats.pw[c.type.id] = (state.playerStats.pw[c.type.id] ?? 0) + 1;
       const pw = c.type.pw;
       if (pw) console.log(`[POWERUP] ${c.type.id} (${c.type.lbl}) wave=${state.waveNum}`);
+      // estado ANTES de aplicar — para detectar sinergia nova
+      const hadFortaleza     = player.boost > 0 && player.shield > 0;
+      const hadRadarAvibras  = player.avibras > 0 && player.inpe > 0;
+      const hadHipersonico   = player.delta > 0 && player.boost > 0;
+      const hadEscudoGlacial = player.revap > 0 && player.shield > 0;
       if (pw === "shield") {
         player.shield = Math.min(player.shield + SHIELD_DUR, SHIELD_DUR * 3);
         sfxPowerup(); floatText("🛡️ ESCUDO!", player.x, player.y, "#34d399");
@@ -710,7 +748,6 @@ function update(): void {
         player.avibras = Math.min(player.avibras + AVIBRAS_DUR, AVIBRAS_DUR * 2);
         player.missileT = 0;
         sfxPowerup(); floatText("🚀 PULSO AVIBRAS!", player.x, player.y, "#f97316");
-        radioSay(RADIO_MSGS.collect_avibras);
       } else if (pw === "inpe_sat") {
         player.inpe = Math.min(player.inpe + INPE_DUR, INPE_DUR * 2);
         sfxPowerup(); floatText("📡 SATÉLITE INPE!", player.x, player.y, "#60a5fa");
@@ -731,6 +768,11 @@ function update(): void {
         state.score += c.type.pts * state.combo;
         floatText(`${c.type.icon} +${c.type.pts * state.combo}`, c.x, c.y, c.type.col);
       }
+      // dispara rádio apenas quando sinergia é NOVA (não estava ativa antes de coletar)
+      if (!hadFortaleza     && player.boost > 0   && player.shield > 0)  radioSay(RADIO_MSGS.synergy_fortaleza,     60);
+      if (!hadRadarAvibras  && player.avibras > 0 && player.inpe > 0)    radioSay(RADIO_MSGS.synergy_radar_avibras,  60);
+      if (!hadHipersonico   && player.delta > 0   && player.boost > 0)   radioSay(RADIO_MSGS.synergy_hipersonico,    60);
+      if (!hadEscudoGlacial && player.revap > 0   && player.shield > 0)  radioSay(RADIO_MSGS.synergy_escudo_glacial, 60);
     }
   });
 }
@@ -923,6 +965,11 @@ function _hitMpBtn(p: { x: number; y: number }): boolean {
 }
 
 document.addEventListener("keydown", (e) => {
+  if (e.code === "F1") {
+    state.dev.showDebugOverlay = !state.dev.showDebugOverlay;
+    e.preventDefault();
+    return;
+  }
   if (state.dev.open) {
     if (devHandleKey(e.code)) { e.preventDefault(); return; }
     if (e.code === "Escape" && state.dev.openCooldown <= 0) { state.dev.open = false; return; }

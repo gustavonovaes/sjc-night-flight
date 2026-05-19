@@ -965,7 +965,8 @@ export function drawPause(): void {
 
 // ── Debug hitbox & overlay ────────────────────────────────────────────────────
 export function drawDebugOverlay(): void {
-  const { dev, player, enemies, eBullets, bullets, spawnT, frame, diffCfg, bossAlive } = state;
+  const { dev, player, enemies, eBullets, bullets, spawnT, frame, diffCfg, bossAlive,
+    combo, comboT, dayPhase, fps, ddaStress, playerStats } = state;
   if (!dev.showHitboxes && !dev.showDebugOverlay) return;
   ctx.save();
 
@@ -1060,16 +1061,44 @@ export function drawDebugOverlay(): void {
       ctx.fillText(`${secs}s`, cx, cy + 3);
       ctx.textAlign = "left";
     }
-    // Enemy count badge
+    // ── Info panel (bottom-left) ──────────────────────────────────────────────
     const ec = enemies.filter(e => !e.dead).length;
     const eb = eBullets.filter(b => !b.dead).length;
-    ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.fillRect(4, H - 38, 115, 32);
-    ctx.fillStyle = "#f87171";
-    ctx.font = "8px monospace";
-    ctx.fillText(`inimigos: ${ec}  projs: ${eb}`, 8, H - 26);
-    ctx.fillStyle = "#fbbf24";
-    ctx.fillText(`spawnT: ${spawnT}  frame: ${frame}`, 8, H - 16);
+    const PW = 210, LH = 10, PAD = 4;
+
+    // active buffs string
+    const buffParts: string[] = [];
+    if (player.shield  > 0) buffParts.push(`SHD:${Math.ceil(player.shield / 60)}s`);
+    if (player.boost   > 0) buffParts.push(`BST:${Math.ceil(player.boost  / 60)}s`);
+    if (player.bis     > 0) buffParts.push(`BIS:${Math.ceil(player.bis    / 60)}s`);
+    if (player.avibras > 0) buffParts.push(`AVI:${Math.ceil(player.avibras/ 60)}s`);
+    if (player.inpe    > 0) buffParts.push(`INP:${Math.ceil(player.inpe   / 60)}s`);
+    if (player.revap   > 0) buffParts.push(`RVP:${Math.ceil(player.revap  / 60)}s`);
+    if (player.delta   > 0) buffParts.push(`DLT:${Math.ceil(player.delta  / 60)}s`);
+    if (player.ericsson> 0) buffParts.push(`ERC:${Math.ceil(player.ericsson/60)}s`);
+
+    const accuracy = playerStats.shotsFired > 0
+      ? ((playerStats.shotsHit / playerStats.shotsFired) * 100).toFixed(0)
+      : "–";
+
+    const rows = [
+      { col: "#93c5fd", txt: `pos:(${player.x.toFixed(0)},${player.y.toFixed(0)})  vel:(${player.vx.toFixed(1)},${player.vy.toFixed(1)})` },
+      { col: "#f87171", txt: `lives:${player.lives}/${player.maxLives}  inv:${player.inv}  spd:${player.topSpd.toFixed(1)}  fps:${fps}` },
+      { col: "#fbbf24", txt: `combo:×${combo}  comboT:${comboT}  day:${dayPhase.toFixed(3)}` },
+      { col: "#94a3b8", txt: `DDA:${(ddaStress*100).toFixed(0)}%  kills:${playerStats.kills}  grazes:${playerStats.grazes}  acc:${accuracy}%` },
+      { col: "#c084fc", txt: `bEvade:${(player.perks.bulletEvasion*100).toFixed(0)}%  iEvade:${(player.perks.impactEvasion*100).toFixed(0)}%  dmg+${player.perks.dmgBonus}  inv×${player.perks.invMult.toFixed(1)}` },
+      { col: "#6b7280", txt: `inimigos:${ec}  projs:${eb}  spawnT:${spawnT}  frame:${frame}` },
+      ...(buffParts.length ? [{ col: "#34d399", txt: buffParts.join("  ") }] : []),
+    ];
+
+    const PH = rows.length * LH + PAD * 2;
+    ctx.fillStyle = "rgba(0,0,0,0.65)";
+    ctx.fillRect(4, H - PH - 4, PW, PH);
+    rows.forEach((row, i) => {
+      ctx.fillStyle = row.col;
+      ctx.font = "8px monospace";
+      ctx.fillText(row.txt, 8, H - PH - 4 + PAD + (i + 1) * LH);
+    });
   }
 
   ctx.restore();
@@ -1373,80 +1402,141 @@ export function drawPlayer(pctx: CanvasRenderingContext2D, player: any): void {
   if (player._drawSprite && player._drawSprite(player.planeId)) return;
 
   if (player.bis > 0) {
-    const pa = state.frame * 0.38;
-    const glow = 0.55 + Math.sin(state.frame * 0.12) * 0.35;
-    const pulse = Math.sin(state.frame * 0.18);
-    pctx.shadowColor = "#ffd700"; pctx.shadowBlur = 18 + glow * 14;
+    // 14-BIS Santos-Dumont — canard pusher
+    // Direita = frente (canard dianteiro), Esquerda = traseira (asa + hélice pusher)
+    const pa    = state.frame * 0.26;
+    const pulse = Math.sin(state.frame * 0.14);
+    const FABRIC  = "#cec3a8"; // linho natural
+    const FABRIC2 = "#b8ad94"; // linho escurecido (baixo/sombra)
+    const WOOD    = "#2c1a08"; // bambu/madeira escuro
+    const WOOD_L  = "#5a3212"; // madeira clara (rigging)
+    const GEAR    = "#b45309"; // trem de pouso (bronze)
+    pctx.shadowBlur = 0;
 
-    pctx.globalAlpha = 0.22 + Math.abs(Math.sin(pa * 2)) * 0.18;
-    pctx.fillStyle = "#ffe080";
-    pctx.beginPath(); pctx.arc(-44, 0, 18, 0, Math.PI * 2); pctx.fill();
+    // ── Hélice pusher (atrás da asa, parcialmente visível) ─────
+    pctx.globalAlpha = 0.16 + Math.abs(Math.sin(pa * 2)) * 0.10;
+    pctx.fillStyle = "#a89470";
+    pctx.beginPath(); pctx.arc(-50, 0, 17, 0, Math.PI * 2); pctx.fill();
     pctx.globalAlpha = 1;
     for (let b = 0; b < 2; b++) {
-      pctx.save(); pctx.translate(-44, 0); pctx.rotate(pa + b * Math.PI);
-      pctx.fillStyle = "#7a3e06";
-      pctx.beginPath(); pctx.ellipse(0, 0, 17, 3, 0, 0, Math.PI * 2); pctx.fill();
+      pctx.save(); pctx.translate(-50, 0); pctx.rotate(pa + b * Math.PI);
+      pctx.fillStyle = WOOD_L;
+      pctx.beginPath(); pctx.ellipse(0, 0, 17, 2.2, 0, 0, Math.PI * 2); pctx.fill();
       pctx.restore();
     }
-    pctx.shadowBlur = 6; pctx.fillStyle = "#5a3004";
-    pctx.beginPath(); pctx.ellipse(-36, 0, 12, 9, 0, 0, Math.PI * 2); pctx.fill();
+    pctx.fillStyle = WOOD;
+    pctx.beginPath(); pctx.arc(-50, 0, 3, 0, Math.PI * 2); pctx.fill();
 
-    const wc = ["#b87010","#d49020","#c07818","#e0a828"];
-    [[-46,-34,50,10],[-44,-22,48,10],[-44,14,48,10],[-46,26,50,10]].forEach(([x,y,w,h],i) => {
-      pctx.fillStyle = wc[i]; pctx.shadowBlur = 4;
-      pctx.beginPath(); if ((pctx as any).roundRect) (pctx as any).roundRect(x,y,w,h,2); else pctx.rect(x,y,w,h); pctx.fill();
+    // ── Trem de pouso (pernas bronze + rodas) ─────────────────
+    pctx.strokeStyle = GEAR; pctx.lineWidth = 2;
+    // pernas principais em V
+    pctx.beginPath(); pctx.moveTo(-34, 20); pctx.lineTo(-28, 32); pctx.stroke();
+    pctx.beginPath(); pctx.moveTo(-18, 20); pctx.lineTo(-22, 32); pctx.stroke();
+    // eixo axle
+    pctx.beginPath(); pctx.moveTo(-28, 32); pctx.lineTo(-22, 32); pctx.stroke();
+    // reforço transversal
+    pctx.lineWidth = 1.2;
+    pctx.beginPath(); pctx.moveTo(-34, 20); pctx.lineTo(-18, 20); pctx.stroke();
+    // rodas principais
+    pctx.fillStyle = "#1c1917";
+    pctx.beginPath(); pctx.arc(-28, 34, 5, 0, Math.PI * 2); pctx.fill();
+    pctx.beginPath(); pctx.arc(-22, 34, 5, 0, Math.PI * 2); pctx.fill();
+    pctx.strokeStyle = "#4b4039"; pctx.lineWidth = 0.8;
+    pctx.beginPath(); pctx.arc(-28, 34, 4, 0, Math.PI * 2); pctx.stroke();
+    pctx.beginPath(); pctx.arc(-22, 34, 4, 0, Math.PI * 2); pctx.stroke();
+    // perna dianteira fina (sob boom, com rodinha pequena)
+    pctx.strokeStyle = GEAR; pctx.lineWidth = 1;
+    pctx.beginPath(); pctx.moveTo(8, 4); pctx.lineTo(6, 16); pctx.stroke();
+    pctx.beginPath(); pctx.moveTo(6, 16); pctx.lineTo(-2, 24); pctx.stroke();
+    pctx.fillStyle = "#1c1917";
+    pctx.beginPath(); pctx.arc(-2, 25, 2.8, 0, Math.PI * 2); pctx.fill();
+
+    // ── Asa principal box-kite (GRANDE, 4 col × 3 rows) ───────
+    const WX = -50, WW = 42, WY = -22, WH = 44;
+    const COLS = 4, ROWS = 3;
+    const CW_c = WW / COLS, CH_c = WH / ROWS;
+
+    // Fill: gradiente vertical (cima mais claro)
+    const wingG = pctx.createLinearGradient(WX, WY, WX, WY + WH);
+    wingG.addColorStop(0, "#d8cebc"); wingG.addColorStop(0.45, FABRIC); wingG.addColorStop(1, FABRIC2);
+    pctx.fillStyle = wingG;
+    pctx.fillRect(WX, WY, WW, WH);
+
+    // Grade interna (montantes + longarinas)
+    pctx.strokeStyle = WOOD; pctx.lineWidth = 1;
+    for (let c = 0; c <= COLS; c++) {
+      const x = WX + c * CW_c;
+      pctx.beginPath(); pctx.moveTo(x, WY); pctx.lineTo(x, WY + WH); pctx.stroke();
+    }
+    for (let r = 0; r <= ROWS; r++) {
+      const y = WY + r * CH_c;
+      pctx.beginPath(); pctx.moveTo(WX, y); pctx.lineTo(WX + WW, y); pctx.stroke();
+    }
+    // Diagonais de rigging em cada célula
+    pctx.strokeStyle = WOOD_L; pctx.lineWidth = 0.5; pctx.globalAlpha = 0.50;
+    for (let c = 0; c < COLS; c++) {
+      for (let r = 0; r < ROWS; r++) {
+        const x0 = WX + c * CW_c, y0 = WY + r * CH_c;
+        const x1 = x0 + CW_c,     y1 = y0 + CH_c;
+        pctx.beginPath(); pctx.moveTo(x0, y0); pctx.lineTo(x1, y1); pctx.stroke();
+        pctx.beginPath(); pctx.moveTo(x1, y0); pctx.lineTo(x0, y1); pctx.stroke();
+      }
+    }
+    pctx.globalAlpha = 1;
+    // Sombra inferior e borda
+    const shG = pctx.createLinearGradient(WX, WY + WH * 0.55, WX, WY + WH);
+    shG.addColorStop(0, "rgba(44,26,8,0)"); shG.addColorStop(1, "rgba(44,26,8,0.25)");
+    pctx.fillStyle = shG; pctx.fillRect(WX, WY, WW, WH);
+    pctx.strokeStyle = WOOD; pctx.lineWidth = 1.5; pctx.strokeRect(WX, WY, WW, WH);
+
+    // ── Boom / nacelle (fino, longo) ───────────────────────────
+    const BX = -8, BW = 38, BY = -4, BH = 8;
+    const bG = pctx.createLinearGradient(BX, BY, BX, BY + BH);
+    bG.addColorStop(0, "#d0c9b5"); bG.addColorStop(0.5, "#b8b29e"); bG.addColorStop(1, "#908a7c");
+    pctx.fillStyle = bG;
+    pctx.fillRect(BX, BY, BW, BH);
+    pctx.strokeStyle = WOOD; pctx.lineWidth = 0.8; pctx.strokeRect(BX, BY, BW, BH);
+    pctx.strokeStyle = WOOD_L; pctx.lineWidth = 0.5;
+    for (let i = 1; i < 5; i++) {
+      const x = BX + i * (BW / 5);
+      pctx.beginPath(); pctx.moveTo(x, BY); pctx.lineTo(x, BY + BH); pctx.stroke();
+    }
+
+    // ── Canard dianteiro (pequeno, box-kite 2×2) ───────────────
+    const CX2 = 30, CW2 = 20, CY2 = -13, CH2 = 26;
+    const cc = CW2 / 2, cr = CH2 / 2;
+    const cG = pctx.createLinearGradient(CX2, CY2, CX2, CY2 + CH2);
+    cG.addColorStop(0, "#d8cebc"); cG.addColorStop(0.5, FABRIC); cG.addColorStop(1, FABRIC2);
+    pctx.fillStyle = cG; pctx.fillRect(CX2, CY2, CW2, CH2);
+    pctx.strokeStyle = WOOD; pctx.lineWidth = 1;
+    [0,1,2].forEach(i => {
+      pctx.beginPath(); pctx.moveTo(CX2+i*cc, CY2); pctx.lineTo(CX2+i*cc, CY2+CH2); pctx.stroke();
+      pctx.beginPath(); pctx.moveTo(CX2, CY2+i*cr); pctx.lineTo(CX2+CW2, CY2+i*cr); pctx.stroke();
     });
-    pctx.shadowBlur = 0; pctx.strokeStyle = "#8a5010"; pctx.lineWidth = 1.2;
-    [-34,-22,-10,2].forEach(x => {
-      pctx.beginPath(); pctx.moveTo(x,-34); pctx.lineTo(x,-22); pctx.stroke();
-      pctx.beginPath(); pctx.moveTo(x,14); pctx.lineTo(x,26); pctx.stroke();
+    // diagonais canard
+    pctx.strokeStyle = WOOD_L; pctx.lineWidth = 0.5; pctx.globalAlpha = 0.50;
+    [[0,0],[1,0],[0,1],[1,1]].forEach(([c,r]) => {
+      const x0=CX2+c*cc, y0=CY2+r*cr;
+      pctx.beginPath(); pctx.moveTo(x0,y0); pctx.lineTo(x0+cc,y0+cr); pctx.stroke();
+      pctx.beginPath(); pctx.moveTo(x0+cc,y0); pctx.lineTo(x0,y0+cr); pctx.stroke();
     });
-    pctx.strokeStyle = "#5a3004"; pctx.lineWidth = 2.5;
-    [-40,-24,-8,4].forEach(x => {
-      pctx.beginPath(); pctx.moveTo(x,-22); pctx.lineTo(x,14); pctx.stroke();
-    });
-    pctx.strokeStyle = "#6b3808"; pctx.lineWidth = 1.2;
-    [[-40,-22],[-24,-22],[-8,-22],[4,-22]].forEach(([x]) => {
-      pctx.beginPath(); pctx.moveTo(x,-22); pctx.lineTo(x+16,14); pctx.stroke();
-      pctx.beginPath(); pctx.moveTo(x+16,-22); pctx.lineTo(x,14); pctx.stroke();
-    });
+    pctx.globalAlpha = 1;
+    pctx.strokeStyle = WOOD; pctx.lineWidth = 1; pctx.strokeRect(CX2, CY2, CW2, CH2);
 
-    pctx.shadowBlur = 10 + glow * 8;
-    const fgrad = pctx.createLinearGradient(-8,-11,-8,11);
-    fgrad.addColorStop(0,"#f0c040"); fgrad.addColorStop(0.4,"#d08010"); fgrad.addColorStop(1,"#8a4a04");
-    pctx.fillStyle = fgrad;
-    pctx.beginPath();
-    pctx.moveTo(30,-8); pctx.bezierCurveTo(20,-12,-4,-12,-34,-9);
-    pctx.lineTo(-34,9); pctx.bezierCurveTo(-4,12,20,12,30,8); pctx.closePath(); pctx.fill();
-    pctx.strokeStyle = "#7a4e08"; pctx.lineWidth = 1.2; pctx.stroke();
-    pctx.fillStyle = "#c87010";
-    pctx.beginPath(); pctx.moveTo(30,0); pctx.lineTo(42,-4); pctx.lineTo(46,0); pctx.lineTo(42,4); pctx.closePath(); pctx.fill();
+    // Fios de controle (canard → asa)
+    pctx.strokeStyle = WOOD_L; pctx.lineWidth = 0.5; pctx.globalAlpha = 0.65;
+    pctx.beginPath(); pctx.moveTo(CX2, -4); pctx.lineTo(-8, -10); pctx.stroke();
+    pctx.beginPath(); pctx.moveTo(CX2+CW2, 6); pctx.lineTo(8, 14); pctx.stroke();
+    pctx.globalAlpha = 1;
 
-    pctx.shadowBlur = 0; pctx.fillStyle = "#2a1a04";
-    pctx.beginPath(); if ((pctx as any).roundRect) (pctx as any).roundRect(6,-14,18,10,2); else pctx.rect(6,-14,18,10); pctx.fill();
-    pctx.fillStyle = `rgba(150,220,255,${0.5+pulse*0.2})`;
-    pctx.beginPath(); pctx.ellipse(14,-10,6,4,0,0,Math.PI*2); pctx.fill();
-    pctx.fillStyle = "#1a1a2e"; pctx.beginPath(); pctx.arc(11,-14,4,0,Math.PI*2); pctx.fill();
-
-    pctx.fillStyle = "#e0a820";
-    pctx.beginPath(); pctx.moveTo(28,-8); pctx.lineTo(36,-22); pctx.lineTo(42,-20); pctx.lineTo(34,-8); pctx.closePath(); pctx.fill();
-    pctx.beginPath(); pctx.moveTo(28,8); pctx.lineTo(36,22); pctx.lineTo(42,20); pctx.lineTo(34,8); pctx.closePath(); pctx.fill();
-    pctx.strokeStyle = "#8a5010"; pctx.lineWidth = 1;
-    pctx.beginPath(); pctx.moveTo(30,-8); pctx.lineTo(40,-20); pctx.stroke();
-    pctx.beginPath(); pctx.moveTo(30,8); pctx.lineTo(40,20); pctx.stroke();
-
-    pctx.strokeStyle = "#5a3004"; pctx.lineWidth = 2;
-    [-18,0].forEach(x => {
-      pctx.beginPath(); pctx.moveTo(x,10); pctx.lineTo(x,22); pctx.stroke();
-      pctx.fillStyle = "#3a2004"; pctx.beginPath(); pctx.arc(x,23,4,0,Math.PI*2); pctx.fill();
-    });
-
-    pctx.globalAlpha = 0.18 + pulse * 0.14;
-    pctx.strokeStyle = `hsl(${45+pulse*15},100%,65%)`; pctx.lineWidth = 2.5;
-    pctx.beginPath(); pctx.ellipse(-2,0,72,42,0,0,Math.PI*2); pctx.stroke();
-    pctx.globalAlpha = 0.08 + Math.abs(pulse) * 0.10;
-    pctx.fillStyle = "#ffe566";
-    pctx.beginPath(); pctx.ellipse(-2,0,72,42,0,0,Math.PI*2); pctx.fill();
+    // ── Aura de invencibilidade ────────────────────────────────
+    pctx.globalAlpha = 0.12 + Math.abs(pulse) * 0.08;
+    pctx.strokeStyle = `hsl(${40 + pulse * 10},85%,62%)`;
+    pctx.lineWidth = 2.5;
+    pctx.shadowColor = "#fef3c7"; pctx.shadowBlur = 20;
+    pctx.beginPath(); pctx.ellipse(-8, 0, 60, 30, 0, 0, Math.PI * 2); pctx.stroke();
+    pctx.fillStyle = "#fef9e7";
+    pctx.beginPath(); pctx.ellipse(-8, 0, 60, 30, 0, 0, Math.PI * 2); pctx.fill();
     pctx.globalAlpha = 1;
   } else if (player.planeId === "e2") {
     pctx.save(); pctx.scale(0.82, 0.82);
@@ -1537,46 +1627,132 @@ export function drawPlayer(pctx: CanvasRenderingContext2D, player: any): void {
     pctx.beginPath(); pctx.moveTo(-44,6); pctx.lineTo(-58,22); pctx.lineTo(-62,18); pctx.lineTo(-52,6); pctx.closePath(); pctx.fill();
     pctx.shadowBlur=0; pctx.restore();
   } else {
+    // EMB-314 Super Tucano — livery FAB: azul marinho + verde + chevron amarelo
     pctx.save(); pctx.scale(0.82, 0.82);
-    const tfg=pctx.createLinearGradient(0,-10,0,10);
-    tfg.addColorStop(0,"#dbeafe"); tfg.addColorStop(0.5,"#93c5fd"); tfg.addColorStop(1,"#3b82f6");
-    pctx.fillStyle=tfg;
-    pctx.beginPath(); pctx.moveTo(62,0);
-    pctx.bezierCurveTo(54,-9,16,-10,-4,-10); pctx.bezierCurveTo(-26,-10,-48,-6,-54,-3);
-    pctx.bezierCurveTo(-58,-1,-58,1,-54,3); pctx.bezierCurveTo(-48,6,-26,10,-4,10);
-    pctx.bezierCurveTo(16,10,54,9,62,0); pctx.closePath(); pctx.fill();
-    pctx.strokeStyle="#60a5fa"; pctx.lineWidth=1; pctx.stroke();
-    pctx.fillStyle="#1e3a8a";
-    pctx.beginPath(); pctx.moveTo(28,-10); pctx.bezierCurveTo(20,-22,2,-23,-8,-19);
-    pctx.bezierCurveTo(-16,-15,-18,-10,-14,-10); pctx.lineTo(28,-10); pctx.closePath(); pctx.fill();
-    pctx.fillStyle="rgba(147,197,253,0.65)";
-    pctx.beginPath(); pctx.moveTo(22,-10); pctx.bezierCurveTo(14,-20,2,-21,-4,-17);
-    pctx.bezierCurveTo(-9,-14,-11,-10,-8,-10); pctx.lineTo(22,-10); pctx.closePath(); pctx.fill();
-    pctx.fillStyle="rgba(219,234,254,0.55)";
-    pctx.beginPath(); pctx.moveTo(14,-12); pctx.bezierCurveTo(10,-18,4,-19,2,-16); pctx.lineTo(15,-12); pctx.closePath(); pctx.fill();
-    pctx.fillStyle="#60a5fa";
-    pctx.beginPath(); pctx.moveTo(8,-10); pctx.lineTo(-10,-34); pctx.lineTo(-36,-28); pctx.lineTo(-22,-10); pctx.closePath(); pctx.fill();
-    pctx.beginPath(); pctx.moveTo(8,10); pctx.lineTo(-10,34); pctx.lineTo(-36,28); pctx.lineTo(-22,10); pctx.closePath(); pctx.fill();
-    pctx.strokeStyle="#2563eb"; pctx.lineWidth=1;
-    pctx.beginPath(); pctx.moveTo(0,-11); pctx.lineTo(-32,-27); pctx.stroke();
-    pctx.beginPath(); pctx.moveTo(0,11); pctx.lineTo(-32,27); pctx.stroke();
-    pctx.fillStyle="#2563eb";
-    pctx.beginPath(); pctx.moveTo(-40,-3); pctx.lineTo(-54,-24); pctx.lineTo(-60,-20); pctx.lineTo(-48,-3); pctx.closePath(); pctx.fill();
-    pctx.fillStyle="#93c5fd";
-    pctx.beginPath(); pctx.moveTo(-42,-3); pctx.lineTo(-54,-18); pctx.lineTo(-60,-15); pctx.lineTo(-50,-3); pctx.closePath(); pctx.fill();
-    pctx.beginPath(); pctx.moveTo(-42,3); pctx.lineTo(-54,18); pctx.lineTo(-60,15); pctx.lineTo(-50,3); pctx.closePath(); pctx.fill();
-    pctx.fillStyle="#1e40af"; pctx.beginPath(); pctx.arc(48,0,8,0,Math.PI*2); pctx.fill();
-    pctx.fillStyle="#bfdbfe"; pctx.beginPath(); pctx.arc(48,0,5,0,Math.PI*2); pctx.fill();
-    pctx.shadowColor="#fb923c"; pctx.shadowBlur=8; pctx.fillStyle="#fdba74";
-    pctx.beginPath(); pctx.ellipse(-56,0,5,3,0,0,Math.PI*2); pctx.fill(); pctx.shadowBlur=0;
-    const pA=state.frame*0.35; pctx.strokeStyle="#1e3a8a"; pctx.lineWidth=4;
-    for (let b=0;b<2;b++) { const ba=pA+b*Math.PI; pctx.beginPath(); pctx.moveTo(54+Math.cos(ba)*2,Math.sin(ba)*2); pctx.lineTo(54+Math.cos(ba)*15,Math.sin(ba)*15); pctx.stroke(); }
-    pctx.fillStyle="#1e40af"; pctx.beginPath(); pctx.arc(54,0,3,0,Math.PI*2); pctx.fill();
-    pctx.fillStyle="#16a34a"; pctx.beginPath(); pctx.arc(8,0,7,0,Math.PI*2); pctx.fill();
-    pctx.fillStyle="#fbbf24"; pctx.beginPath(); pctx.arc(8,0,5,0,Math.PI*2); pctx.fill();
-    pctx.fillStyle="#1d4ed8"; pctx.beginPath(); pctx.arc(8,0,3,0,Math.PI*2); pctx.fill();
-    pctx.fillStyle="#f0fdf4"; pctx.beginPath(); pctx.arc(8,0,1.5,0,Math.PI*2); pctx.fill();
-    pctx.shadowBlur=0; pctx.restore();
+
+    // ── Asa baixa (antes da fuselagem para ficar atrás) ────────
+    pctx.fillStyle = "#1e3a8a";
+    pctx.beginPath();
+    pctx.moveTo(8, 8); pctx.lineTo(-4, 8);
+    pctx.lineTo(-26, 36); pctx.lineTo(-12, 36);
+    pctx.closePath(); pctx.fill();
+    pctx.fillStyle = "#166534";
+    pctx.beginPath();
+    pctx.moveTo(8, 8); pctx.lineTo(4, 10);
+    pctx.lineTo(-18, 36); pctx.lineTo(-12, 36);
+    pctx.closePath(); pctx.fill();
+    pctx.strokeStyle = "#0f4027"; pctx.lineWidth = 0.8;
+    pctx.beginPath(); pctx.moveTo(8,8); pctx.lineTo(-26,36); pctx.stroke();
+    pctx.beginPath(); pctx.moveTo(-4,8); pctx.lineTo(-26,36); pctx.stroke();
+
+    // ── Cauda vertical (ANTES da fuselagem — base fica coberta) ─
+    pctx.fillStyle = "#166534";
+    pctx.beginPath();
+    pctx.moveTo(-38, 6);   // base dianteira (dentro da fuselagem)
+    pctx.lineTo(-46,-26);  // topo dianteiro do fin
+    pctx.lineTo(-54,-22);  // topo traseiro
+    pctx.lineTo(-54, 4);   // base traseira (dentro da fuselagem)
+    pctx.closePath(); pctx.fill();
+    // Roundel/bandeira no fin
+    pctx.fillStyle = "#15803d"; pctx.beginPath(); pctx.arc(-49,-18,5,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle = "#fbbf24"; pctx.beginPath(); pctx.arc(-49,-18,3.5,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle = "#1d4ed8"; pctx.beginPath(); pctx.arc(-49,-18,2.2,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle = "#f0fdf4"; pctx.beginPath(); pctx.arc(-49,-18,1,0,Math.PI*2); pctx.fill();
+
+    // ── Fuselagem principal ────────────────────────────────────
+    // Base azul marinho (metade inferior)
+    const fuseBlue = pctx.createLinearGradient(0, -10, 0, 10);
+    fuseBlue.addColorStop(0, "#1e3a8a"); fuseBlue.addColorStop(0.4, "#1e40af"); fuseBlue.addColorStop(1, "#172554");
+    pctx.fillStyle = fuseBlue;
+    pctx.beginPath();
+    pctx.moveTo(60, 0);
+    pctx.bezierCurveTo(52,-10,14,-10,-4,-10); pctx.bezierCurveTo(-26,-10,-48,-6,-54,-3);
+    pctx.bezierCurveTo(-58,-1,-58,1,-54,3);   pctx.bezierCurveTo(-48,6,-26,10,-4,10);
+    pctx.bezierCurveTo(14,10,52,10,60,0); pctx.closePath(); pctx.fill();
+    pctx.strokeStyle = "#1e3a8a"; pctx.lineWidth = 0.8; pctx.stroke();
+
+    // Metade superior verde escuro
+    const fuseGreen = pctx.createLinearGradient(0,-10,0,0);
+    fuseGreen.addColorStop(0,"#15803d"); fuseGreen.addColorStop(1,"#166534");
+    pctx.fillStyle = fuseGreen;
+    pctx.beginPath();
+    pctx.moveTo(60, 0);
+    pctx.bezierCurveTo(52,-10,14,-10,-4,-10); pctx.bezierCurveTo(-26,-10,-48,-6,-54,-3);
+    pctx.lineTo(-54,0); pctx.bezierCurveTo(-38,-1,10,-1,60,0); pctx.closePath(); pctx.fill();
+
+    // ── Chevron amarelo (diagonal no nariz) ───────────────────
+    pctx.fillStyle = "#fbbf24";
+    pctx.beginPath();
+    pctx.moveTo(46, 0); pctx.lineTo(28, -10); pctx.lineTo(18, -10);
+    pctx.lineTo(36, 0); pctx.closePath(); pctx.fill();
+    // segundo chevron fino (baixo)
+    pctx.fillStyle = "#f59e0b";
+    pctx.beginPath();
+    pctx.moveTo(36, 0); pctx.lineTo(18,-10); pctx.lineTo(14,-10);
+    pctx.lineTo(32,0); pctx.closePath(); pctx.fill();
+
+    // ── Entrada de ar (air intake) sob o cockpit ──────────────
+    pctx.fillStyle = "#0f172a";
+    pctx.beginPath(); pctx.ellipse(20, 5, 7, 4, 0.3, 0, Math.PI * 2); pctx.fill();
+    pctx.fillStyle = "#1e3a8a";
+    pctx.beginPath(); pctx.ellipse(20, 4.5, 5, 2.8, 0.3, 0, Math.PI * 2); pctx.fill();
+
+    // ── Canopy (capota bolha grande) ──────────────────────────
+    // Moldura escura
+    pctx.fillStyle = "#1c1917";
+    pctx.beginPath(); pctx.moveTo(40,-10); pctx.bezierCurveTo(36,-22,12,-24,8,-18); pctx.bezierCurveTo(6,-15,6,-10,8,-10); pctx.lineTo(40,-10); pctx.closePath(); pctx.fill();
+    // Vidro (bubble canopy) — gradiente azul-esverdeado
+    const canG = pctx.createLinearGradient(24,-22,24,-10);
+    canG.addColorStop(0,"rgba(147,210,255,0.85)"); canG.addColorStop(0.5,"rgba(96,165,250,0.65)"); canG.addColorStop(1,"rgba(30,58,138,0.4)");
+    pctx.fillStyle = canG;
+    pctx.beginPath(); pctx.moveTo(38,-10); pctx.bezierCurveTo(34,-21,12,-23,8,-17); pctx.bezierCurveTo(7,-14,7,-10,9,-10); pctx.lineTo(38,-10); pctx.closePath(); pctx.fill();
+    // Reflexo no vidro
+    pctx.fillStyle = "rgba(255,255,255,0.22)";
+    pctx.beginPath(); pctx.moveTo(34,-15); pctx.bezierCurveTo(28,-21,16,-22,13,-18); pctx.lineTo(20,-15); pctx.closePath(); pctx.fill();
+    // Divisória central do canopy
+    pctx.strokeStyle = "#0f172a"; pctx.lineWidth = 1;
+    pctx.beginPath(); pctx.moveTo(24,-10); pctx.bezierCurveTo(24,-18,24,-20,24,-21); pctx.stroke();
+
+    // ── Estabilizador horizontal (T-tail) ─────────────────────
+    pctx.fillStyle = "#166534";
+    pctx.beginPath(); pctx.moveTo(-44,-24); pctx.lineTo(-58,-24); pctx.lineTo(-62,-20); pctx.lineTo(-50,-20); pctx.closePath(); pctx.fill();
+    pctx.beginPath(); pctx.moveTo(-44,-24); pctx.lineTo(-38,-20); pctx.lineTo(-40,-20); pctx.lineTo(-44,-22); pctx.closePath(); pctx.fill();
+    pctx.strokeStyle="#0f4027"; pctx.lineWidth=0.7;
+    pctx.beginPath(); pctx.moveTo(-44,-24); pctx.lineTo(-62,-20); pctx.stroke();
+
+    // ── Cowling do motor (nariz) ──────────────────────────────
+    pctx.fillStyle = "#1c1917";
+    pctx.beginPath(); pctx.arc(54,0,9,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle = "#374151";
+    pctx.beginPath(); pctx.arc(54,0,7,0,Math.PI*2); pctx.fill();
+    // grade de resfriamento
+    pctx.strokeStyle = "#111827"; pctx.lineWidth = 0.8;
+    [-3,0,3].forEach(dy => { pctx.beginPath(); pctx.moveTo(47,dy); pctx.lineTo(53,dy); pctx.stroke(); });
+
+    // ── Hélice 4 pás (turboprop) ──────────────────────────────
+    const pA = state.frame * 0.34;
+    for (let b = 0; b < 4; b++) {
+      const ba = pA + b * (Math.PI / 2);
+      pctx.save(); pctx.translate(54,0); pctx.rotate(ba);
+      const bladeG = pctx.createLinearGradient(-16,0,16,0);
+      bladeG.addColorStop(0,"#1c1917"); bladeG.addColorStop(0.5,"#4b5563"); bladeG.addColorStop(1,"#1c1917");
+      pctx.fillStyle = bladeG;
+      pctx.beginPath(); pctx.ellipse(0, 0, 16, 3, 0, 0, Math.PI*2); pctx.fill();
+      pctx.restore();
+    }
+    // cubo da hélice
+    pctx.fillStyle = "#f59e0b";
+    pctx.beginPath(); pctx.arc(54,0,3.5,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle = "#92400e";
+    pctx.beginPath(); pctx.arc(54,0,2,0,Math.PI*2); pctx.fill();
+
+    // ── Roundel FAB na fuselagem ───────────────────────────────
+    pctx.fillStyle = "#15803d"; pctx.beginPath(); pctx.arc(0,0,7,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle = "#fbbf24"; pctx.beginPath(); pctx.arc(0,0,5,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle = "#1d4ed8"; pctx.beginPath(); pctx.arc(0,0,3,0,Math.PI*2); pctx.fill();
+    pctx.fillStyle = "#f0fdf4"; pctx.beginPath(); pctx.arc(0,0,1.5,0,Math.PI*2); pctx.fill();
+
+    pctx.shadowBlur = 0; pctx.restore();
   }
 }
 

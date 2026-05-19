@@ -14,6 +14,7 @@ export const INPE_DUR     = 420;
 export const REVAP_DUR    = 260;
 export const DELTA_DUR    = 420;
 export const ERICSSON_DUR = 540;
+export const FAB_JET_DUR  = 1200;
 export const INV = 120;
 
 export const JOY_MAX = 82;
@@ -100,9 +101,19 @@ export const RADIO_MSGS: Record<string, string> = {
   wave_5: "CEMADEN: Tempestade de categoria máxima. Evacuação imediata!",
   boss:   "Torre SJC: ⚠️ CONTATO DE GRANDE PORTE. Fogo à vontade.",
   ovni:   "FAB Radar: Objetos de 19/05/1986 confirmados. Interceptar!",
-  collect_avibras: "Avibras: Mísseis ASTROS carregados. Fogo livre!",
-  collect_14bis:   "ITA: Sistema 14-BIS ativado. Invencibilidade total.",
-  hit_low: "Torre SJC: Piloto, último HP! Encontre escudo urgente!",
+  collect_14bis:        "ITA: Sistema 14-BIS ativado. Invencibilidade total.",
+  hit_low:              "Torre SJC: Piloto, último HP! Encontre escudo urgente!",
+  synergy_fortaleza:    "FAB: Escudo + Boost combinados — Modo FORTALEZA ativo!",
+  synergy_radar_avibras:"Avibras+INPE: Telemetria de mísseis online. Caça automático!",
+  synergy_hipersonico:  "DCTA: Delta + Boost — regime hipersônico alcançado!",
+  synergy_escudo_glacial:"REVAP+Escudo: Campo de gelo ativo. Blindagem máxima!",
+  dda_hard_1: "Torre SJC: Opa, começou a esquentar aí! Foco, guardião.",
+  dda_hard_2: "CEMADEN: Piloto em apuros. Vai com calma!",
+  dda_hard_3: "FAB: Situação crítica! Você tá bem aí dentro?!",
+  dda_hard_4: "Torre SJC: Meu Deus... Vai na fé, Guardião. Vai na fé.",
+  dda_easy_3: "DCTA: Parece que sobreviveu. Quase infarquei aqui também.",
+  dda_easy_2: "Torre SJC: Ufa! Achei que ia ter que ligar pro CEA.",
+  dda_easy_1: "CEMADEN: Tá tão fácil que começo a suspeitar de trapaça.",
 };
 
 function _buildHorde(spec: [string, number][]): HordeItem[] {

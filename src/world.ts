@@ -4,7 +4,7 @@ import type { SkyKeyframeProcessed, SkyValues } from "./types";
 import { SKY_KF } from "./constants";
 
 export const VERSION =
-  `v${version}-` + new Date().toISOString().substring(0, 14).replace(/-:/g, "");
+  `v${version}-` + Date.now().toString(36).slice(-4);
 
 export const canvas = document.getElementById("c") as HTMLCanvasElement;
 export const ctx = canvas.getContext("2d")!;
